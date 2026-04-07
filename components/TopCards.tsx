@@ -1,8 +1,9 @@
 import Link from 'next/link'
 import { ExternalLink, Check } from 'lucide-react'
 import { TARJETAS_MOCK } from '@/lib/data'
+import BankLogo from '@/components/BankLogo'
 
-const TOP_CARDS = TARJETAS_MOCK.slice(0, 4)
+const TOP_CARDS = TARJETAS_MOCK.slice(0, 5)
 
 export default function TopCards() {
   return (
@@ -17,20 +18,17 @@ export default function TopCards() {
               Ranking basado en beneficios, costo y experiencia de usuario.
             </p>
           </div>
-          <Link
-            href="/tarjetas"
-            className="shrink-0 text-sm font-semibold text-[#1DB954] hover:text-[#17a349] transition-colors"
-          >
+          <Link href="/tarjetas" className="shrink-0 text-sm font-semibold text-[#1DB954] hover:text-[#17a349] transition-colors">
             Ver todas →
           </Link>
         </div>
 
         {/* Column headers */}
-        <div className="hidden md:grid md:grid-cols-[2rem_200px_1fr_120px_130px] gap-4 items-center px-5 pb-2 border-b border-[#e5e7eb]">
+        <div className="hidden md:grid md:grid-cols-[2rem_220px_1fr_120px_120px] gap-4 items-center px-5 pb-2 border-b border-[#e5e7eb]">
           <div />
           <div className="text-xs font-semibold text-[#9ca3af] uppercase tracking-wide">Tarjeta</div>
           <div className="text-xs font-semibold text-[#9ca3af] uppercase tracking-wide">Beneficios destacados</div>
-          <div className="text-xs font-semibold text-[#9ca3af] uppercase tracking-wide">Costo mensual</div>
+          <div className="text-xs font-semibold text-[#9ca3af] uppercase tracking-wide">Costo</div>
           <div />
         </div>
 
@@ -40,11 +38,10 @@ export default function TopCards() {
             return (
               <div
                 key={card.id}
-                className={`group relative grid grid-cols-1 md:grid-cols-[2rem_200px_1fr_120px_130px] gap-4 items-center py-5 px-5 rounded-xl transition-colors hover:bg-[#f0fdf4] ${
-                  isBest ? 'border border-[#86efac] bg-[#f0fdf4]' : ''
+                className={`group relative grid grid-cols-1 md:grid-cols-[2rem_220px_1fr_120px_120px] gap-4 items-center py-5 px-5 rounded-xl transition-colors hover:bg-[#f0fdf4] ${
+                  isBest ? 'border border-[#86efac] bg-[#f0fdf4] mt-3' : ''
                 }`}
               >
-                {/* Best badge */}
                 {isBest && (
                   <span className="absolute -top-2.5 left-5 text-[10px] font-bold px-2.5 py-0.5 rounded-full bg-[#1DB954] text-white">
                     Mejor elección
@@ -58,9 +55,7 @@ export default function TopCards() {
 
                 {/* Identity */}
                 <div className="flex items-center gap-3">
-                  <div className="w-12 h-8 rounded-md border border-[#e5e7eb] bg-[#f7f8fa] flex items-center justify-center shrink-0">
-                    <span className="text-[9px] font-bold text-[#6b7280] uppercase">{card.red}</span>
-                  </div>
+                  <BankLogo domain={card.logo_domain} name={card.banco} size={40} />
                   <div className="min-w-0">
                     <div className="flex items-center gap-1.5 flex-wrap">
                       <span className="font-semibold text-sm text-[#1a1a1a] truncate">{card.nombre}</span>
@@ -70,11 +65,17 @@ export default function TopCards() {
                         </span>
                       )}
                     </div>
-                    <div className="flex items-baseline gap-1 mt-0.5">
+                    <div className="flex items-baseline gap-1 mt-0.5 flex-wrap">
                       <span className="text-xs text-[#9ca3af]">{card.banco}</span>
                       <span className="text-[#e5e7eb]">·</span>
                       <span className="font-bold text-sm text-[#1a1a1a]">{card.puntuacion.toFixed(1)}</span>
                       <span className="text-xs text-[#9ca3af]">/10</span>
+                      {card.red && (
+                        <>
+                          <span className="text-[#e5e7eb]">·</span>
+                          <span className="text-xs text-[#9ca3af]">{card.red}</span>
+                        </>
+                      )}
                     </div>
                   </div>
                 </div>
@@ -92,11 +93,11 @@ export default function TopCards() {
                 {/* Cost */}
                 <div className="hidden md:block">
                   <div className="text-xs text-[#9ca3af] mb-0.5">Mensual</div>
-                  <div className="font-semibold text-sm text-[#1a1a1a]">
+                  <div className="font-semibold text-sm">
                     {card.costo_mensual === 0 ? (
                       <span className="text-[#1DB954]">Sin costo</span>
                     ) : (
-                      `$${card.costo_mensual.toLocaleString('es-AR')}`
+                      <span className="text-[#1a1a1a]">${card.costo_mensual.toLocaleString('es-AR')}</span>
                     )}
                   </div>
                 </div>
@@ -108,9 +109,7 @@ export default function TopCards() {
                     target="_blank"
                     rel="noopener noreferrer sponsored"
                     className={`inline-flex items-center gap-1.5 px-4 py-2 rounded-md text-xs font-semibold text-white transition-colors whitespace-nowrap ${
-                      isBest
-                        ? 'bg-[#1DB954] hover:bg-[#17a349]'
-                        : 'bg-[#1a1a1a] hover:bg-[#374151]'
+                      isBest ? 'bg-[#1DB954] hover:bg-[#17a349]' : 'bg-[#1a1a1a] hover:bg-[#374151]'
                     }`}
                   >
                     Solicitar
@@ -124,7 +123,7 @@ export default function TopCards() {
 
         <div className="mt-4 pt-4 border-t border-[#f3f4f6]">
           <p className="text-xs text-[#9ca3af]">
-            * Ranking actualizado mensualmente. Algunos links son de afiliados.
+            * Ranking actualizado mensualmente. Condiciones y tasas sujetas a cambios por parte de cada entidad. Algunos links son de afiliados.
           </p>
         </div>
       </div>

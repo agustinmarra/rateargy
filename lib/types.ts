@@ -10,7 +10,8 @@ export interface Producto {
   url_afiliado: string
   activo: boolean
   imagen_url?: string
-  red?: string
+  logo_domain?: string   // dominio para Clearbit logo API
+  red?: string           // Visa, Mastercard, Amex, etc.
   tag?: string
 }
 
