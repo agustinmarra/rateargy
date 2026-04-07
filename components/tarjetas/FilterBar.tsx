@@ -26,7 +26,7 @@ export default function FilterBar({ selected, onChange, total }: FilterBarProps)
             onClick={() => onChange(f.value)}
             className={`px-3.5 py-1.5 rounded-md text-sm font-medium transition-colors ${
               selected === f.value
-                ? 'bg-[#1DB954] text-white'
+                ? 'bg-[#008000] text-white'
                 : 'bg-white text-[#6b7280] border border-[#e5e7eb] hover:border-[#86efac] hover:text-[#1a1a1a]'
             }`}
           >

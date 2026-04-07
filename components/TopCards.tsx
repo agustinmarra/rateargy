@@ -18,7 +18,7 @@ export default function TopCards() {
               Ranking basado en beneficios, costo y experiencia de usuario.
             </p>
           </div>
-          <Link href="/tarjetas" className="shrink-0 text-sm font-semibold text-[#1DB954] hover:text-[#17a349] transition-colors">
+          <Link href="/tarjetas" className="shrink-0 text-sm font-semibold text-[#008000] hover:text-[#1a5c38] transition-colors">
             Ver todas →
           </Link>
         </div>
@@ -43,7 +43,7 @@ export default function TopCards() {
                 }`}
               >
                 {isBest && (
-                  <span className="absolute -top-2.5 left-5 text-[10px] font-bold px-2.5 py-0.5 rounded-full bg-[#1DB954] text-white">
+                  <span className="absolute -top-2.5 left-5 text-[10px] font-bold px-2.5 py-0.5 rounded-full bg-[#008000] text-white">
                     Mejor elección
                   </span>
                 )}
@@ -60,7 +60,7 @@ export default function TopCards() {
                     <div className="flex items-center gap-1.5 flex-wrap">
                       <span className="font-semibold text-sm text-[#1a1a1a] truncate">{card.nombre}</span>
                       {card.tag && (
-                        <span className="text-[10px] font-semibold px-1.5 py-0.5 rounded bg-[#1DB954]/10 text-[#15803d] shrink-0">
+                        <span className="text-[10px] font-semibold px-1.5 py-0.5 rounded bg-[#008000]/10 text-[#15803d] shrink-0">
                           {card.tag}
                         </span>
                       )}
@@ -84,7 +84,7 @@ export default function TopCards() {
                 <ul className="hidden md:flex flex-col gap-1">
                   {card.beneficios.slice(0, 3).map((b, i) => (
                     <li key={i} className="flex items-center gap-1.5 text-xs text-[#6b7280]">
-                      <Check size={11} className="text-[#1DB954] shrink-0" />
+                      <Check size={11} className="text-[#008000] shrink-0" />
                       {b}
                     </li>
                   ))}
@@ -95,7 +95,7 @@ export default function TopCards() {
                   <div className="text-xs text-[#9ca3af] mb-0.5">Mensual</div>
                   <div className="font-semibold text-sm">
                     {card.costo_mensual === 0 ? (
-                      <span className="text-[#1DB954]">Sin costo</span>
+                      <span className="text-[#008000]">Sin costo</span>
                     ) : (
                       <span className="text-[#1a1a1a]">${card.costo_mensual.toLocaleString('es-AR')}</span>
                     )}
@@ -109,7 +109,7 @@ export default function TopCards() {
                     target="_blank"
                     rel="noopener noreferrer sponsored"
                     className={`inline-flex items-center gap-1.5 px-4 py-2 rounded-md text-xs font-semibold text-white transition-colors whitespace-nowrap ${
-                      isBest ? 'bg-[#1DB954] hover:bg-[#17a349]' : 'bg-[#1a1a1a] hover:bg-[#374151]'
+                      isBest ? 'bg-[#008000] hover:bg-[#1a5c38]' : 'bg-[#1a1a1a] hover:bg-[#374151]'
                     }`}
                   >
                     Solicitar

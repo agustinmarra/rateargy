@@ -8,7 +8,7 @@ import { Producto, Categoria } from './types'
 // ─────────────────────────────────────────────────────────────────
 
 export const CATEGORIAS: Categoria[] = [
-  { id: '1', nombre: 'Tarjetas de Crédito', slug: 'tarjetas',    descripcion: 'Encontrá la tarjeta con más beneficios para tu perfil', icono: '💳', color: '#1DB954', cantidad_productos: 12 },
+  { id: '1', nombre: 'Tarjetas de Crédito', slug: 'tarjetas',    descripcion: 'Encontrá la tarjeta con más beneficios para tu perfil', icono: '💳', color: '#008000', cantidad_productos: 12 },
   { id: '2', nombre: 'Cuentas Bancarias',   slug: 'cuentas',     descripcion: 'Cuentas con cashback, sin comisión y con rendimiento',  icono: '🏦', color: '#0ea5e9', cantidad_productos: 10 },
   { id: '3', nombre: 'Préstamos',           slug: 'prestamos',   descripcion: 'Compará tasas y condiciones de los mejores préstamos',  icono: '💰', color: '#f59e0b', cantidad_productos: 8  },
   { id: '4', nombre: 'Seguros',             slug: 'seguros',     descripcion: 'Auto, hogar y vida al mejor precio del mercado',       icono: '🛡️', color: '#6366f1', cantidad_productos: 7  },

@@ -17,7 +17,6 @@ function CountUp({ end, suffix = '', prefix = '', duration = 1600 }: CountUpProp
   useEffect(() => {
     const el = ref.current
     if (!el) return
-
     const observer = new IntersectionObserver(
       ([entry]) => {
         if (entry.isIntersecting && !started.current) {
@@ -49,89 +48,92 @@ function CountUp({ end, suffix = '', prefix = '', duration = 1600 }: CountUpProp
 }
 
 const STATS = [
-  { prefix: '+', end: 50000, suffix: '', label: 'decisiones financieras\ntomadas con rateargy' },
-  { prefix: '+', end: 200, suffix: '', label: 'productos comparados\nde los mejores bancos' },
-  { prefix: '', end: 100, suffix: '+', label: 'expertos revisando\ncada producto' },
+  { prefix: '+', end: 50000, suffix: '', label: 'decisiones financieras tomadas' },
+  { prefix: '+', end: 200, suffix: '', label: 'productos comparados' },
+  { prefix: '', end: 0, suffix: 'Siempre gratis', label: 'sin registro obligatorio', isText: true },
 ]
 
 const PARTNERS = [
-  'Banco Nación',
-  'Banco Galicia',
-  'Mercado Pago',
-  'Naranja X',
-  'Ualá',
-  'Santander',
+  { name: 'BCRA', color: '#003087' },
+  { name: 'Banco Nación', color: '#003F80' },
+  { name: 'Mercado Pago', color: '#009EE3' },
+  { name: 'Galicia', color: '#E30613' },
+  { name: 'Santander', color: '#EC0000' },
+  { name: 'Naranja X', color: '#FF6200' },
 ]
 
 export default function TrustSection() {
   return (
     <section className="py-16 bg-white border-t border-[#e5e7eb]">
       <div className="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8">
-        <div className="flex flex-col lg:flex-row gap-12 lg:gap-20 items-start">
-          {/* Left — decorative */}
-          <div className="flex-1 max-w-md">
-            <div className="relative bg-[#f0fdf4] rounded-2xl p-8 border border-[#bbf7d0]">
-              {/* Green accent bar */}
-              <div className="w-10 h-1 bg-[#1DB954] rounded-full mb-5" />
-              <h2 className="font-extrabold text-2xl md:text-3xl text-[#1a1a1a] leading-tight mb-4">
-                Por qué miles de argentinos confían en rateargy
-              </h2>
-              <p className="text-[#6b7280] text-sm leading-relaxed">
-                Analizamos cada producto financiero con criterios objetivos: tasa real, costos ocultos, experiencia de usuario y atención al cliente. Sin conflictos de interés.
-              </p>
+        <div className="flex flex-col lg:flex-row gap-10 lg:gap-16 items-center">
 
-              {/* Check list */}
-              <ul className="mt-5 space-y-2">
-                {[
-                  'Información verificada con cada banco',
-                  'Actualizamos tasas y condiciones diariamente',
-                  'Las comisiones no afectan nuestros rankings',
-                ].map((item) => (
-                  <li key={item} className="flex items-start gap-2.5 text-sm text-[#374151]">
-                    <div className="w-4 h-4 rounded-full bg-[#1DB954] flex items-center justify-center shrink-0 mt-0.5">
-                      <svg width="8" height="6" viewBox="0 0 8 6" fill="none">
-                        <path d="M1 3l2 2 4-4" stroke="white" strokeWidth="1.5" strokeLinecap="round" strokeLinejoin="round" />
-                      </svg>
-                    </div>
-                    {item}
-                  </li>
-                ))}
-              </ul>
-            </div>
+          {/* Left — imagen persona usando celular */}
+          <div className="w-full lg:w-80 shrink-0">
+            {/* eslint-disable-next-line @next/next/no-img-element */}
+            <img
+              src="https://images.unsplash.com/photo-1554224155-6726b3ff858f?w=500"
+              alt="Persona tomando decisiones financieras con rateargy"
+              className="w-full rounded-2xl object-cover"
+              style={{ height: 360 }}
+            />
           </div>
 
-          {/* Right — stats + logos */}
+          {/* Right — título + stats + logos */}
           <div className="flex-1">
+            <div className="w-10 h-1 bg-[#008000] rounded-full mb-5" />
+            <h2 className="font-extrabold text-2xl md:text-3xl text-[#1a1a1a] leading-tight mb-3">
+              Por qué miles de argentinos<br />confían en rateargy
+            </h2>
+            <p className="text-[#6b7280] text-sm leading-relaxed mb-8 max-w-lg">
+              Analizamos cada producto financiero con criterios objetivos: costos reales, beneficios verificados y experiencia de usuario. Sin conflictos de interés.
+            </p>
+
+            {/* Stats en verde grande */}
             <div className="grid grid-cols-1 sm:grid-cols-3 gap-6 mb-10">
-              {STATS.map((stat, i) => (
-                <div key={i} className="text-center sm:text-left">
-                  <div className="font-extrabold text-4xl text-[#1DB954] leading-none mb-1.5">
-                    <CountUp end={stat.end} prefix={stat.prefix} suffix={stat.suffix} />
-                  </div>
-                  <p className="text-sm text-[#6b7280] leading-snug whitespace-pre-line">
-                    {stat.label}
-                  </p>
+              <div>
+                <div className="font-extrabold text-4xl text-[#008000] leading-none mb-1">
+                  <CountUp end={50000} prefix="+" />
                 </div>
-              ))}
+                <p className="text-sm text-[#6b7280]">decisiones financieras tomadas</p>
+              </div>
+              <div>
+                <div className="font-extrabold text-4xl text-[#008000] leading-none mb-1">
+                  <CountUp end={200} prefix="+" />
+                </div>
+                <p className="text-sm text-[#6b7280]">productos comparados</p>
+              </div>
+              <div>
+                <div className="font-extrabold text-4xl text-[#008000] leading-none mb-1">
+                  Gratis
+                </div>
+                <p className="text-sm text-[#6b7280]">sin registro obligatorio</p>
+              </div>
             </div>
 
-            {/* Partners */}
+            {/* Logos de fuentes */}
             <div>
-              <p className="text-xs text-[#9ca3af] font-semibold uppercase tracking-wide mb-4">
-                Productos de estas instituciones en rateargy
+              <p className="text-xs text-[#9ca3af] font-semibold uppercase tracking-wide mb-3">
+                Nuestros datos vienen de:
               </p>
               <div className="flex flex-wrap gap-2">
-                {PARTNERS.map((name) => (
+                {PARTNERS.map((p) => (
                   <div
-                    key={name}
-                    className="px-3.5 py-1.5 rounded-md border border-[#e5e7eb] bg-[#f7f8fa] text-xs font-semibold text-[#6b7280]"
+                    key={p.name}
+                    className="px-3 py-1.5 rounded-md border text-xs font-bold"
+                    style={{
+                      borderColor: p.color + '40',
+                      color: p.color,
+                      background: p.color + '08',
+                    }}
                   >
-                    {name}
+                    {p.name}
                   </div>
                 ))}
               </div>
             </div>
           </div>
+
         </div>
       </div>
     </section>

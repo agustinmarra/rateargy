@@ -12,7 +12,7 @@ export default function StatsSection() {
         <div className="grid grid-cols-2 lg:grid-cols-4 divide-x divide-[#e5e7eb]">
           {STATS.map((stat, i) => (
             <div key={i} className="px-6 first:pl-0 last:pr-0 py-2">
-              <div className="font-extrabold text-3xl text-[#1DB954] tracking-tight mb-0.5">
+              <div className="font-extrabold text-3xl text-[#008000] tracking-tight mb-0.5">
                 {stat.value}
               </div>
               <div className="font-semibold text-sm text-[#1a1a1a] mb-0.5">{stat.label}</div>

@@ -35,7 +35,7 @@ export default function PrestamosPage() {
     <div className="min-h-screen bg-[#f7f8fa]">
       <div className="bg-white border-b border-[#e5e7eb]">
         <div className="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8 py-10">
-          <p className="text-[#1DB954] font-semibold text-xs uppercase tracking-widest mb-2">Comparador</p>
+          <p className="text-[#008000] font-semibold text-xs uppercase tracking-widest mb-2">Comparador</p>
           <h1 className="font-extrabold text-3xl md:text-4xl text-[#1a1a1a] tracking-tight mb-2">
             Préstamos personales
           </h1>
@@ -54,7 +54,7 @@ export default function PrestamosPage() {
         </div>
 
         <div className="flex items-start gap-3 bg-[#f0fdf4] border border-[#86efac] rounded-xl p-4 mb-7">
-          <Info size={15} className="text-[#1DB954] mt-0.5 shrink-0" />
+          <Info size={15} className="text-[#008000] mt-0.5 shrink-0" />
           <p className="text-sm text-[#374151]">
             <span className="font-semibold text-[#1a1a1a]">¿Cómo comparamos?</span> Evaluamos proceso de solicitud, monto máximo, plazo, requisitos y experiencia del cliente. No publicamos tasas específicas porque cambian constantemente.
           </p>
@@ -69,7 +69,7 @@ export default function PrestamosPage() {
                 onClick={() => setFiltro(f.value)}
                 className={`px-3.5 py-1.5 rounded-md text-sm font-medium transition-colors ${
                   filtro === f.value
-                    ? 'bg-[#1DB954] text-white'
+                    ? 'bg-[#008000] text-white'
                     : 'bg-white text-[#6b7280] border border-[#e5e7eb] hover:border-[#86efac] hover:text-[#1a1a1a]'
                 }`}
               >
@@ -93,7 +93,7 @@ export default function PrestamosPage() {
                     <div className="flex items-center gap-1.5 flex-wrap mb-0.5">
                       <span className="font-semibold text-sm text-[#1a1a1a] leading-tight">{prestamo.nombre}</span>
                       {prestamo.tag && (
-                        <span className="text-[10px] font-semibold px-1.5 py-0.5 rounded bg-[#1DB954]/10 text-[#15803d] shrink-0">
+                        <span className="text-[10px] font-semibold px-1.5 py-0.5 rounded bg-[#008000]/10 text-[#15803d] shrink-0">
                           {prestamo.tag}
                         </span>
                       )}
@@ -115,7 +115,7 @@ export default function PrestamosPage() {
                 <ul className="space-y-1.5 mb-5 flex-1">
                   {prestamo.beneficios.map((b, i) => (
                     <li key={i} className="flex items-start gap-2 text-xs text-[#6b7280]">
-                      <Check size={12} className="text-[#1DB954] shrink-0 mt-0.5" />
+                      <Check size={12} className="text-[#008000] shrink-0 mt-0.5" />
                       {b}
                     </li>
                   ))}
@@ -129,7 +129,7 @@ export default function PrestamosPage() {
                     href={prestamo.url_afiliado}
                     target="_blank"
                     rel="noopener noreferrer sponsored"
-                    className="inline-flex items-center gap-1.5 px-4 py-2 rounded-md text-xs font-semibold text-white bg-[#1DB954] hover:bg-[#17a349] transition-colors"
+                    className="inline-flex items-center gap-1.5 px-4 py-2 rounded-md text-xs font-semibold text-white bg-[#008000] hover:bg-[#1a5c38] transition-colors"
                   >
                     Solicitar
                     <ExternalLink size={11} />

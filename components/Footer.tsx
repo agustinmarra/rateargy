@@ -29,11 +29,11 @@ export default function Footer() {
           {/* Brand */}
           <div className="lg:col-span-2">
             <div className="flex items-center gap-2 mb-3">
-              <div className="w-6 h-6 rounded bg-[#1DB954] flex items-center justify-center">
+              <div className="w-6 h-6 rounded bg-[#008000] flex items-center justify-center">
                 <span className="text-white font-bold text-xs">R</span>
               </div>
               <span className="font-bold text-base text-[#1a1a1a]">
-                rate<span className="text-[#1DB954]">argy</span>
+                rate<span className="text-[#008000]">argy</span>
               </span>
             </div>
             <p className="text-[#6b7280] text-sm leading-relaxed max-w-xs">

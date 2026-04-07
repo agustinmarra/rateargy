@@ -51,7 +51,7 @@ export default function TarjetasPage() {
       {/* Page header */}
       <div className="bg-white border-b border-[#e5e7eb]">
         <div className="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8 py-10">
-          <p className="text-[#1DB954] font-semibold text-xs uppercase tracking-widest mb-2">
+          <p className="text-[#008000] font-semibold text-xs uppercase tracking-widest mb-2">
             Comparador
           </p>
           <h1 className="font-extrabold text-3xl md:text-4xl text-[#1a1a1a] tracking-tight mb-2">
@@ -66,7 +66,7 @@ export default function TarjetasPage() {
       <div className="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8 py-8">
         {/* Info banner */}
         <div className="flex items-start gap-3 bg-[#f0fdf4] border border-[#86efac] rounded-xl p-4 mb-7">
-          <Info size={15} className="text-[#1DB954] mt-0.5 shrink-0" />
+          <Info size={15} className="text-[#008000] mt-0.5 shrink-0" />
           <p className="text-sm text-[#374151]">
             <span className="font-semibold text-[#1a1a1a]">¿Cómo elegimos?</span> Evaluamos
             beneficios, costo, red de aceptación y experiencia de usuario. Puntuaciones
