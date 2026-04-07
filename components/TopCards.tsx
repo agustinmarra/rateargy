@@ -55,7 +55,7 @@ export default function TopCards() {
 
                 {/* Identity */}
                 <div className="flex items-center gap-3">
-                  <BankLogo domain={card.logo_domain} name={card.banco} size={40} />
+                  <BankLogo name={card.banco} size={40} />
                   <div className="min-w-0">
                     <div className="flex items-center gap-1.5 flex-wrap">
                       <span className="font-semibold text-sm text-[#1a1a1a] truncate">{card.nombre}</span>

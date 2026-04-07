@@ -88,7 +88,7 @@ export default function CuentasPage() {
             >
               <div className="flex items-start justify-between px-5 pt-5 pb-4 border-b border-[#f3f4f6]">
                 <div className="flex items-center gap-3 min-w-0">
-                  <BankLogo domain={cuenta.logo_domain} name={cuenta.banco} size={40} />
+                  <BankLogo name={cuenta.banco} size={40} />
                   <div className="min-w-0">
                     <div className="flex items-center gap-1.5 flex-wrap mb-0.5">
                       <span className="font-semibold text-sm text-[#1a1a1a] leading-tight">{cuenta.nombre}</span>

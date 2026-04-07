@@ -33,6 +33,13 @@ const PERFIL_MAP: Record<PerfilUso, (p: typeof TARJETAS_MOCK[0]) => boolean> = {
 
 export default function TarjetasPage() {
   const [perfil, setPerfil] = useState<PerfilUso>('todos')
+  const [comparing, setComparing] = useState<string[]>([])
+
+  function toggleCompare(id: string) {
+    setComparing((prev) =>
+      prev.includes(id) ? prev.filter((x) => x !== id) : [...prev, id]
+    )
+  }
 
   const filtered = useMemo(() => {
     const fn = PERFIL_MAP[perfil]
@@ -75,9 +82,17 @@ export default function TarjetasPage() {
             <p className="text-[#6b7280] text-sm">Probá cambiando el filtro de perfil.</p>
           </div>
         ) : (
-          <div className="grid grid-cols-1 md:grid-cols-2 xl:grid-cols-3 gap-5">
+          <div className="flex flex-col gap-4">
             {filtered.map((card, index) => (
-              <CardItem key={card.id} card={card} rank={index + 1} />
+              <CardItem
+                key={card.id}
+                card={card}
+                rank={index + 1}
+                isBestChoice={index === 0}
+                bestChoiceLabel={index === 0 ? 'Viajes' : undefined}
+                isComparing={comparing.includes(card.id)}
+                onToggleCompare={toggleCompare}
+              />
             ))}
           </div>
         )}

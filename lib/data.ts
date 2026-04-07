@@ -42,6 +42,9 @@ export const TARJETAS_MOCK: Producto[] = [
     activo: true,
     red: 'Visa',
     tag: 'Mejor para viajes',
+    beneficio_principal: 'Acceso a salas VIP LoungeKey en aeropuertos',
+    cuotas_sin_interes: 'Hasta 12 cuotas s/i',
+    ingreso_minimo: 'Consultar con ICBC',
   },
   {
     id: 't2',
@@ -64,6 +67,9 @@ export const TARJETAS_MOCK: Producto[] = [
     activo: true,
     red: 'Mastercard',
     tag: 'Más beneficios',
+    beneficio_principal: 'Cashback y puntos Galicia en todas las compras',
+    cuotas_sin_interes: 'Hasta 18 cuotas s/i',
+    ingreso_minimo: 'Consultar con Galicia',
   },
   {
     id: 't3',
@@ -86,6 +92,9 @@ export const TARJETAS_MOCK: Producto[] = [
     activo: true,
     red: 'Visa',
     tag: 'Premium',
+    beneficio_principal: 'Priority Pass — salas VIP en el mundo',
+    cuotas_sin_interes: 'Hasta 12 cuotas s/i',
+    ingreso_minimo: 'Consultar con BBVA',
   },
   {
     id: 't4',
@@ -108,6 +117,9 @@ export const TARJETAS_MOCK: Producto[] = [
     activo: true,
     red: 'Amex',
     tag: 'Ultra premium',
+    beneficio_principal: 'Salas VIP ilimitadas + Concierge personal 24hs',
+    cuotas_sin_interes: 'Consultar con Amex',
+    ingreso_minimo: 'Consultar con Amex',
   },
   {
     id: 't5',
@@ -130,6 +142,9 @@ export const TARJETAS_MOCK: Producto[] = [
     activo: true,
     red: 'Amex',
     tag: 'Para viajes y gastronomía',
+    beneficio_principal: 'Membership Rewards en gastronomía y viajes',
+    cuotas_sin_interes: 'Consultar con Amex',
+    ingreso_minimo: 'Consultar con Amex',
   },
   {
     id: 't6',
@@ -152,6 +167,9 @@ export const TARJETAS_MOCK: Producto[] = [
     activo: true,
     red: 'Mastercard',
     tag: 'Banca preferencial',
+    beneficio_principal: 'Descuentos en más de 300 comercios HSBC',
+    cuotas_sin_interes: 'Hasta 12 cuotas s/i',
+    ingreso_minimo: 'Consultar con HSBC',
   },
   {
     id: 't7',
@@ -174,6 +192,9 @@ export const TARJETAS_MOCK: Producto[] = [
     activo: true,
     red: 'Visa',
     tag: 'Descuentos en combustible',
+    beneficio_principal: 'Descuentos en YPF, Shell y supermercados',
+    cuotas_sin_interes: 'Hasta 12 cuotas s/i',
+    ingreso_minimo: 'Consultar con Macro',
   },
   {
     id: 't8',
@@ -196,6 +217,9 @@ export const TARJETAS_MOCK: Producto[] = [
     activo: true,
     red: 'Visa',
     tag: 'Sin costo',
+    beneficio_principal: 'Sin costo — descuentos en 200+ comercios adheridos',
+    cuotas_sin_interes: 'Hasta 24 cuotas s/i en red Naranja',
+    ingreso_minimo: 'Sin ingreso mínimo',
   },
   {
     id: 't9',
@@ -218,6 +242,9 @@ export const TARJETAS_MOCK: Producto[] = [
     activo: true,
     red: 'Visa',
     tag: 'Para empezar',
+    beneficio_principal: 'Programas AHORA 3 / 6 / 12 / 18 cuotas',
+    cuotas_sin_interes: 'Hasta 18 cuotas AHORA',
+    ingreso_minimo: 'Consultar con Santander',
   },
   {
     id: 't10',
@@ -240,6 +267,9 @@ export const TARJETAS_MOCK: Producto[] = [
     activo: true,
     red: 'Visa',
     tag: 'Empleados públicos PBA',
+    beneficio_principal: 'Tasas preferenciales para empleados públicos PBA',
+    cuotas_sin_interes: 'Hasta 12 cuotas s/i',
+    ingreso_minimo: 'Para empleados públicos PBA',
   },
   {
     id: 't11',
@@ -262,6 +292,9 @@ export const TARJETAS_MOCK: Producto[] = [
     activo: true,
     red: 'Mastercard',
     tag: 'Sin banco',
+    beneficio_principal: 'Sin banco, sin costos — acepta programas AHORA',
+    cuotas_sin_interes: 'Acepta AHORA 3/6/12/18',
+    ingreso_minimo: 'Sin ingreso mínimo',
   },
   {
     id: 't12',
@@ -284,6 +317,9 @@ export const TARJETAS_MOCK: Producto[] = [
     activo: true,
     red: 'Visa',
     tag: 'Cashback en cripto',
+    beneficio_principal: 'Cashback en USDT en cada compra',
+    cuotas_sin_interes: 'Hasta 12 cuotas s/i',
+    ingreso_minimo: 'Sin ingreso mínimo',
   },
 ]
 
