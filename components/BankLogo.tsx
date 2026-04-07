@@ -3,23 +3,14 @@
 import { useState } from 'react'
 
 interface BankConfig {
-  imgUrl?: string
-  imgFilter?: string   // CSS filter to colorize the SVG
   color: string
   textColor: string
   displayName: string
 }
 
+// Brand color map — usado como fallback cuando no hay logo en /public/logos/
 const BANK_CONFIGS: Record<string, BankConfig> = {
-  // ── Con logo via SimpleIcons ──
-  'Mercado Pago': {
-    imgUrl: 'https://simpleicons.org/icons/mercadopago.svg',
-    // Converts black SVG to #009EE3
-    imgFilter: 'brightness(0) saturate(100%) invert(47%) sepia(92%) saturate(644%) hue-rotate(173deg) brightness(100%) contrast(102%)',
-    color: '#009EE3', textColor: 'white', displayName: 'Mercado Pago',
-  },
-
-  // ── Texto bold con color de marca (más profesional que cuadrado) ──
+  'Mercado Pago':        { color: '#009EE3', textColor: 'white', displayName: 'Mercado Pago' },
   'Banco Galicia':       { color: '#E30613', textColor: 'white', displayName: 'Galicia' },
   'BBVA Argentina':      { color: '#004481', textColor: 'white', displayName: 'BBVA' },
   'Santander Argentina': { color: '#EC0000', textColor: 'white', displayName: 'Santander' },
@@ -44,17 +35,26 @@ const BANK_CONFIGS: Record<string, BankConfig> = {
   'Federación Patronal': { color: '#006633', textColor: 'white', displayName: 'Fed. Patronal' },
 }
 
-const DEFAULT_CONFIG: BankConfig = {
-  color: '#6b7280', textColor: 'white', displayName: '',
+const DEFAULT_CONFIG: BankConfig = { color: '#6b7280', textColor: 'white', displayName: '' }
+
+/** Converts "Banco Galicia" → "banco-galicia" for the /public/logos/ path */
+function toSlug(name: string) {
+  return name
+    .toLowerCase()
+    .normalize('NFD')
+    .replace(/[\u0300-\u036f]/g, '')
+    .replace(/[^a-z0-9]+/g, '-')
+    .replace(/^-|-$/g, '')
 }
 
 interface BankLogoProps {
   name: string
   size?: number
   className?: string
+  grayscale?: boolean
 }
 
-export default function BankLogo({ name, size = 48, className = '' }: BankLogoProps) {
+export default function BankLogo({ name, size = 48, className = '', grayscale = false }: BankLogoProps) {
   const [imgFailed, setImgFailed] = useState(false)
   const config = BANK_CONFIGS[name] ?? { ...DEFAULT_CONFIG, displayName: name }
 
@@ -65,8 +65,10 @@ export default function BankLogo({ name, size = 48, className = '' }: BankLogoPr
     flexShrink: 0,
   }
 
-  // ── Logo con imagen (SimpleIcons o similar) ──
-  if (config.imgUrl && !imgFailed) {
+  // ── Try /public/logos/{slug}.png ──
+  const logoSrc = `/logos/${toSlug(name)}.png`
+
+  if (!imgFailed) {
     return (
       <div
         className={`rounded-lg overflow-hidden bg-white border border-[#e5e7eb] flex items-center justify-center p-1.5 ${className}`}
@@ -75,15 +77,14 @@ export default function BankLogo({ name, size = 48, className = '' }: BankLogoPr
       >
         {/* eslint-disable-next-line @next/next/no-img-element */}
         <img
-          src={config.imgUrl}
+          src={logoSrc}
           alt={name}
-          width={size - 12}
-          height={size - 12}
           style={{
             objectFit: 'contain',
             width: '100%',
             height: '100%',
-            filter: config.imgFilter,
+            filter: grayscale ? 'grayscale(100%) opacity(0.5)' : undefined,
+            transition: 'filter 0.2s ease',
           }}
           onError={() => setImgFailed(true)}
         />
@@ -91,7 +92,7 @@ export default function BankLogo({ name, size = 48, className = '' }: BankLogoPr
     )
   }
 
-  // ── Fallback: nombre del banco con color de marca sobre fondo blanco ──
+  // ── Fallback: bank name bold with brand color on white ──
   const fontSize = size <= 32 ? 9 : size <= 48 ? 11 : 13
 
   return (
@@ -101,6 +102,8 @@ export default function BankLogo({ name, size = 48, className = '' }: BankLogoPr
         ...containerStyle,
         background: '#fff',
         borderColor: config.color + '40',
+        filter: grayscale ? 'grayscale(100%) opacity(0.5)' : undefined,
+        transition: 'filter 0.2s ease',
       }}
       title={name}
     >
