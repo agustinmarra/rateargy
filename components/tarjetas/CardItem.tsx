@@ -1,8 +1,10 @@
 'use client'
 
+import Link from 'next/link'
 import { ExternalLink, Star, Check } from 'lucide-react'
 import { Producto } from '@/lib/types'
 import BankLogo from '@/components/BankLogo'
+import { toSlug } from '@/lib/utils'
 
 interface CardItemProps {
   card: Producto
@@ -154,12 +156,13 @@ export default function CardItem({
             <div className="flex items-start gap-2.5 mb-2">
               <BankLogo name={card.banco} size={36} />
               <div className="min-w-0">
-                <div
-                  className="font-bold text-[#1a1a1a] leading-tight"
-                  style={{ fontSize: 22 }}
+                <Link
+                  href={`/tarjetas/${toSlug(card.nombre + '-' + card.banco)}`}
+                  className="font-bold text-[#1a1a1a] leading-tight hover:text-[#008000] transition-colors"
+                  style={{ fontSize: 22, display: 'block' }}
                 >
                   {card.nombre}
-                </div>
+                </Link>
                 <div style={{ fontSize: 16, color: '#6b7280', marginTop: 2 }}>{card.banco}</div>
               </div>
             </div>

@@ -17,6 +17,10 @@ export interface Producto {
   beneficio_principal?: string
   cuotas_sin_interes?: string
   ingreso_minimo?: string
+  // Campos financieros calculables
+  tna?: number          // Tasa Nominal Anual (0.60 = 60%)
+  cftea?: number        // Costo Financiero Total Efectivo Anual
+  rendimiento?: number  // TNA de rendimiento para cuentas (0.30 = 30%)
 }
 
 export interface Categoria {

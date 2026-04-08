@@ -4,16 +4,17 @@ import Link from 'next/link'
 import { useState } from 'react'
 import { ExternalLink, ChevronRight } from 'lucide-react'
 import BankLogo from '@/components/BankLogo'
+import DisclaimerBanner from '@/components/DisclaimerBanner'
 
 // ── Datos de seguros ──────────────────────────────────────────────────────────
 const SEGUROS = [
-  { banco: 'Sancor Seguros',      rating: 4.8, todoRiesgo: 85000,  terceros: 32000, url: '#' },
-  { banco: 'MAPFRE Argentina',    rating: 4.6, todoRiesgo: 92000,  terceros: 35000, url: '#' },
-  { banco: 'Zurich Argentina',    rating: 4.5, todoRiesgo: 98000,  terceros: 38000, url: '#' },
-  { banco: 'La Caja',             rating: 4.4, todoRiesgo: 78000,  terceros: 29000, url: '#' },
-  { banco: 'Federación Patronal', rating: 4.3, todoRiesgo: 72000,  terceros: 27000, url: '#' },
-  { banco: 'San Cristóbal',       rating: 4.2, todoRiesgo: 68000,  terceros: 25000, url: '#' },
-  { banco: 'Mercado Seguros',     rating: 4.1, todoRiesgo: 65000,  terceros: 24000, url: '#' },
+  { banco: 'Sancor Seguros',      rating: 4.8, todoRiesgo: 85000,  terceros: 32000, url: 'https://www.sancorseguros.com.ar/autos' },
+  { banco: 'MAPFRE Argentina',    rating: 4.6, todoRiesgo: 92000,  terceros: 35000, url: 'https://www.mapfre.com.ar/seguros-de-auto/' },
+  { banco: 'Zurich Argentina',    rating: 4.5, todoRiesgo: 98000,  terceros: 38000, url: 'https://www.zurich.com.ar/' },
+  { banco: 'La Caja',             rating: 4.4, todoRiesgo: 78000,  terceros: 29000, url: 'https://www.lacaja.com.ar/autos' },
+  { banco: 'Federación Patronal', rating: 4.3, todoRiesgo: 72000,  terceros: 27000, url: 'https://www.federacionpatronal.com.ar/' },
+  { banco: 'San Cristóbal',       rating: 4.2, todoRiesgo: 68000,  terceros: 25000, url: 'https://www.sancristobal.com.ar/' },
+  { banco: 'Mercado Seguros',     rating: 4.1, todoRiesgo: 65000,  terceros: 24000, url: 'https://seguros.mercadopago.com.ar/' },
 ]
 
 const COTIZACIONES = [
@@ -161,6 +162,9 @@ export default function SegurosPage() {
 
       {/* ── Content: filters + table ──────────────────────────────────── */}
       <div id="comparar" className="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8 py-10">
+        <div className="mb-8">
+          <DisclaimerBanner variant="seguros" />
+        </div>
         <div className="flex flex-col lg:flex-row gap-8">
 
           {/* Sidebar filters */}

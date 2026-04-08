@@ -4,16 +4,17 @@ import Link from 'next/link'
 import { useState } from 'react'
 import { ExternalLink, ChevronRight } from 'lucide-react'
 import BankLogo from '@/components/BankLogo'
+import DisclaimerBanner from '@/components/DisclaimerBanner'
 
 // ── Datos hardcodeados (como requiere el spec) ────────────────────────────────
 const CUENTAS = [
-  { banco: 'Mercado Pago', nombre: 'Cuenta Mercado Pago', rating: 4.9, tna: '31%', retiro: 'Sí', cashback: 'No',            minimo: '$1',  url: '#', tag: '+ popular' },
-  { banco: 'Ualá',         nombre: 'Cuenta Ualá',         rating: 4.8, tna: '30%', retiro: 'Sí', cashback: 'No',            minimo: '$1',  url: '#', tag: null },
-  { banco: 'Lemon Cash',   nombre: 'Cuenta Lemon',        rating: 4.7, tna: '32%', retiro: 'Sí', cashback: 'Sí (cripto)',   minimo: '$1',  url: '#', tag: 'Mayor TNA' },
-  { banco: 'Personal Pay', nombre: 'Personal Pay',        rating: 4.6, tna: '28%', retiro: 'Sí', cashback: 'Sí',            minimo: '$1',  url: '#', tag: null },
-  { banco: 'Brubank',      nombre: 'Cuenta Brubank',      rating: 4.5, tna: '29%', retiro: 'Sí', cashback: 'No',            minimo: '$1',  url: '#', tag: null },
-  { banco: 'Banco Galicia', nombre: 'Cuenta Galicia',     rating: 4.3, tna: '27%', retiro: 'No (48hs)', cashback: 'No',     minimo: '$0',  url: '#', tag: null },
-  { banco: 'Banco Nación', nombre: 'Cuenta BNA',          rating: 4.2, tna: '25%', retiro: 'No', cashback: 'No',            minimo: '$0',  url: '#', tag: null },
+  { banco: 'Mercado Pago', nombre: 'Cuenta Mercado Pago', rating: 4.9, tna: '31%', retiro: 'Sí', cashback: 'No',            minimo: '$1',  url: 'https://www.mercadopago.com.ar/cuenta/', tag: '+ popular' },
+  { banco: 'Ualá',         nombre: 'Cuenta Ualá',         rating: 4.8, tna: '30%', retiro: 'Sí', cashback: 'No',            minimo: '$1',  url: 'https://www.uala.com.ar/', tag: null },
+  { banco: 'Lemon Cash',   nombre: 'Cuenta Lemon',        rating: 4.7, tna: '32%', retiro: 'Sí', cashback: 'Sí (cripto)',   minimo: '$1',  url: 'https://www.lemon.me/ar/', tag: 'Mayor TNA' },
+  { banco: 'Personal Pay', nombre: 'Personal Pay',        rating: 4.6, tna: '28%', retiro: 'Sí', cashback: 'Sí',            minimo: '$1',  url: 'https://www.personal.com.ar/personal-pay/', tag: null },
+  { banco: 'Brubank',      nombre: 'Cuenta Brubank',      rating: 4.5, tna: '29%', retiro: 'Sí', cashback: 'No',            minimo: '$1',  url: 'https://www.brubank.com.ar/', tag: null },
+  { banco: 'Banco Galicia', nombre: 'Cuenta Galicia',     rating: 4.3, tna: '27%', retiro: 'No (48hs)', cashback: 'No',     minimo: '$0',  url: 'https://www.galicia.com.ar/personas/cuentas', tag: null },
+  { banco: 'Banco Nación', nombre: 'Cuenta BNA',          rating: 4.2, tna: '25%', retiro: 'No', cashback: 'No',            minimo: '$0',  url: 'https://www.bna.com.ar/Personas', tag: null },
 ]
 
 function Stars({ rating }: { rating: number }) {
@@ -138,12 +139,8 @@ export default function CuentasPage() {
 
       {/* ── Table ─────────────────────────────────────────────────────── */}
       <div id="comparar" className="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8 py-10">
-        {/* Info banner */}
-        <div className="bg-amber-50 border border-amber-200 rounded-xl p-4 mb-7 flex items-start gap-3">
-          <span className="text-amber-500 text-lg shrink-0">⚠</span>
-          <p style={{ fontSize: 14, color: '#92400e' }}>
-            <strong>Tasas referenciales:</strong> La TNA de rendimiento varía frecuentemente según la política de cada entidad. Verificá siempre la tasa vigente antes de decidir.
-          </p>
+        <div className="mb-7">
+          <DisclaimerBanner variant="tasas" />
         </div>
 
         {/* Filters */}

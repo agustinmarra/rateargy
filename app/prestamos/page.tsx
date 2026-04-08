@@ -4,18 +4,21 @@ import Link from 'next/link'
 import { useState, useMemo } from 'react'
 import { ExternalLink, ChevronRight } from 'lucide-react'
 import { PRESTAMOS_MOCK } from '@/lib/data'
+import { calcularPrestamo, compararPrestamistas } from '@/lib/finance'
+import { FINANCIAL_CONSTANTS } from '@/lib/constants'
 import BankLogo from '@/components/BankLogo'
+import DisclaimerBanner from '@/components/DisclaimerBanner'
 
 // ── Tabla auxiliar con datos adicionales por banco ────────────────────────────
 const EXTRA: Record<string, { montoMax: string; plazoMax: string; acreditacion: string }> = {
-  'Banco Galicia': { montoMax: '$5.000.000', plazoMax: '48 cuotas', acreditacion: 'Instante' },
-  'Banco Nación':  { montoMax: 'Según perfil', plazoMax: '60 cuotas', acreditacion: '24–48 hs' },
-  'BBVA Argentina': { montoMax: '$8.000.000', plazoMax: '72 cuotas', acreditacion: 'Online' },
-  'Mercado Pago':  { montoMax: 'Según historial', plazoMax: '24 cuotas', acreditacion: 'Instante' },
-  'Banco Macro':   { montoMax: '$4.000.000', plazoMax: '60 cuotas', acreditacion: '24 hs' },
-  'Naranja X':     { montoMax: '$2.000.000', plazoMax: '36 cuotas', acreditacion: 'Instante' },
-  'Brubank':       { montoMax: '$3.000.000', plazoMax: '36 cuotas', acreditacion: 'Instante' },
-  'Banco Provincia': { montoMax: '$5.000.000', plazoMax: '60 cuotas', acreditacion: '24–48 hs' },
+  'Banco Galicia':    { montoMax: '$5.000.000', plazoMax: '48 cuotas', acreditacion: 'Instante' },
+  'Banco Nación':     { montoMax: 'Según perfil', plazoMax: '60 cuotas', acreditacion: '24–48 hs' },
+  'BBVA Argentina':   { montoMax: '$8.000.000', plazoMax: '72 cuotas', acreditacion: 'Online' },
+  'Mercado Pago':     { montoMax: 'Según historial', plazoMax: '24 cuotas', acreditacion: 'Instante' },
+  'Banco Macro':      { montoMax: '$4.000.000', plazoMax: '60 cuotas', acreditacion: '24 hs' },
+  'Ualá':             { montoMax: '$1.500.000', plazoMax: '24 cuotas', acreditacion: 'Instante' },
+  'Santander Argentina': { montoMax: '$6.000.000', plazoMax: '72 cuotas', acreditacion: '24 hs' },
+  'Banco Provincia':  { montoMax: '$5.000.000', plazoMax: '60 cuotas', acreditacion: '24–48 hs' },
 }
 
 function Stars({ rating }: { rating: number }) {
@@ -30,15 +33,21 @@ function Stars({ rating }: { rating: number }) {
   )
 }
 
-// ── Calculadora ───────────────────────────────────────────────────────────────
+// ── Calculadora mejorada ──────────────────────────────────────────────────────
 function LoanCalculator() {
   const [monto, setMonto] = useState(500000)
   const [cuotas, setCuotas] = useState(12)
+  const [tnaCustom, setTnaCustom] = useState(60)
 
-  // Cálculo ilustrativo con TNA ≈ 60% (tasa de referencia, no oficial)
-  const r = 0.60 / 12
-  const pmt = monto * (r * Math.pow(1 + r, cuotas)) / (Math.pow(1 + r, cuotas) - 1)
-  const totalPagar = pmt * cuotas
+  const tna = tnaCustom / 100
+  const resultado = calcularPrestamo(monto, tna, cuotas)
+
+  // Comparación con otras tasas del mercado (60% referencial de cada banco)
+  const TNAs = [0.55, 0.60, 0.65, 0.70, 0.75]
+  const cuotasComparacion = TNAs.map((t) => calcularPrestamo(monto, t, cuotas)?.cuotaMensual ?? 0)
+  const cuotaMin = Math.min(...cuotasComparacion)
+  const cuotaMax = Math.max(...cuotasComparacion)
+  const ahorroVsMax = resultado ? Math.max(0, cuotaMax - resultado.cuotaMensual) * cuotas : 0
 
   return (
     <div className="bg-white rounded-2xl border border-[#e5e7eb] p-6 sticky top-20" style={{ boxShadow: '0 1px 3px rgba(0,0,0,0.06)' }}>
@@ -47,7 +56,7 @@ function LoanCalculator() {
       </h3>
 
       {/* Monto */}
-      <div className="mb-5">
+      <div className="mb-4">
         <label className="block font-semibold text-[#374151] mb-1" style={{ fontSize: 14 }}>
           ¿Cuánto necesitás?
         </label>
@@ -70,7 +79,7 @@ function LoanCalculator() {
       </div>
 
       {/* Cuotas */}
-      <div className="mb-6">
+      <div className="mb-4">
         <label className="block font-semibold text-[#374151] mb-1" style={{ fontSize: 14 }}>
           ¿En cuántas cuotas?
         </label>
@@ -80,27 +89,78 @@ function LoanCalculator() {
           className="w-full border border-[#e5e7eb] rounded-lg px-3 py-2.5 focus:outline-none focus:border-[#008000] transition-colors"
           style={{ fontSize: 14 }}
         >
-          {[6, 12, 18, 24, 36, 48].map((n) => (
+          {[6, 12, 18, 24, 36, 48, 60, 72].map((n) => (
             <option key={n} value={n}>{n} cuotas</option>
           ))}
         </select>
       </div>
 
-      {/* Resultado */}
-      <div className="bg-[#f0fdf4] rounded-xl p-4 border border-[#86efac] mb-4">
-        <p className="text-[#374151] mb-1" style={{ fontSize: 13 }}>
-          Tu cuota mensual sería de aproximadamente
-        </p>
-        <p className="font-extrabold text-[#008000]" style={{ fontSize: 32 }}>
-          ${Math.round(pmt).toLocaleString('es-AR')}
-        </p>
-        <p className="text-[#6b7280] mt-1" style={{ fontSize: 12 }}>
-          Total a pagar: <strong>${Math.round(totalPagar).toLocaleString('es-AR')}</strong>
-        </p>
+      {/* TNA */}
+      <div className="mb-5">
+        <label className="block font-semibold text-[#374151] mb-1" style={{ fontSize: 14 }}>
+          TNA del banco (%)
+        </label>
+        <div className="flex items-center gap-2">
+          <input
+            type="number"
+            min={10}
+            max={300}
+            value={tnaCustom}
+            onChange={(e) => setTnaCustom(Number(e.target.value))}
+            className="w-20 border border-[#e5e7eb] rounded-lg px-3 py-2 focus:outline-none focus:border-[#008000] text-center font-bold"
+            style={{ fontSize: 16 }}
+          />
+          <span style={{ fontSize: 14, color: '#6b7280' }}>%</span>
+          <span style={{ fontSize: 12, color: '#9ca3af' }}>
+            (referencial ≈ {FINANCIAL_CONSTANTS.TNA_REFERENCIAL_PRESTAMOS * 100}%)
+          </span>
+        </div>
       </div>
 
-      <p className="text-[#9ca3af] leading-relaxed" style={{ fontSize: 12 }}>
-        ⚠ Cálculo ilustrativo a TNA referencial ≈ 60%. La cuota real depende de la entidad y tu perfil crediticio. Siempre verificá el CFT antes de firmar.
+      {resultado ? (
+        <>
+          {/* Cuota principal */}
+          <div className="bg-[#f0fdf4] rounded-xl p-4 border border-[#86efac] mb-3">
+            <p className="text-[#374151] mb-1" style={{ fontSize: 13 }}>
+              Tu cuota mensual estimada
+            </p>
+            <p className="font-extrabold text-[#008000]" style={{ fontSize: 32 }}>
+              ${resultado.cuotaMensual.toLocaleString('es-AR')}
+            </p>
+            <p className="text-[#6b7280] mt-0.5" style={{ fontSize: 12 }}>
+              por {cuotas} meses
+            </p>
+          </div>
+
+          {/* Desglose */}
+          <div className="space-y-2 mb-4">
+            {[
+              { label: 'Total a pagar', value: `$${resultado.totalAPagar.toLocaleString('es-AR')}`, highlight: false },
+              { label: 'Total en intereses', value: `$${resultado.totalIntereses.toLocaleString('es-AR')}`, highlight: false },
+              { label: 'CFTEA estimado', value: `${resultado.cftea}%`, highlight: true },
+            ].map(({ label, value, highlight }) => (
+              <div key={label} className="flex justify-between items-center py-1.5 border-b border-[#f3f4f6]">
+                <span style={{ fontSize: 13, color: '#6b7280' }}>{label}</span>
+                <span style={{ fontSize: 14, fontWeight: 700, color: highlight ? '#b45309' : '#1a1a1a' }}>{value}</span>
+              </div>
+            ))}
+          </div>
+
+          {/* Comparación */}
+          {ahorroVsMax > 0 && (
+            <div className="bg-amber-50 rounded-lg p-3 border border-amber-200 mb-3">
+              <p style={{ fontSize: 12, color: '#92400e' }}>
+                <strong>¿Sabías que?</strong> Comparar tasas puede ahorrarte hasta{' '}
+                <strong>${ahorroVsMax.toLocaleString('es-AR')}</strong> en el total del préstamo.
+                Usá los filtros para encontrar la opción más barata.
+              </p>
+            </div>
+          )}
+        </>
+      ) : null}
+
+      <p className="text-[#9ca3af] leading-relaxed" style={{ fontSize: 11 }}>
+        ⚠ Cálculo referencial. La cuota real depende de la entidad, tu perfil crediticio y los gastos adicionales (seguro, IVA, etc.). El CFTEA incluye todos los costos. Siempre verificá el CFT oficial antes de firmar.
       </p>
     </div>
   )
@@ -147,14 +207,10 @@ export default function PrestamosPage() {
         </div>
       </section>
 
-      {/* ── Main content: calculadora + tabla ────────────────────────── */}
+      {/* ── Main content ─────────────────────────────────────────────── */}
       <div className="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8 py-10">
-        {/* Alert */}
-        <div className="bg-amber-50 border border-amber-200 rounded-xl p-4 mb-8 flex items-start gap-3">
-          <span className="text-amber-500 text-lg shrink-0">⚠</span>
-          <p style={{ fontSize: 14, color: '#92400e' }}>
-            <strong>Importante:</strong> Las tasas (TNA/CFT) varían frecuentemente según la política del BCRA y el perfil del solicitante. Siempre verificá la tasa vigente y el CFT directamente con el banco antes de firmar.
-          </p>
+        <div className="mb-8">
+          <DisclaimerBanner variant="prestamos" />
         </div>
 
         <div className="flex flex-col lg:flex-row gap-8">
@@ -210,7 +266,7 @@ export default function PrestamosPage() {
               </div>
 
               {/* Rows */}
-              {filtered.map((p, i) => {
+              {filtered.map((p) => {
                 const extra = EXTRA[p.banco] ?? { montoMax: 'A consultar', plazoMax: 'A consultar', acreditacion: 'A consultar' }
                 return (
                   <div
@@ -231,13 +287,17 @@ export default function PrestamosPage() {
 
                     <Stars rating={p.puntuacion} />
 
-                    <div style={{ fontSize: 14, color: '#6b7280' }}>Consultar</div>
+                    <div style={{ fontSize: 13, color: '#6b7280' }}>Consultar</div>
 
                     <div style={{ fontSize: 15, fontWeight: 600, color: '#1a1a1a' }}>{extra.montoMax}</div>
 
                     <div style={{ fontSize: 15, fontWeight: 600, color: '#1a1a1a' }}>{extra.plazoMax}</div>
 
-                    <div style={{ fontSize: 14, color: extra.acreditacion === 'Instante' ? '#008000' : '#6b7280', fontWeight: extra.acreditacion === 'Instante' ? 700 : 400 }}>
+                    <div style={{
+                      fontSize: 14,
+                      color: extra.acreditacion === 'Instante' ? '#008000' : '#6b7280',
+                      fontWeight: extra.acreditacion === 'Instante' ? 700 : 400,
+                    }}>
                       {extra.acreditacion}
                     </div>
 
@@ -259,7 +319,7 @@ export default function PrestamosPage() {
             </div>
 
             <p className="text-xs text-[#9ca3af] mt-4">
-              Montos y plazos referenciales, sujetos a aprobación crediticia. TNA variable — consultá la tasa vigente y el CFT antes de contratar. Algunos links son de afiliados.
+              Montos y plazos referenciales, sujetos a aprobación crediticia. TNA variable — consultá la tasa vigente y el CFT antes de contratar. Algunos links pueden ser de afiliados.
             </p>
           </div>
         </div>
