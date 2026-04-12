@@ -3,7 +3,7 @@
 import { useState, useEffect, useCallback, useRef } from "react"
 import { motion, AnimatePresence } from "framer-motion"
 import dynamic from "next/dynamic"
-import { Calculator, BarChart2, Trophy, ArrowRight, Shield, Zap, TrendingUp, BookOpen, CreditCard, Banknote, PiggyBank } from "lucide-react"
+import { Calculator, BarChart2, Trophy, ArrowRight, Shield, Zap, TrendingUp, BookOpen, CreditCard, Banknote, PiggyBank, ChevronDown, X, Check } from "lucide-react"
 import { TARJETAS, rankear, type Gastos, type CatKey } from "@/components/tarjetas-data"
 import { formatARS, CatIcon } from "@/components/ResultadosTarjetas"
 import { BancoLogo } from "@/components/BancoLogo"
@@ -264,6 +264,7 @@ export default function Home() {
   const [loading, setLoading]       = useState(false)
   const [tarjetaActual, setTarjetaActual] = useState("")
   const [toastMsg, setToastMsg]     = useState<string | null>(null)
+  const [selectorAbierto, setSelectorAbierto] = useState(false)
 
   const resultadosRef  = useRef<HTMLDivElement>(null)
   const calculadoraRef = useRef<HTMLDivElement>(null)
@@ -272,6 +273,16 @@ export default function Home() {
     const fromURL = loadFromURL()
     if (Object.keys(fromURL).length > 0) setGastos((p) => ({ ...p, ...fromURL }))
   }, [])
+
+  useEffect(() => {
+    if (!selectorAbierto) return
+    const handler = (e: MouseEvent) => {
+      const target = e.target as HTMLElement
+      if (!target.closest("[data-selector]")) setSelectorAbierto(false)
+    }
+    document.addEventListener("mousedown", handler)
+    return () => document.removeEventListener("mousedown", handler)
+  }, [selectorAbierto])
 
   const showToast = useCallback((msg: string) => {
     setToastMsg(msg)
@@ -596,30 +607,167 @@ export default function Home() {
                 ))}
               </div>
 
-              {/* Select tarjeta actual */}
-              <div style={{ marginBottom: 24 }}>
-                <label style={{ display:"block", fontSize:13, fontWeight:600, color:"#374151",
-                  letterSpacing:"0.02em", marginBottom:8 }}>
-                  Tengo actualmente:
-                </label>
-                <select value={tarjetaActual} onChange={(e) => setTarjetaActual(e.target.value)}
-                  style={{ background:"#f8fafc", border:"1.5px solid #e2e8f0", borderRadius:12,
-                    padding:"11px 14px", fontSize:14, color:"#374151", outline:"none",
-                    width:"100%", maxWidth:320, cursor:"pointer" }}>
-                  <option value="">Ninguna / no sé</option>
-                  {TARJETAS.map((t) => (
-                    <option key={t.id} value={t.id}>{t.nombre} — {t.banco}</option>
-                  ))}
-                </select>
-              </div>
+              {/* SELECTOR TARJETA ACTUAL + GASTO TOTAL */}
+              <div style={{ marginBottom: 28 }}>
 
-              {/* Gasto total en tiempo real */}
-              {totalGasto > 0 && (
-                <p style={{ fontSize:13, color:"#94a3b8", marginBottom:16, textAlign:"center" }}>
-                  Gasto total ingresado:{" "}
-                  <strong style={{ color:"#475569" }}>{formatARS(totalGasto)}/mes</strong>
-                </p>
-              )}
+                {/* Label */}
+                <div style={{ fontSize: 12, fontWeight: 700, color: "#374151", letterSpacing: "0.04em", textTransform: "uppercase", marginBottom: 12, display: "flex", alignItems: "center", gap: 8 }}>
+                  <div style={{ width: 20, height: 20, borderRadius: 6, background: "#f0fdf7", border: "1px solid #bbf7d0", display: "flex", alignItems: "center", justifyContent: "center" }}>
+                    <CreditCard size={12} color="#0a7c4e" />
+                  </div>
+                  ¿Tenés una tarjeta actualmente? <span style={{ color: "#94a3b8", fontWeight: 500, textTransform: "none", letterSpacing: 0 }}>(opcional)</span>
+                </div>
+
+                {/* Trigger + dropdown envueltos en position relative */}
+                <div style={{ position: "relative" }} data-selector="true">
+
+                  {/* Trigger */}
+                  <div
+                    onClick={() => setSelectorAbierto(v => !v)}
+                    style={{
+                      display: "flex", alignItems: "center", justifyContent: "space-between",
+                      padding: "14px 16px",
+                      border: selectorAbierto ? "1.5px solid #0a7c4e" : "1.5px solid #e2e8f0",
+                      borderRadius: 12,
+                      background: "white",
+                      cursor: "pointer",
+                      transition: "all 0.2s",
+                      boxShadow: selectorAbierto ? "0 0 0 3px rgba(10,124,78,0.1)" : "none",
+                      userSelect: "none",
+                    }}
+                  >
+                    <div style={{ display: "flex", alignItems: "center", gap: 12 }}>
+                      {tarjetaActual ? (
+                        <>
+                          <BancoLogo banco={tarjetaActual} size={32} />
+                          <div>
+                            <div style={{ fontSize: 15, fontWeight: 600, color: "#0f172a", lineHeight: 1.2 }}>
+                              {TARJETAS.find(t => t.id === tarjetaActual)?.nombre}
+                            </div>
+                            <div style={{ fontSize: 12, color: "#94a3b8", marginTop: 2 }}>
+                              {TARJETAS.find(t => t.id === tarjetaActual)?.banco}
+                            </div>
+                          </div>
+                        </>
+                      ) : (
+                        <div style={{ fontSize: 15, color: "#94a3b8" }}>Seleccioná tu tarjeta actual...</div>
+                      )}
+                    </div>
+                    <motion.div animate={{ rotate: selectorAbierto ? 180 : 0 }} transition={{ duration: 0.2 }}>
+                      <ChevronDown size={18} color="#94a3b8" />
+                    </motion.div>
+                  </div>
+
+                  {/* Dropdown panel */}
+                  <AnimatePresence>
+                    {selectorAbierto && (
+                      <motion.div
+                        initial={{ opacity: 0, y: -8, scale: 0.98 }}
+                        animate={{ opacity: 1, y: 0, scale: 1 }}
+                        exit={{ opacity: 0, y: -8, scale: 0.98 }}
+                        transition={{ duration: 0.15 }}
+                        style={{
+                          position: "absolute",
+                          top: "calc(100% + 8px)",
+                          left: 0, right: 0,
+                          background: "white",
+                          border: "1.5px solid #e2e8f0",
+                          borderRadius: 16,
+                          boxShadow: "0 20px 60px rgba(0,0,0,0.12), 0 0 0 1px rgba(0,0,0,0.04)",
+                          zIndex: 100,
+                          overflow: "hidden",
+                          maxHeight: 320,
+                          overflowY: "auto",
+                        }}
+                      >
+                        {/* Opción ninguna */}
+                        <div
+                          onClick={() => { setTarjetaActual(""); setSelectorAbierto(false) }}
+                          style={{
+                            display: "flex", alignItems: "center", gap: 12,
+                            padding: "12px 16px",
+                            cursor: "pointer",
+                            borderBottom: "1px solid #f8fafc",
+                            background: tarjetaActual === "" ? "#f0fdf7" : "white",
+                            transition: "background 0.15s",
+                          }}
+                          onMouseEnter={e => (e.currentTarget.style.background = "#f8fafc")}
+                          onMouseLeave={e => (e.currentTarget.style.background = tarjetaActual === "" ? "#f0fdf7" : "white")}
+                        >
+                          <div style={{ width: 32, height: 32, borderRadius: 8, background: "#f1f5f9", border: "1px solid #e2e8f0", display: "flex", alignItems: "center", justifyContent: "center" }}>
+                            <X size={14} color="#94a3b8" />
+                          </div>
+                          <span style={{ fontSize: 14, color: "#94a3b8", fontWeight: 500 }}>Ninguna / no sé</span>
+                        </div>
+
+                        {/* Lista de tarjetas */}
+                        {TARJETAS.map((t) => (
+                          <div
+                            key={t.id}
+                            onClick={() => { setTarjetaActual(t.id); setSelectorAbierto(false) }}
+                            style={{
+                              display: "flex", alignItems: "center", gap: 12,
+                              padding: "12px 16px",
+                              cursor: "pointer",
+                              background: tarjetaActual === t.id ? "#f0fdf7" : "white",
+                              borderBottom: "1px solid #f8fafc",
+                              transition: "background 0.15s",
+                            }}
+                            onMouseEnter={e => { if (tarjetaActual !== t.id) e.currentTarget.style.background = "#f8fafc" }}
+                            onMouseLeave={e => { e.currentTarget.style.background = tarjetaActual === t.id ? "#f0fdf7" : "white" }}
+                          >
+                            <BancoLogo banco={t.id} size={32} />
+                            <div style={{ flex: 1 }}>
+                              <div style={{ fontSize: 14, fontWeight: 600, color: "#0f172a" }}>{t.nombre}</div>
+                              <div style={{ fontSize: 12, color: "#94a3b8", marginTop: 1 }}>{t.banco} · {t.red}</div>
+                            </div>
+                            <div style={{ width: 40, height: 26, borderRadius: 6, background: t.gradiente, flexShrink: 0 }} />
+                            {tarjetaActual === t.id && (
+                              <div style={{ width: 20, height: 20, borderRadius: "50%", background: "#0a7c4e", display: "flex", alignItems: "center", justifyContent: "center", flexShrink: 0 }}>
+                                <Check size={12} color="white" />
+                              </div>
+                            )}
+                          </div>
+                        ))}
+                      </motion.div>
+                    )}
+                  </AnimatePresence>
+                </div>
+
+                {/* Card gasto total */}
+                {getTotalGasto(gastos) > 0 && (
+                  <motion.div
+                    initial={{ opacity: 0, y: 8 }}
+                    animate={{ opacity: 1, y: 0 }}
+                    style={{
+                      display: "flex", alignItems: "center", justifyContent: "space-between",
+                      padding: "14px 18px",
+                      background: "linear-gradient(135deg, #f0fdf7 0%, #f8fafc 100%)",
+                      border: "1px solid #bbf7d0",
+                      borderRadius: 12,
+                      marginTop: 16,
+                    }}
+                  >
+                    <div style={{ display: "flex", alignItems: "center", gap: 10 }}>
+                      <div style={{ width: 36, height: 36, borderRadius: 10, background: "#0a7c4e", display: "flex", alignItems: "center", justifyContent: "center" }}>
+                        <BarChart2 size={18} color="white" />
+                      </div>
+                      <div>
+                        <div style={{ fontSize: 11, fontWeight: 700, color: "#94a3b8", textTransform: "uppercase", letterSpacing: "0.06em" }}>Gasto mensual total</div>
+                        <div style={{ fontSize: 22, fontWeight: 900, color: "#0f172a", letterSpacing: "-0.02em", lineHeight: 1.2 }}>
+                          {formatARS(getTotalGasto(gastos))}
+                        </div>
+                      </div>
+                    </div>
+                    <div style={{ textAlign: "right" }}>
+                      <div style={{ fontSize: 11, fontWeight: 700, color: "#94a3b8", textTransform: "uppercase", letterSpacing: "0.06em" }}>Al año serían</div>
+                      <div style={{ fontSize: 16, fontWeight: 700, color: "#0a7c4e", letterSpacing: "-0.01em" }}>
+                        {formatARS(getTotalGasto(gastos) * 12)}
+                      </div>
+                    </div>
+                  </motion.div>
+                )}
+              </div>
 
               {/* Botón calcular */}
               <motion.button
