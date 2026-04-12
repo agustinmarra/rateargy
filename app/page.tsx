@@ -3,9 +3,10 @@
 import { useState, useEffect, useCallback, useRef } from "react"
 import { motion, AnimatePresence } from "framer-motion"
 import dynamic from "next/dynamic"
-import { Calculator, BarChart2, Trophy } from "lucide-react"
+import { Calculator, BarChart2, Trophy, ArrowRight, Shield, Zap, TrendingUp, BookOpen, CreditCard, Banknote, PiggyBank } from "lucide-react"
 import { TARJETAS, rankear, type Gastos, type CatKey } from "@/components/tarjetas-data"
 import { formatARS, CatIcon } from "@/components/ResultadosTarjetas"
+import BancoLogo from "@/components/BancoLogo"
 
 const ResultadosTarjetas = dynamic(() => import("@/components/ResultadosTarjetas"), { ssr: false })
 
@@ -27,10 +28,31 @@ const GASTOS_VACIO: Gastos = {
   online: 0, viajes: 0, transporte: 0, servicios: 0,
 }
 
+const STATS = [
+  { value: "13", label: "tarjetas comparadas" },
+  { value: "100%", label: "gratis, sin registro" },
+  { value: "Lunes", label: "actualización semanal" },
+]
+
 const COMO_FUNCIONA = [
-  { Icono: Calculator, num: "01", title: "Ingresá tus gastos",  desc: "Sin registro ni datos personales." },
-  { Icono: BarChart2,  num: "02", title: "Calculamos tu ahorro", desc: "Comparamos 13 tarjetas en tiempo real." },
-  { Icono: Trophy,     num: "03", title: "Elegís la mejor",     desc: "Ranking ordenado por ahorro real." },
+  { Icono: Calculator, num: "01", title: "Ingresá tus gastos",   desc: "Sin registro ni datos personales. Todo queda en tu navegador." },
+  { Icono: BarChart2,  num: "02", title: "Calculamos tu ahorro", desc: "Comparamos 13 tarjetas en tiempo real usando sus beneficios reales." },
+  { Icono: Trophy,     num: "03", title: "Elegís la mejor",      desc: "Ranking ordenado por ahorro real mensual para tu perfil de gasto." },
+]
+
+const BENEFICIOS_DESTACADOS = [
+  { banco: "Patagonia Visa",     beneficio: "35% La Anónima",  cat: "Supermercados", color: "#2d6a4f" },
+  { banco: "Supervielle Visa",   beneficio: "50% farmacias",   cat: "Farmacia",      color: "#e85d04" },
+  { banco: "BNA Gold",           beneficio: "30% super mié.",  cat: "Supermercados", color: "#003580" },
+  { banco: "Cuenta DNI",         beneficio: "30% delivery finde", cat: "Delivery",   color: "#0f766e" },
+  { banco: "Naranja X",          beneficio: "20% online",      cat: "Online",        color: "#e05a00" },
+  { banco: "BBVA Platinum",      beneficio: "15% viajes",      cat: "Viajes",        color: "#004481" },
+]
+
+const GUIAS = [
+  { Icono: CreditCard, titulo: "Cómo elegir tu tarjeta", desc: "Los 5 factores clave para no equivocarte en Argentina.", href: "/articulos/como-elegir-tarjeta-de-credito-argentina-2025" },
+  { Icono: Banknote,   titulo: "Dólar MEP paso a paso",  desc: "La forma legal y sin límite de dolarizar tus ahorros.", href: "/articulos/como-comprar-dolar-mep-homebanking" },
+  { Icono: PiggyBank,  titulo: "MP vs Ualá: cuál rinde más", desc: "Comparamos tasas, beneficios y funcionalidades.", href: "/articulos/mercado-pago-vs-uala-cual-rinde-mas" },
 ]
 
 // ─── URL helpers ─────────────────────────────────────────────────────────────
@@ -86,6 +108,154 @@ function Toast({ msg }: { msg: string | null }) {
   )
 }
 
+// ─── DashboardPreview (hero widget) ──────────────────────────────────────────
+
+function DashboardPreview() {
+  // Mock de los top 3 resultados para un perfil típico
+  const mockTop = [
+    { id: "galicia-eminent",  bancoId: "galicia-eminent",  nombre: "Galicia Éminent",  banco: "Banco Galicia", ahorro: 18400, gradiente: "linear-gradient(135deg, #1a7f4f 0%, #0d4f31 100%)" },
+    { id: "santander-gold",   bancoId: "santander-gold",   nombre: "Santander Gold",   banco: "Santander",     ahorro: 14200, gradiente: "linear-gradient(135deg, #cc0000 0%, #ff4444 100%)" },
+    { id: "naranja-x",        bancoId: "naranja-x",        nombre: "Naranja X",        banco: "Naranja X",     ahorro: 11800, gradiente: "linear-gradient(135deg, #e05a00 0%, #ff8c42 100%)" },
+  ]
+
+  return (
+    <motion.div
+      initial={{ opacity: 0, y: 24, scale: 0.97 }}
+      animate={{ opacity: 1, y: 0, scale: 1 }}
+      transition={{ duration: 0.55, delay: 0.2 }}
+      style={{
+        background: "rgba(255,255,255,0.95)",
+        backdropFilter: "blur(24px)", WebkitBackdropFilter: "blur(24px)",
+        border: "1px solid rgba(0,0,0,0.07)",
+        borderRadius: 24,
+        boxShadow: "0 32px 80px rgba(0,0,0,0.1), 0 0 0 1px rgba(0,0,0,0.03)",
+        padding: 24,
+        maxWidth: 380,
+        width: "100%",
+      }}
+    >
+      {/* Header del widget */}
+      <div style={{ display: "flex", alignItems: "center", justifyContent: "space-between", marginBottom: 18 }}>
+        <div>
+          <p style={{ fontSize: 11, fontWeight: 700, letterSpacing: "0.1em", textTransform: "uppercase", color: "#94a3b8", margin: 0 }}>
+            Tu ranking
+          </p>
+          <p style={{ fontSize: 14, fontWeight: 600, color: "#111827", margin: "2px 0 0" }}>
+            Perfil: gasto típico mensual
+          </p>
+        </div>
+        <div style={{
+          background: "#f0fdf4", border: "1px solid #d1fae5",
+          borderRadius: 8, padding: "4px 10px",
+          fontSize: 11, fontWeight: 700, color: "#065f46",
+        }}>
+          13 tarjetas
+        </div>
+      </div>
+
+      {/* Top 3 cards */}
+      <div style={{ display: "flex", flexDirection: "column", gap: 10 }}>
+        {mockTop.map((t, i) => (
+          <div key={t.id} style={{
+            display: "flex", alignItems: "center", gap: 12,
+            padding: "12px 14px",
+            background: i === 0 ? "linear-gradient(135deg, #f0fdf4 0%, #dcfce7 100%)" : "#f8fafc",
+            border: `1.5px solid ${i === 0 ? "#86efac" : "#e2e8f0"}`,
+            borderRadius: 14,
+          }}>
+            {/* Posición */}
+            <div style={{
+              width: 28, height: 28, borderRadius: "50%",
+              background: i === 0 ? "#10b981" : "#e2e8f0",
+              color: i === 0 ? "#fff" : "#64748b",
+              display: "flex", alignItems: "center", justifyContent: "center",
+              fontSize: 13, fontWeight: 800, flexShrink: 0,
+            }}>
+              {i + 1}
+            </div>
+
+            {/* Mini card */}
+            <div style={{
+              width: 36, height: 22, borderRadius: 5,
+              background: t.gradiente, flexShrink: 0,
+              boxShadow: "0 2px 6px rgba(0,0,0,0.15)",
+            }} />
+
+            {/* Nombre */}
+            <div style={{ flex: 1, minWidth: 0 }}>
+              <p style={{ fontSize: 13, fontWeight: 600, color: "#111827", margin: 0, whiteSpace: "nowrap", overflow: "hidden", textOverflow: "ellipsis" }}>
+                {t.nombre}
+              </p>
+              <p style={{ fontSize: 11, color: "#6b7280", margin: 0 }}>{t.banco}</p>
+            </div>
+
+            {/* Ahorro */}
+            <div style={{ textAlign: "right", flexShrink: 0 }}>
+              <p style={{ fontSize: 14, fontWeight: 800, color: i === 0 ? "#059669" : "#374151", margin: 0 }}>
+                {formatARS(t.ahorro)}
+              </p>
+              <p style={{ fontSize: 10, color: "#94a3b8", margin: 0 }}>/ mes</p>
+            </div>
+          </div>
+        ))}
+      </div>
+
+      {/* CTA */}
+      <div style={{ marginTop: 16, paddingTop: 16, borderTop: "1px solid #f1f5f9" }}>
+        <p style={{ fontSize: 12, color: "#94a3b8", margin: "0 0 10px", textAlign: "center" }}>
+          ↓ Ingresá tus gastos reales para ver tu ranking personalizado
+        </p>
+        <div style={{ display: "flex", gap: 8 }}>
+          {[
+            { icon: Shield, label: "Sin registro" },
+            { icon: Zap,    label: "En segundos" },
+            { icon: TrendingUp, label: "100% gratis" },
+          ].map(({ icon: Icon, label }) => (
+            <div key={label} style={{
+              flex: 1, display: "flex", alignItems: "center", justifyContent: "center", gap: 4,
+              background: "#f8fafc", borderRadius: 8, padding: "6px 4px",
+              fontSize: 10, fontWeight: 600, color: "#64748b",
+            }}>
+              <Icon size={10} />
+              {label}
+            </div>
+          ))}
+        </div>
+      </div>
+    </motion.div>
+  )
+}
+
+// ─── MarqueeLogos ─────────────────────────────────────────────────────────────
+
+function MarqueeLogos() {
+  const items = [...TARJETAS, ...TARJETAS] // duplicar para loop
+  return (
+    <div style={{ overflow: "hidden", position: "relative", padding: "6px 0" }}>
+      {/* Fade izquierdo */}
+      <div style={{ position: "absolute", left: 0, top: 0, bottom: 0, width: 80, zIndex: 1,
+        background: "linear-gradient(to right, #fafafa, transparent)", pointerEvents: "none" }} />
+      {/* Fade derecho */}
+      <div style={{ position: "absolute", right: 0, top: 0, bottom: 0, width: 80, zIndex: 1,
+        background: "linear-gradient(to left, #fafafa, transparent)", pointerEvents: "none" }} />
+
+      <div className="partners-track" style={{ display: "flex", gap: 16, alignItems: "center" }}>
+        {items.map((t, i) => (
+          <div key={`${t.id}-${i}`} style={{
+            display: "flex", alignItems: "center", gap: 8,
+            background: "#fff", border: "1px solid #e2e8f0",
+            borderRadius: 999, padding: "8px 16px",
+            flexShrink: 0, whiteSpace: "nowrap",
+          }}>
+            <BancoLogo bancoId={t.bancoId} nombre={t.banco} size={20} />
+            <span style={{ fontSize: 13, fontWeight: 600, color: "#374151" }}>{t.banco}</span>
+          </div>
+        ))}
+      </div>
+    </div>
+  )
+}
+
 // ─── Page ─────────────────────────────────────────────────────────────────────
 
 export default function Home() {
@@ -95,8 +265,8 @@ export default function Home() {
   const [tarjetaActual, setTarjetaActual] = useState("")
   const [toastMsg, setToastMsg]     = useState<string | null>(null)
 
-  // PROBLEMA 1 — ref para scroll preciso (evita quedar bajo el sticky header)
-  const resultadosRef = useRef<HTMLDivElement>(null)
+  const resultadosRef  = useRef<HTMLDivElement>(null)
+  const calculadoraRef = useRef<HTMLDivElement>(null)
 
   useEffect(() => {
     const fromURL = loadFromURL()
@@ -114,7 +284,6 @@ export default function Home() {
     setTimeout(() => {
       setResultados(rankear(gastos))
       setLoading(false)
-      // PROBLEMA 1 FIX — scroll via ref + scrollMarginTop compensa el sticky header
       setTimeout(() => {
         resultadosRef.current?.scrollIntoView({ behavior: "smooth", block: "start" })
       }, 100)
@@ -140,6 +309,10 @@ export default function Home() {
 
   const totalGasto = getTotalGasto(gastos)
 
+  const scrollToCalculadora = () => {
+    calculadoraRef.current?.scrollIntoView({ behavior: "smooth", block: "start" })
+  }
+
   // ────────────────────────────────────────────────────────────────────────────
   return (
     <>
@@ -148,7 +321,6 @@ export default function Home() {
           0%   { transform: translateX(-100%); }
           100% { transform: translateX(300%); }
         }
-        /* Punto pulsante del header */
         @keyframes pulse-dot {
           0%, 100% { opacity: 1; transform: scale(1); }
           50%       { opacity: 0.5; transform: scale(1.4); }
@@ -156,311 +328,409 @@ export default function Home() {
         input[type=number]::-webkit-inner-spin-button,
         input[type=number]::-webkit-outer-spin-button { -webkit-appearance: none; margin: 0; }
         input[type=number] { -moz-appearance: textfield; }
-        /* Calculadora card — padding responsive */
         .calc-card { padding: 40px; }
         @media (max-width: 640px) { .calc-card { padding: 20px; } }
+        .hero-grid {
+          display: grid;
+          grid-template-columns: 1fr 1fr;
+          gap: 48px;
+          align-items: center;
+        }
+        @media (max-width: 900px) {
+          .hero-grid { grid-template-columns: 1fr; }
+          .hero-preview { display: none; }
+        }
+        .beneficios-grid {
+          display: grid;
+          grid-template-columns: repeat(3, 1fr);
+          gap: 16px;
+        }
+        @media (max-width: 768px) { .beneficios-grid { grid-template-columns: repeat(2, 1fr); } }
+        @media (max-width: 480px) { .beneficios-grid { grid-template-columns: 1fr; } }
+        .guias-grid {
+          display: grid;
+          grid-template-columns: repeat(3, 1fr);
+          gap: 20px;
+        }
+        @media (max-width: 768px) { .guias-grid { grid-template-columns: 1fr; } }
       `}</style>
 
-      {/* ── Wrapper principal ── */}
       <div style={{ position: "relative", minHeight: "100vh", background: "#fafafa", overflow: "hidden" }}>
 
         {/* Orbs decorativos */}
+        <div aria-hidden style={{ position:"absolute", width:700, height:700, borderRadius:"50%",
+          background:"radial-gradient(circle, rgba(16,185,129,0.07) 0%, transparent 70%)",
+          top:-250, left:-150, pointerEvents:"none", zIndex:0 }} />
         <div aria-hidden style={{ position:"absolute", width:600, height:600, borderRadius:"50%",
-          background:"radial-gradient(circle, rgba(16,185,129,0.08) 0%, transparent 70%)",
-          top:-200, left:-100, pointerEvents:"none", zIndex:0 }} />
-        <div aria-hidden style={{ position:"absolute", width:600, height:600, borderRadius:"50%",
-          background:"radial-gradient(circle, rgba(99,102,241,0.06) 0%, transparent 70%)",
-          bottom:-100, right:-150, pointerEvents:"none", zIndex:0 }} />
+          background:"radial-gradient(circle, rgba(99,102,241,0.05) 0%, transparent 70%)",
+          bottom:0, right:-200, pointerEvents:"none", zIndex:0 }} />
 
-        {/* ════════════════════════════════════════════════════════════
-            SECCIÓN 1 — HEADER — PROBLEMA 8
-        ════════════════════════════════════════════════════════════ */}
+        {/* ════ HEADER ════ */}
         <header style={{
-          position: "sticky", top: 0, zIndex: 50,
-          height: 64,                                   // PROBLEMA 1 + 8: height exacto
+          position: "sticky", top: 0, zIndex: 50, height: 64,
           background: "rgba(255,255,255,0.82)",
           backdropFilter: "blur(14px)", WebkitBackdropFilter: "blur(14px)",
           borderBottom: "1px solid rgba(0,0,0,0.06)",
         }}>
           <div style={{
-            maxWidth: 960, margin: "0 auto", padding: "0 24px",
+            maxWidth: 1120, margin: "0 auto", padding: "0 24px",
             height: "100%", display: "flex", alignItems: "center", justifyContent: "space-between",
           }}>
-            {/* Logo + punto pulsante */}
             <a href="/" style={{ textDecoration: "none", flexShrink: 0, display: "flex", alignItems: "center", gap: 8 }}>
               <span style={{ fontSize: 22, fontWeight: 800, letterSpacing: "-0.03em" }}>
                 <span style={{ color: "#10b981" }}>r</span>
                 <span style={{ color: "#111827" }}>ateargy</span>
               </span>
-              {/* Punto verde pulsante */}
               <span style={{
                 display: "inline-block", width: 8, height: 8, borderRadius: "50%",
-                background: "#10b981",
-                animation: "pulse-dot 2s ease-in-out infinite",
+                background: "#10b981", animation: "pulse-dot 2s ease-in-out infinite",
               }} />
             </a>
 
-            {/* Badge derecha */}
-            <div style={{
-              display: "inline-flex", alignItems: "center", gap: 6,
-              background: "#f0fdf4", border: "1px solid #d1fae5",
-              borderRadius: 999, padding: "6px 14px",
-              fontSize: 12, fontWeight: 600, color: "#065f46", flexShrink: 0,
-            }}>
-              ✓ Actualizado cada lunes
-            </div>
+            <nav style={{ display: "flex", alignItems: "center", gap: 8 }}>
+              <a href="/tarjetas" style={{ fontSize: 13, fontWeight: 600, color: "#374151", textDecoration: "none", padding: "6px 12px", borderRadius: 8, transition: "background 0.15s" }}
+                onMouseEnter={e => e.currentTarget.style.background="#f1f5f9"}
+                onMouseLeave={e => e.currentTarget.style.background="transparent"}>
+                Tarjetas
+              </a>
+              <a href="/inversiones" style={{ fontSize: 13, fontWeight: 600, color: "#374151", textDecoration: "none", padding: "6px 12px", borderRadius: 8, transition: "background 0.15s" }}
+                onMouseEnter={e => e.currentTarget.style.background="#f1f5f9"}
+                onMouseLeave={e => e.currentTarget.style.background="transparent"}>
+                Inversiones
+              </a>
+              <div style={{
+                display: "inline-flex", alignItems: "center", gap: 6,
+                background: "#f0fdf4", border: "1px solid #d1fae5",
+                borderRadius: 999, padding: "6px 14px",
+                fontSize: 12, fontWeight: 600, color: "#065f46",
+              }}>
+                ✓ Actualizado cada lunes
+              </div>
+            </nav>
           </div>
         </header>
 
-        {/* ── Contenido ── */}
         <div style={{
           position: "relative", zIndex: 1,
-          maxWidth: 960, margin: "0 auto", padding: "0 24px 80px",
-          backgroundImage: `url("data:image/svg+xml,%3Csvg width='20' height='20' viewBox='0 0 20 20' xmlns='http://www.w3.org/2000/svg'%3E%3Ccircle cx='1' cy='1' r='1' fill='%23000' fill-opacity='0.06'/%3E%3C/svg%3E")`,
-          backgroundRepeat: "repeat",
+          maxWidth: 1120, margin: "0 auto", padding: "0 24px 0",
         }}>
 
-          {/* ════════════════════════════════════════════════════════════
-              SECCIÓN 2 — HERO — PROBLEMAS 2 + 3
-          ════════════════════════════════════════════════════════════ */}
-          <section style={{ paddingTop: 80, paddingBottom: 64 }}>
+          {/* ════ SECCIÓN 1: HERO (dos columnas) ════ */}
+          <section style={{ paddingTop: 80, paddingBottom: 72 }}>
+            <div className="hero-grid">
 
-            {/* Eyebrow */}
-            <motion.p
-              initial={{ opacity: 0, y: 8 }} animate={{ opacity: 1, y: 0 }} transition={{ duration: 0.4 }}
-              style={{ fontSize: 11, fontWeight: 700, letterSpacing: "0.12em", textTransform: "uppercase", color: "#10b981", marginBottom: 0 }}
-            >
-              Comparador de tarjetas · Argentina · 2026
-            </motion.p>
+              {/* Columna izquierda */}
+              <div>
+                {/* Eyebrow */}
+                <motion.div
+                  initial={{ opacity: 0, y: 8 }} animate={{ opacity: 1, y: 0 }} transition={{ duration: 0.4 }}
+                  style={{ display: "inline-flex", alignItems: "center", gap: 6,
+                    background: "#f0fdf4", border: "1px solid #d1fae5",
+                    borderRadius: 999, padding: "5px 12px",
+                    fontSize: 11, fontWeight: 700, letterSpacing: "0.1em",
+                    textTransform: "uppercase", color: "#065f46", marginBottom: 24 }}
+                >
+                  <span style={{ width: 6, height: 6, borderRadius: "50%", background: "#10b981", display: "inline-block" }} />
+                  Comparador financiero · Argentina · 2026
+                </motion.div>
 
-            {/* H1 — PROBLEMA 2: 900 weight, clamp 36→64px */}
-            <motion.h1
-              initial={{ opacity: 0, y: 16 }} animate={{ opacity: 1, y: 0 }} transition={{ duration: 0.45, delay: 0.05 }}
-              style={{
-                fontSize: "clamp(36px, 5.5vw, 64px)",
-                fontWeight: 900,
-                letterSpacing: "-0.04em",
-                lineHeight: 1.0,
-                color: "#0a0a0a",
-                margin: "24px 0 0",   // PROBLEMA 3: 24px entre eyebrow y H1
-              }}
-            >
-              La tarjeta que más
-              <br />
-              te conviene,{" "}
-              <span style={{
-                background: "linear-gradient(135deg, #10b981 0%, #6366f1 100%)",
-                WebkitBackgroundClip: "text", WebkitTextFillColor: "transparent", backgroundClip: "text",
-              }}>
-                calculada.
-              </span>
-            </motion.h1>
+                {/* H1 */}
+                <motion.h1
+                  initial={{ opacity: 0, y: 16 }} animate={{ opacity: 1, y: 0 }} transition={{ duration: 0.45, delay: 0.05 }}
+                  style={{
+                    fontSize: "clamp(36px, 4.5vw, 60px)",
+                    fontWeight: 900, letterSpacing: "-0.04em",
+                    lineHeight: 1.0, color: "#0a0a0a",
+                    margin: "0 0 24px",
+                  }}
+                >
+                  La tarjeta que más<br />
+                  te conviene,{" "}
+                  <span style={{
+                    background: "linear-gradient(135deg, #10b981 0%, #6366f1 100%)",
+                    WebkitBackgroundClip: "text", WebkitTextFillColor: "transparent", backgroundClip: "text",
+                  }}>
+                    calculada.
+                  </span>
+                </motion.h1>
 
-            {/* Subtítulo — PROBLEMA 2: 20px, maxWidth 560, lineHeight 1.7 */}
-            <motion.p
-              initial={{ opacity: 0, y: 12 }} animate={{ opacity: 1, y: 0 }} transition={{ duration: 0.4, delay: 0.1 }}
-              style={{
-                fontSize: 20, fontWeight: 400, color: "#4b5563",
-                maxWidth: 560, lineHeight: 1.7,
-                margin: "24px 0 0",   // PROBLEMA 3: 24px entre H1 y subtítulo
-              }}
-            >
-              Ingresá tus gastos mensuales y te mostramos exactamente cuánto
-              ahorrás con cada tarjeta argentina. 13 tarjetas comparadas.
-            </motion.p>
+                {/* Subtítulo */}
+                <motion.p
+                  initial={{ opacity: 0, y: 12 }} animate={{ opacity: 1, y: 0 }} transition={{ duration: 0.4, delay: 0.1 }}
+                  style={{ fontSize: 18, fontWeight: 400, color: "#4b5563",
+                    maxWidth: 480, lineHeight: 1.7, margin: "0 0 36px" }}
+                >
+                  Ingresá tus gastos mensuales y te mostramos exactamente
+                  cuánto ahorrás con cada tarjeta argentina. 13 tarjetas. Gratis.
+                </motion.p>
+
+                {/* CTA Button */}
+                <motion.div
+                  initial={{ opacity: 0, y: 8 }} animate={{ opacity: 1, y: 0 }} transition={{ duration: 0.4, delay: 0.15 }}
+                  style={{ display: "flex", gap: 12, flexWrap: "wrap" }}
+                >
+                  <motion.button
+                    onClick={scrollToCalculadora}
+                    whileHover={{ y: -2, boxShadow: "0 16px 40px rgba(16,185,129,0.35)" }}
+                    whileTap={{ scale: 0.97 }}
+                    style={{
+                      position: "relative", overflow: "hidden",
+                      display: "inline-flex", alignItems: "center", gap: 8,
+                      background: "linear-gradient(135deg, #10b981 0%, #059669 100%)",
+                      color: "#fff", border: "none", borderRadius: 14,
+                      padding: "14px 28px", fontSize: 15, fontWeight: 700,
+                      cursor: "pointer",
+                      boxShadow: "0 8px 24px rgba(16,185,129,0.3)",
+                    }}
+                  >
+                    <span aria-hidden style={{
+                      position:"absolute", top:0, bottom:0, width:"40%",
+                      background:"linear-gradient(90deg, transparent 0%, rgba(255,255,255,0.15) 50%, transparent 100%)",
+                      animation:"slideShimmer 2.5s infinite", pointerEvents:"none",
+                    }} />
+                    Calculá tu ahorro gratis
+                    <ArrowRight size={16} />
+                  </motion.button>
+                </motion.div>
+
+                {/* Stats strip */}
+                <motion.div
+                  initial={{ opacity: 0 }} animate={{ opacity: 1 }} transition={{ duration: 0.5, delay: 0.25 }}
+                  style={{ display: "flex", gap: 28, marginTop: 36, flexWrap: "wrap" }}
+                >
+                  {STATS.map(({ value, label }) => (
+                    <div key={label}>
+                      <p style={{ fontSize: 24, fontWeight: 800, color: "#111827", margin: 0, letterSpacing: "-0.02em" }}>
+                        {value}
+                      </p>
+                      <p style={{ fontSize: 12, color: "#6b7280", margin: "2px 0 0" }}>{label}</p>
+                    </div>
+                  ))}
+                </motion.div>
+              </div>
+
+              {/* Columna derecha — dashboard preview */}
+              <div className="hero-preview" style={{ display: "flex", justifyContent: "flex-end" }}>
+                <DashboardPreview />
+              </div>
+            </div>
           </section>
 
-          {/* ════════════════════════════════════════════════════════════
-              SECCIÓN 3 — CALCULADORA — PROBLEMAS 2 + 3
-          ════════════════════════════════════════════════════════════ */}
-          <motion.section
-            className="calc-card"
-            initial={{ opacity: 0, y: 20 }} animate={{ opacity: 1, y: 0 }} transition={{ duration: 0.5, delay: 0.15 }}
-            style={{
-              background: "rgba(255,255,255,0.92)",
-              backdropFilter: "blur(20px)", WebkitBackdropFilter: "blur(20px)",
-              border: "1px solid rgba(255,255,255,0.85)",
-              boxShadow: "0 32px 80px rgba(0,0,0,0.08), 0 0 0 1px rgba(0,0,0,0.04), inset 0 1px 0 rgba(255,255,255,1)",
-              borderRadius: 24,
-              marginTop: 48,          // PROBLEMA 3: 48px entre subtítulo y card
-            }}
-          >
-
-            {/* Grid inputs — PROBLEMA 2: labels 13px, inputs 16px, gap 20px */}
-            <div style={{ display: "grid", gridTemplateColumns: "repeat(auto-fill, minmax(200px, 1fr))", gap: 20, marginBottom: 24 }}>
-              {CAT_FIELDS.map(({ label, key }, idx) => (
-                <motion.div key={key}
-                  initial={{ opacity: 0, y: 12 }} animate={{ opacity: 1, y: 0 }}
-                  transition={{ duration: 0.3, delay: idx * 0.06 }}
-                >
-                  <label htmlFor={`input-${key}`} style={{
-                    display: "flex", alignItems: "center", gap: 6,
-                    fontSize: 13,               // PROBLEMA 2
-                    fontWeight: 600,
-                    color: "#374151",           // PROBLEMA 2
-                    letterSpacing: "0.02em",    // PROBLEMA 2
-                    marginBottom: 8,            // PROBLEMA 3
-                    cursor: "pointer",
-                  }}>
-                    <CatIcon catKey={key} className="w-3.5 h-3.5 flex-shrink-0" style={{ color: "#94a3b8" }} />
-                    {label}
-                  </label>
-
-                  <div style={{ position: "relative" }}>
-                    <div style={{ position:"absolute", inset:0, right:"auto", width:38,
-                      display:"flex", alignItems:"center", justifyContent:"center", pointerEvents:"none" }}>
-                      <CatIcon catKey={key} className="w-4 h-4" style={{ color: "#94a3b8" }} />
-                    </div>
-                    <div style={{ position:"absolute", inset:0, left:36, right:"auto", width:16,
-                      display:"flex", alignItems:"center", pointerEvents:"none",
-                      fontSize:15, color:"#94a3b8", fontWeight:500, userSelect:"none" }}>$</div>
-                    <input
-                      id={`input-${key}`}
-                      type="number" min="0" placeholder="0"
-                      value={gastos[key] === 0 ? "" : gastos[key]}
-                      onChange={(e) => updateGasto(key, e.target.value)}
-                      style={{
-                        width:"100%", boxSizing:"border-box",
-                        padding:"12px 14px 12px 54px",
-                        background:"#f8fafc", border:"1.5px solid #e2e8f0",
-                        borderRadius:12,
-                        fontSize: 16,           // PROBLEMA 2
-                        color:"#0f172a", outline:"none",
-                        transition:"border-color 0.15s, box-shadow 0.15s",
-                      }}
-                      onFocus={(e) => { e.target.style.borderColor="#10b981"; e.target.style.boxShadow="0 0 0 3px rgba(16,185,129,0.1)"; e.target.style.background="#fff" }}
-                      onBlur={(e)  => { e.target.style.borderColor="#e2e8f0"; e.target.style.boxShadow="none"; e.target.style.background="#f8fafc" }}
-                    />
-                  </div>
-                </motion.div>
-              ))}
+          {/* ════ MARQUEE — logos bancos ════ */}
+          <section style={{ marginBottom: 80 }}>
+            <p style={{ fontSize: 11, fontWeight: 700, letterSpacing: "0.1em", textTransform: "uppercase",
+              color: "#94a3b8", textAlign: "center", marginBottom: 20 }}>
+              Comparamos 13 tarjetas líderes de Argentina
+            </p>
+            <div className="partners-wrap">
+              <MarqueeLogos />
             </div>
+          </section>
+        </div>
 
-            {/* Select tarjeta actual */}
-            <div style={{ marginBottom: 24 }}>
-              <label style={{ display:"block", fontSize:13, fontWeight:600, color:"#374151",
-                letterSpacing:"0.02em", marginBottom:8 }}>
-                Tengo actualmente:
-              </label>
-              <select value={tarjetaActual} onChange={(e) => setTarjetaActual(e.target.value)}
-                style={{ background:"#f8fafc", border:"1.5px solid #e2e8f0", borderRadius:12,
-                  padding:"11px 14px", fontSize:14, color:"#374151", outline:"none",
-                  width:"100%", maxWidth:320, cursor:"pointer" }}>
-                <option value="">Ninguna / no sé</option>
-                {TARJETAS.map((t) => (
-                  <option key={t.id} value={t.id}>{t.nombre} — {t.banco}</option>
-                ))}
-              </select>
-            </div>
+        {/* ════ SECCIÓN CALCULADORA ════ */}
+        <div style={{
+          background: "linear-gradient(180deg, #fafafa 0%, #f0fdf4 50%, #fafafa 100%)",
+          padding: "0 24px 80px",
+        }}>
+          <div style={{ maxWidth: 1120, margin: "0 auto" }}>
 
-            {/* Gasto total en tiempo real */}
-            {totalGasto > 0 && (
-              <p style={{ fontSize:13, color:"#94a3b8", marginBottom:16, textAlign:"center" }}>
-                Gasto total ingresado:{" "}
-                <strong style={{ color:"#475569" }}>{formatARS(totalGasto)}/mes</strong>
+            {/* Encabezado de sección */}
+            <div style={{ textAlign: "center", marginBottom: 48 }}>
+              <p style={{ fontSize: 11, fontWeight: 700, letterSpacing: "0.12em", textTransform: "uppercase",
+                color: "#10b981", margin: "0 0 12px" }}>
+                Calculadora personalizada
               </p>
-            )}
+              <h2 style={{ fontSize: "clamp(28px, 3.5vw, 44px)", fontWeight: 900,
+                letterSpacing: "-0.03em", color: "#0a0a0a", margin: "0 0 16px" }}>
+                ¿Cuánto podés ahorrar?
+              </h2>
+              <p style={{ fontSize: 17, color: "#6b7280", maxWidth: 480, margin: "0 auto", lineHeight: 1.6 }}>
+                Ingresá tus gastos mensuales y calculamos el ranking al instante.
+              </p>
+            </div>
 
-            {/* Botón calcular — PROBLEMA 3: marginTop 28px */}
-            <motion.button
-              onClick={handleCalcular}
-              disabled={loading || totalGasto === 0}
-              whileHover={!loading && totalGasto > 0 ? { y: -1, boxShadow: "0 12px 32px rgba(16,185,129,0.4)" } : {}}
-              whileTap={!loading && totalGasto > 0 ? { scale: 0.98 } : {}}
+            {/* Card de la calculadora */}
+            <motion.section
+              ref={calculadoraRef}
+              className="calc-card"
+              initial={{ opacity: 0, y: 20 }} animate={{ opacity: 1, y: 0 }} transition={{ duration: 0.5, delay: 0.15 }}
               style={{
-                position:"relative", overflow:"hidden",
-                width:"100%", height:52, marginTop: 28,
-                background: totalGasto === 0 || loading
-                  ? "linear-gradient(135deg, #94a3b8 0%, #64748b 100%)"
-                  : "linear-gradient(135deg, #10b981 0%, #059669 100%)",
-                color:"white", border:"none", borderRadius:14,
-                fontSize:15, fontWeight:600,
-                cursor: totalGasto === 0 || loading ? "not-allowed" : "pointer",
-                display:"flex", alignItems:"center", justifyContent:"center", gap:8,
-                boxShadow: totalGasto > 0 && !loading ? "0 8px 24px rgba(16,185,129,0.3)" : "none",
-                transition:"background 0.2s, box-shadow 0.2s",
-                marginBottom:12,
+                background: "rgba(255,255,255,0.95)",
+                backdropFilter: "blur(20px)", WebkitBackdropFilter: "blur(20px)",
+                border: "1px solid rgba(255,255,255,0.9)",
+                boxShadow: "0 32px 80px rgba(0,0,0,0.08), 0 0 0 1px rgba(0,0,0,0.03), inset 0 1px 0 rgba(255,255,255,1)",
+                borderRadius: 24,
+                scrollMarginTop: 80,
               }}
             >
-              {!loading && totalGasto > 0 && (
-                <span aria-hidden style={{
-                  position:"absolute", top:0, bottom:0, width:"40%",
-                  background:"linear-gradient(90deg, transparent 0%, rgba(255,255,255,0.18) 50%, transparent 100%)",
-                  animation:"slideShimmer 2.2s infinite", pointerEvents:"none",
-                }} />
+              {/* Grid inputs */}
+              <div style={{ display: "grid", gridTemplateColumns: "repeat(auto-fill, minmax(200px, 1fr))", gap: 20, marginBottom: 24 }}>
+                {CAT_FIELDS.map(({ label, key }, idx) => (
+                  <motion.div key={key}
+                    initial={{ opacity: 0, y: 12 }} animate={{ opacity: 1, y: 0 }}
+                    transition={{ duration: 0.3, delay: idx * 0.06 }}
+                  >
+                    <label htmlFor={`input-${key}`} style={{
+                      display: "flex", alignItems: "center", gap: 6,
+                      fontSize: 13, fontWeight: 600, color: "#374151",
+                      letterSpacing: "0.02em", marginBottom: 8, cursor: "pointer",
+                    }}>
+                      <CatIcon catKey={key} className="w-3.5 h-3.5 flex-shrink-0" style={{ color: "#94a3b8" }} />
+                      {label}
+                    </label>
+
+                    <div style={{ position: "relative" }}>
+                      <div style={{ position:"absolute", inset:0, right:"auto", width:38,
+                        display:"flex", alignItems:"center", justifyContent:"center", pointerEvents:"none" }}>
+                        <CatIcon catKey={key} className="w-4 h-4" style={{ color: "#94a3b8" }} />
+                      </div>
+                      <div style={{ position:"absolute", inset:0, left:36, right:"auto", width:16,
+                        display:"flex", alignItems:"center", pointerEvents:"none",
+                        fontSize:15, color:"#94a3b8", fontWeight:500, userSelect:"none" }}>$</div>
+                      <input
+                        id={`input-${key}`}
+                        type="number" min="0" placeholder="0"
+                        value={gastos[key] === 0 ? "" : gastos[key]}
+                        onChange={(e) => updateGasto(key, e.target.value)}
+                        style={{
+                          width:"100%", boxSizing:"border-box",
+                          padding:"12px 14px 12px 54px",
+                          background:"#f8fafc", border:"1.5px solid #e2e8f0",
+                          borderRadius:12, fontSize: 16, color:"#0f172a", outline:"none",
+                          transition:"border-color 0.15s, box-shadow 0.15s",
+                        }}
+                        onFocus={(e) => { e.target.style.borderColor="#10b981"; e.target.style.boxShadow="0 0 0 3px rgba(16,185,129,0.1)"; e.target.style.background="#fff" }}
+                        onBlur={(e)  => { e.target.style.borderColor="#e2e8f0"; e.target.style.boxShadow="none"; e.target.style.background="#f8fafc" }}
+                      />
+                    </div>
+                  </motion.div>
+                ))}
+              </div>
+
+              {/* Select tarjeta actual */}
+              <div style={{ marginBottom: 24 }}>
+                <label style={{ display:"block", fontSize:13, fontWeight:600, color:"#374151",
+                  letterSpacing:"0.02em", marginBottom:8 }}>
+                  Tengo actualmente:
+                </label>
+                <select value={tarjetaActual} onChange={(e) => setTarjetaActual(e.target.value)}
+                  style={{ background:"#f8fafc", border:"1.5px solid #e2e8f0", borderRadius:12,
+                    padding:"11px 14px", fontSize:14, color:"#374151", outline:"none",
+                    width:"100%", maxWidth:320, cursor:"pointer" }}>
+                  <option value="">Ninguna / no sé</option>
+                  {TARJETAS.map((t) => (
+                    <option key={t.id} value={t.id}>{t.nombre} — {t.banco}</option>
+                  ))}
+                </select>
+              </div>
+
+              {/* Gasto total en tiempo real */}
+              {totalGasto > 0 && (
+                <p style={{ fontSize:13, color:"#94a3b8", marginBottom:16, textAlign:"center" }}>
+                  Gasto total ingresado:{" "}
+                  <strong style={{ color:"#475569" }}>{formatARS(totalGasto)}/mes</strong>
+                </p>
               )}
-              <span style={{ position:"relative", zIndex:1, display:"flex", alignItems:"center", gap:8 }}>
-                {loading ? (
-                  <><Spinner />Calculando…</>
-                ) : (
-                  <>Calcular mi ahorro
-                    <svg viewBox="0 0 20 20" fill="none" stroke="currentColor" strokeWidth="2" strokeLinecap="round" style={{ width:18, height:18 }}>
-                      <path d="M4 10h12M10 4l6 6-6 6" />
-                    </svg>
-                  </>
+
+              {/* Botón calcular */}
+              <motion.button
+                onClick={handleCalcular}
+                disabled={loading || totalGasto === 0}
+                whileHover={!loading && totalGasto > 0 ? { y: -1, boxShadow: "0 12px 32px rgba(16,185,129,0.4)" } : {}}
+                whileTap={!loading && totalGasto > 0 ? { scale: 0.98 } : {}}
+                style={{
+                  position:"relative", overflow:"hidden",
+                  width:"100%", height:52, marginTop: 28,
+                  background: totalGasto === 0 || loading
+                    ? "linear-gradient(135deg, #94a3b8 0%, #64748b 100%)"
+                    : "linear-gradient(135deg, #10b981 0%, #059669 100%)",
+                  color:"white", border:"none", borderRadius:14,
+                  fontSize:15, fontWeight:700,
+                  cursor: totalGasto === 0 || loading ? "not-allowed" : "pointer",
+                  display:"flex", alignItems:"center", justifyContent:"center", gap:8,
+                  boxShadow: totalGasto > 0 && !loading ? "0 8px 24px rgba(16,185,129,0.3)" : "none",
+                  transition:"background 0.2s, box-shadow 0.2s",
+                  marginBottom:12,
+                }}
+              >
+                {!loading && totalGasto > 0 && (
+                  <span aria-hidden style={{
+                    position:"absolute", top:0, bottom:0, width:"40%",
+                    background:"linear-gradient(90deg, transparent 0%, rgba(255,255,255,0.18) 50%, transparent 100%)",
+                    animation:"slideShimmer 2.2s infinite", pointerEvents:"none",
+                  }} />
                 )}
-              </span>
-            </motion.button>
+                <span style={{ position:"relative", zIndex:1, display:"flex", alignItems:"center", gap:8 }}>
+                  {loading ? (
+                    <><Spinner />Calculando…</>
+                  ) : (
+                    <>Calcular mi ahorro
+                      <svg viewBox="0 0 20 20" fill="none" stroke="currentColor" strokeWidth="2" strokeLinecap="round" style={{ width:18, height:18 }}>
+                        <path d="M4 10h12M10 4l6 6-6 6" />
+                      </svg>
+                    </>
+                  )}
+                </span>
+              </motion.button>
 
-            {totalGasto === 0 && !loading && (
-              <p style={{ textAlign:"center", fontSize:12, color:"#94a3b8", margin:"0 0 12px" }}>
-                Ingresá al menos un monto para calcular
-              </p>
-            )}
+              {totalGasto === 0 && !loading && (
+                <p style={{ textAlign:"center", fontSize:12, color:"#94a3b8", margin:"0 0 12px" }}>
+                  Ingresá al menos un monto para calcular
+                </p>
+              )}
 
-            {/* Guardar / cargar perfil */}
-            <div style={{ display:"flex", gap:10 }}>
-              {(["guardar","cargar"] as const).map((action) => (
-                <button key={action}
-                  onClick={action === "guardar" ? handleGuardarPerfil : handleCargarPerfil}
-                  style={{ flex:1, fontSize:13, color:"#64748b", background:"#f8fafc",
-                    border:"1.5px solid #e2e8f0", borderRadius:10, padding:"8px 12px",
-                    cursor:"pointer", transition:"background 0.15s, border-color 0.15s" }}
-                  onMouseEnter={(e) => { e.currentTarget.style.background="#f1f5f9"; e.currentTarget.style.borderColor="#cbd5e1" }}
-                  onMouseLeave={(e) => { e.currentTarget.style.background="#f8fafc"; e.currentTarget.style.borderColor="#e2e8f0" }}
-                >
-                  {action === "guardar" ? "Guardar perfil" : "Cargar perfil"}
-                </button>
-              ))}
-            </div>
-          </motion.section>
+              {/* Guardar / cargar perfil */}
+              <div style={{ display:"flex", gap:10 }}>
+                {(["guardar","cargar"] as const).map((action) => (
+                  <button key={action}
+                    onClick={action === "guardar" ? handleGuardarPerfil : handleCargarPerfil}
+                    style={{ flex:1, fontSize:13, color:"#64748b", background:"#f8fafc",
+                      border:"1.5px solid #e2e8f0", borderRadius:10, padding:"8px 12px",
+                      cursor:"pointer", transition:"background 0.15s, border-color 0.15s" }}
+                    onMouseEnter={(e) => { e.currentTarget.style.background="#f1f5f9"; e.currentTarget.style.borderColor="#cbd5e1" }}
+                    onMouseLeave={(e) => { e.currentTarget.style.background="#f8fafc"; e.currentTarget.style.borderColor="#e2e8f0" }}
+                  >
+                    {action === "guardar" ? "Guardar perfil" : "Cargar perfil"}
+                  </button>
+                ))}
+              </div>
+            </motion.section>
+          </div>
+        </div>
 
-          {/* ════════════════════════════════════════════════════════════
-              SECCIÓN 4 — CÓMO FUNCIONA — PROBLEMA 7
-              Solo se muestra ANTES de calcular
-          ════════════════════════════════════════════════════════════ */}
+        {/* ════ RESULTADOS ════ */}
+        <div style={{ maxWidth: 1120, margin: "0 auto", padding: "0 24px" }}>
+
+          {/* Cómo funciona — solo antes de calcular */}
           <AnimatePresence>
             {resultados === null && (
               <motion.section
                 key="como-funciona"
                 initial={{ opacity: 0, y: 16 }} animate={{ opacity: 1, y: 0 }}
-                exit={{ opacity: 0, y: -8 }} transition={{ duration: 0.4, delay: 0.3 }}
-                style={{ marginTop: 96, marginBottom: 0 }}
+                exit={{ opacity: 0, y: -8 }} transition={{ duration: 0.4, delay: 0.2 }}
+                style={{ padding: "80px 0 0" }}
               >
-                <h2 style={{ fontSize: 32, fontWeight: 800, letterSpacing: "-0.02em",
-                  color: "#111827", marginBottom: 40, textAlign: "center" }}>
+                <h2 style={{ fontSize: "clamp(26px,3vw,40px)", fontWeight: 900, letterSpacing: "-0.02em",
+                  color: "#111827", marginBottom: 48, textAlign: "center" }}>
                   Cómo funciona
                 </h2>
-
-                <div style={{ display: "grid", gridTemplateColumns: "repeat(auto-fit, minmax(240px, 1fr))", gap: 32 }}>
+                <div style={{ display: "grid", gridTemplateColumns: "repeat(auto-fit, minmax(240px, 1fr))", gap: 28 }}>
                   {COMO_FUNCIONA.map(({ Icono, num, title, desc }, i) => (
                     <motion.div key={num}
                       initial={{ opacity: 0, y: 12 }} animate={{ opacity: 1, y: 0 }}
-                      transition={{ delay: 0.35 + i * 0.08 }}
+                      transition={{ delay: 0.25 + i * 0.08 }}
                       style={{ position: "relative", padding: "32px 24px 28px",
-                        background: "rgba(255,255,255,0.85)", borderRadius: 20,
+                        background: "rgba(255,255,255,0.9)", borderRadius: 20,
                         border: "1px solid rgba(0,0,0,0.05)",
                         boxShadow: "0 4px 20px rgba(0,0,0,0.04)" }}
                     >
-                      {/* Número decorativo de fondo */}
                       <span style={{
                         position: "absolute", top: 8, left: 16,
                         fontSize: 80, fontWeight: 900, lineHeight: 1,
-                        color: "#10b981", opacity: 0.12,
+                        color: "#10b981", opacity: 0.1,
                         userSelect: "none", pointerEvents: "none",
                       }}>{num}</span>
-
-                      {/* Contenido */}
                       <div style={{ position: "relative" }}>
                         <div style={{
                           width: 48, height: 48, borderRadius: "50%",
@@ -469,12 +739,8 @@ export default function Home() {
                         }}>
                           <Icono size={22} color="#059669" strokeWidth={1.75} />
                         </div>
-                        <h3 style={{ fontSize: 18, fontWeight: 700, color: "#111827", margin: "0 0 8px" }}>
-                          {title}
-                        </h3>
-                        <p style={{ fontSize: 14, color: "#6b7280", margin: 0, lineHeight: 1.6 }}>
-                          {desc}
-                        </p>
+                        <h3 style={{ fontSize: 18, fontWeight: 700, color: "#111827", margin: "0 0 8px" }}>{title}</h3>
+                        <p style={{ fontSize: 14, color: "#6b7280", margin: 0, lineHeight: 1.6 }}>{desc}</p>
                       </div>
                     </motion.div>
                   ))}
@@ -483,14 +749,8 @@ export default function Home() {
             )}
           </AnimatePresence>
 
-          {/* ════════════════════════════════════════════════════════════
-              SECCIÓN 5 — RESULTADOS — PROBLEMA 1 + 3
-          ════════════════════════════════════════════════════════════ */}
-          {/* scrollMarginTop compensa el sticky header de 64px */}
-          <div
-            ref={resultadosRef}
-            style={{ scrollMarginTop: 80, paddingTop: resultados ? 80 : 0 }}
-          >
+          {/* Resultados */}
+          <div ref={resultadosRef} style={{ scrollMarginTop: 80, paddingTop: resultados ? 80 : 0 }}>
             <AnimatePresence>
               {resultados !== null && (
                 <ResultadosTarjetas
@@ -501,19 +761,239 @@ export default function Home() {
               )}
             </AnimatePresence>
           </div>
-
-          {/* ════════════════════════════════════════════════════════════
-              FOOTER
-          ════════════════════════════════════════════════════════════ */}
-          <footer style={{
-            marginTop: 96, paddingTop: 24,
-            borderTop: "1px solid rgba(0,0,0,0.06)",
-            textAlign: "center", fontSize: 12, color: "#94a3b8", lineHeight: 1.6,
-          }}>
-            © 2026 rateargy · Datos actualizados abril 2026 · La información es orientativa y no
-            constituye asesoramiento financiero.
-          </footer>
         </div>
+
+        {/* ════ BENEFICIOS DESTACADOS ════ */}
+        <section style={{ padding: "80px 24px 80px", background: "#fff" }}>
+          <div style={{ maxWidth: 1120, margin: "0 auto" }}>
+            <div style={{ textAlign: "center", marginBottom: 48 }}>
+              <p style={{ fontSize: 11, fontWeight: 700, letterSpacing: "0.12em", textTransform: "uppercase",
+                color: "#10b981", margin: "0 0 12px" }}>
+                Mejores beneficios del momento
+              </p>
+              <h2 style={{ fontSize: "clamp(26px,3vw,40px)", fontWeight: 900, letterSpacing: "-0.03em",
+                color: "#0a0a0a", margin: "0 0 12px" }}>
+                Los descuentos más destacados
+              </h2>
+              <p style={{ fontSize: 16, color: "#6b7280", margin: 0 }}>
+                Actualizados cada lunes con los beneficios vigentes.
+              </p>
+            </div>
+
+            <div className="beneficios-grid">
+              {BENEFICIOS_DESTACADOS.map(({ banco, beneficio, cat, color }, i) => (
+                <motion.div
+                  key={banco}
+                  initial={{ opacity: 0, y: 12 }} whileInView={{ opacity: 1, y: 0 }}
+                  viewport={{ once: true }} transition={{ duration: 0.35, delay: i * 0.06 }}
+                  style={{
+                    padding: "20px 20px 18px",
+                    background: "#f8fafc",
+                    border: "1.5px solid #e2e8f0",
+                    borderRadius: 16,
+                    transition: "transform 0.2s, box-shadow 0.2s",
+                  }}
+                  whileHover={{ y: -3, boxShadow: "0 8px 24px rgba(0,0,0,0.08)" }}
+                >
+                  <div style={{ display: "flex", alignItems: "center", gap: 10, marginBottom: 12 }}>
+                    <div style={{ width: 36, height: 36, borderRadius: "50%", background: color,
+                      display: "flex", alignItems: "center", justifyContent: "center",
+                      fontSize: 13, fontWeight: 700, color: "#fff", flexShrink: 0 }}>
+                      {banco.split(" ")[0][0]}{banco.split(" ")[1]?.[0] ?? ""}
+                    </div>
+                    <div>
+                      <p style={{ fontSize: 12, fontWeight: 600, color: "#374151", margin: 0 }}>{banco}</p>
+                      <p style={{ fontSize: 11, color: "#94a3b8", margin: 0 }}>{cat}</p>
+                    </div>
+                  </div>
+                  <p style={{ fontSize: 22, fontWeight: 900, color: "#10b981", margin: 0, letterSpacing: "-0.02em" }}>
+                    {beneficio}
+                  </p>
+                </motion.div>
+              ))}
+            </div>
+
+            <div style={{ textAlign: "center", marginTop: 32 }}>
+              <a href="/tarjetas" style={{
+                display: "inline-flex", alignItems: "center", gap: 6,
+                fontSize: 14, fontWeight: 700, color: "#10b981",
+                textDecoration: "none", padding: "10px 20px",
+                border: "1.5px solid #a7f3d0", borderRadius: 10,
+                transition: "background 0.15s",
+              }}
+                onMouseEnter={e => e.currentTarget.style.background="#f0fdf4"}
+                onMouseLeave={e => e.currentTarget.style.background="transparent"}>
+                Ver todas las tarjetas y beneficios
+                <ArrowRight size={14} />
+              </a>
+            </div>
+          </div>
+        </section>
+
+        {/* ════ GUÍAS ════ */}
+        <section style={{ padding: "80px 24px 80px", background: "#fafafa" }}>
+          <div style={{ maxWidth: 1120, margin: "0 auto" }}>
+            <div style={{ display: "flex", alignItems: "flex-end", justifyContent: "space-between",
+              flexWrap: "wrap", gap: 16, marginBottom: 40 }}>
+              <div>
+                <p style={{ fontSize: 11, fontWeight: 700, letterSpacing: "0.12em", textTransform: "uppercase",
+                  color: "#10b981", margin: "0 0 10px" }}>
+                  Guías financieras
+                </p>
+                <h2 style={{ fontSize: "clamp(24px,2.8vw,36px)", fontWeight: 900,
+                  letterSpacing: "-0.03em", color: "#0a0a0a", margin: 0 }}>
+                  Aprendé a tomar mejores decisiones
+                </h2>
+              </div>
+              <a href="/articulos" style={{ fontSize: 13, fontWeight: 700, color: "#10b981",
+                textDecoration: "none", display: "flex", alignItems: "center", gap: 4 }}>
+                Ver todas las guías <ArrowRight size={14} />
+              </a>
+            </div>
+
+            <div className="guias-grid">
+              {GUIAS.map(({ Icono, titulo, desc, href }, i) => (
+                <motion.a
+                  key={titulo}
+                  href={href}
+                  initial={{ opacity: 0, y: 12 }} whileInView={{ opacity: 1, y: 0 }}
+                  viewport={{ once: true }} transition={{ duration: 0.35, delay: i * 0.08 }}
+                  style={{
+                    display: "block", textDecoration: "none",
+                    padding: "28px 24px",
+                    background: "#fff", border: "1.5px solid #e2e8f0",
+                    borderRadius: 18,
+                    transition: "transform 0.2s, box-shadow 0.2s, border-color 0.2s",
+                  }}
+                  whileHover={{ y: -4, boxShadow: "0 12px 32px rgba(0,0,0,0.08)", borderColor: "#10b981" }}
+                >
+                  <div style={{
+                    width: 44, height: 44, borderRadius: 12,
+                    background: "#f0fdf4",
+                    display: "flex", alignItems: "center", justifyContent: "center",
+                    marginBottom: 16,
+                  }}>
+                    <Icono size={20} color="#059669" strokeWidth={1.75} />
+                  </div>
+                  <h3 style={{ fontSize: 16, fontWeight: 700, color: "#111827", margin: "0 0 8px", lineHeight: 1.3 }}>
+                    {titulo}
+                  </h3>
+                  <p style={{ fontSize: 13, color: "#6b7280", margin: "0 0 16px", lineHeight: 1.6 }}>
+                    {desc}
+                  </p>
+                  <span style={{ fontSize: 13, fontWeight: 700, color: "#10b981",
+                    display: "flex", alignItems: "center", gap: 4 }}>
+                    Leer guía <ArrowRight size={12} />
+                  </span>
+                </motion.a>
+              ))}
+            </div>
+          </div>
+        </section>
+
+        {/* ════ FOOTER OSCURO ════ */}
+        <footer style={{
+          background: "#0a0a0a",
+          padding: "56px 24px 40px",
+          color: "#fff",
+        }}>
+          <div style={{ maxWidth: 1120, margin: "0 auto" }}>
+            <div style={{ display: "grid", gridTemplateColumns: "2fr 1fr 1fr", gap: 48,
+              marginBottom: 48, flexWrap: "wrap" }}
+              className="footer-grid">
+
+              {/* Brand */}
+              <div>
+                <a href="/" style={{ textDecoration: "none", display: "inline-flex", alignItems: "center", gap: 8, marginBottom: 16 }}>
+                  <span style={{ fontSize: 22, fontWeight: 800, letterSpacing: "-0.03em" }}>
+                    <span style={{ color: "#10b981" }}>r</span>
+                    <span style={{ color: "#fff" }}>ateargy</span>
+                  </span>
+                </a>
+                <p style={{ fontSize: 14, color: "#6b7280", lineHeight: 1.7, maxWidth: 320, margin: "0 0 20px" }}>
+                  El comparador financiero independiente de Argentina. Comparamos tarjetas, cuentas, inversiones y más para que tomés las mejores decisiones.
+                </p>
+                <div style={{ display: "inline-flex", alignItems: "center", gap: 6,
+                  background: "rgba(16,185,129,0.1)", border: "1px solid rgba(16,185,129,0.2)",
+                  borderRadius: 999, padding: "5px 12px",
+                  fontSize: 11, fontWeight: 700, color: "#10b981" }}>
+                  ✓ Actualizado abril 2026
+                </div>
+              </div>
+
+              {/* Productos */}
+              <div>
+                <p style={{ fontSize: 12, fontWeight: 700, letterSpacing: "0.1em", textTransform: "uppercase",
+                  color: "#4b5563", marginBottom: 16 }}>
+                  Productos
+                </p>
+                {[
+                  { label: "Tarjetas de crédito", href: "/tarjetas" },
+                  { label: "Inversiones", href: "/inversiones" },
+                  { label: "Cuentas bancarias", href: "/cuentas" },
+                  { label: "Préstamos", href: "/prestamos" },
+                ].map(({ label, href }) => (
+                  <a key={label} href={href} style={{ display: "block", fontSize: 14,
+                    color: "#9ca3af", textDecoration: "none", marginBottom: 10,
+                    transition: "color 0.15s" }}
+                    onMouseEnter={e => e.currentTarget.style.color="#fff"}
+                    onMouseLeave={e => e.currentTarget.style.color="#9ca3af"}>
+                    {label}
+                  </a>
+                ))}
+              </div>
+
+              {/* Información */}
+              <div>
+                <p style={{ fontSize: 12, fontWeight: 700, letterSpacing: "0.1em", textTransform: "uppercase",
+                  color: "#4b5563", marginBottom: 16 }}>
+                  Información
+                </p>
+                {[
+                  { label: "Guías financieras", href: "/articulos" },
+                  { label: "Metodología", href: "/metodologia" },
+                  { label: "Sobre rateargy", href: "/nosotros" },
+                  { label: "Contacto", href: "/contacto" },
+                ].map(({ label, href }) => (
+                  <a key={label} href={href} style={{ display: "block", fontSize: 14,
+                    color: "#9ca3af", textDecoration: "none", marginBottom: 10,
+                    transition: "color 0.15s" }}
+                    onMouseEnter={e => e.currentTarget.style.color="#fff"}
+                    onMouseLeave={e => e.currentTarget.style.color="#9ca3af"}>
+                    {label}
+                  </a>
+                ))}
+              </div>
+            </div>
+
+            {/* Bottom bar */}
+            <div style={{ borderTop: "1px solid #1f2937", paddingTop: 24,
+              display: "flex", justifyContent: "space-between", flexWrap: "wrap", gap: 12 }}>
+              <p style={{ fontSize: 12, color: "#4b5563", margin: 0 }}>
+                © 2026 rateargy · Información orientativa, no constituye asesoramiento financiero.
+              </p>
+              <div style={{ display: "flex", gap: 16 }}>
+                {[
+                  { label: "Términos", href: "/terminos" },
+                  { label: "Privacidad", href: "/privacidad" },
+                ].map(({ label, href }) => (
+                  <a key={label} href={href} style={{ fontSize: 12, color: "#4b5563",
+                    textDecoration: "none", transition: "color 0.15s" }}
+                    onMouseEnter={e => e.currentTarget.style.color="#9ca3af"}
+                    onMouseLeave={e => e.currentTarget.style.color="#4b5563"}>
+                    {label}
+                  </a>
+                ))}
+              </div>
+            </div>
+          </div>
+        </footer>
+
+        <style>{`
+          @media (max-width: 768px) {
+            .footer-grid { grid-template-columns: 1fr !important; gap: 32px !important; }
+          }
+        `}</style>
       </div>
 
       <Toast msg={toastMsg} />

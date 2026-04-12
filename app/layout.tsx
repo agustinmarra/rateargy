@@ -6,6 +6,7 @@ import ClientShell from '@/components/ClientShell'
 const inter = Inter({
   subsets: ['latin'],
   weight: ['400', '500', '600', '700', '800', '900'],
+  variable: '--font-inter',
 })
 
 export const metadata: Metadata = {
@@ -39,7 +40,7 @@ export default function RootLayout({
 }>) {
   return (
     <html lang="es-AR" className="h-full antialiased">
-      <body className={`min-h-full flex flex-col ${inter.className}`}>
+      <body className={`min-h-full flex flex-col font-sans antialiased ${inter.variable}`}>
         <ClientShell>{children}</ClientShell>
       </body>
     </html>
