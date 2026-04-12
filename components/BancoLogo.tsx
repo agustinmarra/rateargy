@@ -1,71 +1,57 @@
 "use client"
+import Image from "next/image"
 
-import { useState } from "react"
-
-// Brandfetch CDN domains para cada bancoId
-const DOMINIOS: Record<string, string> = {
-  "galicia-eminent":  "galicia.com.ar",
-  "bbva-platinum":    "bbva.com.ar",
-  "santander-gold":   "santander.com.ar",
-  "macro-visa":       "macro.com.ar",
-  "naranja-x":        "naranja.com",
-  "bna-gold":         "bna.com.ar",
-  "supervielle":      "supervielle.com.ar",
-  "icbc-platinum":    "icbc.com.ar",
-  "uala":             "uala.com.ar",
-  "personal-pay":     "personal.com.ar",
-  "credicoop":        "credicoop.coop",
-  "patagonia":        "bancopatagonia.com.ar",
-  "cuenta-dni":       "bancoprovincia.com.ar",
+// MAPA DE LOGOS — editá acá si agregás o renombrás archivos en public/logos/
+// Formato: "bancoId": "nombre-exacto-del-archivo-con-extension"
+const LOGOS: Record<string, string> = {
+  "galicia":         "banco-galicia.png",
+  "galicia-eminent": "banco-galicia.png",
+  "bbva":            "bbva-argentina.png",
+  "bbva-platinum":   "bbva-argentina.png",
+  "santander":       "santander-argentina.png",
+  "santander-gold":  "santander-argentina.png",
+  "macro":           "banco-macro.png",
+  "macro-visa":      "banco-macro.png",
+  "naranja-x":       "naranja-x.png",
+  "bna":             "banco-nacion.png",
+  "bna-gold":        "banco-nacion.png",
+  "supervielle":     "supervielle.png",
+  "icbc":            "icbc-argentina.png",
+  "icbc-platinum":   "icbc-argentina.png",
+  "uala":            "uala.png",
+  "personal-pay":    "personal-pay.png",
+  "credicoop":       "credicoop.jpg",
+  "patagonia":       "patagonia.png",
+  "provincia":       "banco-provincia.png",
+  "cuenta-dni":      "banco-provincia.png",
 }
 
-// Color de avatar fallback por banco
-const AVATAR_COLORS: Record<string, string> = {
-  "galicia-eminent":  "#1a7f4f",
-  "bbva-platinum":    "#004481",
-  "santander-gold":   "#cc0000",
-  "macro-visa":       "#b8860b",
-  "naranja-x":        "#e05a00",
-  "bna-gold":         "#003580",
-  "supervielle":      "#e85d04",
-  "icbc-platinum":    "#c41230",
-  "uala":             "#5b2d8e",
-  "personal-pay":     "#6d28d9",
-  "credicoop":        "#005a9e",
-  "patagonia":        "#2d6a4f",
-  "cuenta-dni":       "#0f766e",
-}
+// CÓMO AGREGAR UN LOGO NUEVO:
+// 1. Guardá el archivo en public/logos/nombre-banco.png
+// 2. Agregá una línea acá: "bancoId": "nombre-banco.png"
+// 3. Listo — no hay que tocar nada más
 
 interface BancoLogoProps {
-  bancoId: string
-  nombre: string
+  banco: string
   size?: number
   className?: string
 }
 
-export default function BancoLogo({ bancoId, nombre, size = 32, className = "" }: BancoLogoProps) {
-  const [error, setError] = useState(false)
-  const domain = DOMINIOS[bancoId]
-  const apiKey = process.env.NEXT_PUBLIC_BRANDFETCH_KEY ?? ""
-  const color  = AVATAR_COLORS[bancoId] ?? "#64748b"
+export function BancoLogo({ banco, size = 32, className }: BancoLogoProps) {
+  const archivo = LOGOS[banco]
+  const initials = banco.replace(/-/g, " ").split(" ").map(w => w[0]).join("").toUpperCase().slice(0, 2)
 
-  // Iniciales para el fallback
-  const initials = nombre
-    .split(" ")
-    .slice(0, 2)
-    .map((w) => w[0])
-    .join("")
-    .toUpperCase()
-
-  if (!domain || error) {
+  if (!archivo) {
     return (
       <div
         className={className}
         style={{
-          width: size, height: size, borderRadius: "50%",
-          background: color, color: "#fff",
+          width: size, height: size,
+          borderRadius: Math.round(size * 0.25),
+          background: "#f1f5f9",
+          border: "1px solid #e2e8f0",
           display: "flex", alignItems: "center", justifyContent: "center",
-          fontSize: size * 0.35, fontWeight: 700, letterSpacing: "-0.02em",
+          fontSize: Math.round(size * 0.35), fontWeight: 700, color: "#64748b",
           flexShrink: 0, userSelect: "none",
         }}
       >
@@ -75,18 +61,34 @@ export default function BancoLogo({ bancoId, nombre, size = 32, className = "" }
   }
 
   return (
-    // eslint-disable-next-line @next/next/no-img-element
-    <img
-      src={`https://cdn.brandfetch.io/${domain}/w/${size * 2}/h/${size * 2}/symbol${apiKey ? `?c=${apiKey}` : ""}`}
-      alt={nombre}
-      width={size}
-      height={size}
-      onError={() => setError(true)}
+    <div
       className={className}
       style={{
-        width: size, height: size, objectFit: "contain",
-        borderRadius: 6, flexShrink: 0,
+        width: size, height: size,
+        borderRadius: Math.round(size * 0.25),
+        background: "white",
+        border: "1px solid #e2e8f0",
+        overflow: "hidden",
+        display: "flex", alignItems: "center", justifyContent: "center",
+        flexShrink: 0,
       }}
-    />
+    >
+      <Image
+        src={`/logos/${archivo}`}
+        alt={banco}
+        width={size}
+        height={size}
+        style={{ objectFit: "contain", padding: Math.round(size * 0.08) }}
+        onError={(e) => {
+          const el = e.currentTarget as HTMLImageElement
+          el.style.display = "none"
+          const parent = el.parentElement
+          if (parent) {
+            parent.style.background = "#f1f5f9"
+            parent.innerHTML = `<span style="font-size:${Math.round(size*0.35)}px;font-weight:700;color:#64748b">${initials}</span>`
+          }
+        }}
+      />
+    </div>
   )
 }

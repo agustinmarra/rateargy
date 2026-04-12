@@ -6,7 +6,7 @@ import dynamic from "next/dynamic"
 import { Calculator, BarChart2, Trophy, ArrowRight, Shield, Zap, TrendingUp, BookOpen, CreditCard, Banknote, PiggyBank } from "lucide-react"
 import { TARJETAS, rankear, type Gastos, type CatKey } from "@/components/tarjetas-data"
 import { formatARS, CatIcon } from "@/components/ResultadosTarjetas"
-import BancoLogo from "@/components/BancoLogo"
+import { BancoLogo } from "@/components/BancoLogo"
 
 const ResultadosTarjetas = dynamic(() => import("@/components/ResultadosTarjetas"), { ssr: false })
 
@@ -247,7 +247,7 @@ function MarqueeLogos() {
             borderRadius: 999, padding: "8px 16px",
             flexShrink: 0, whiteSpace: "nowrap",
           }}>
-            <BancoLogo bancoId={t.bancoId} nombre={t.banco} size={20} />
+            <BancoLogo banco={t.bancoId} size={20} />
             <span style={{ fontSize: 13, fontWeight: 600, color: "#374151" }}>{t.banco}</span>
           </div>
         ))}

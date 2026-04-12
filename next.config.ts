@@ -8,7 +8,6 @@ const nextConfig: NextConfig = {
       { protocol: 'https', hostname: 'http2.mlstatic.com' },
       { protocol: 'https', hostname: 'www.galicia.ar' },
       { protocol: 'https', hostname: 'www.bbva.com.ar' },
-      { protocol: 'https', hostname: 'cdn.brandfetch.io' },
     ],
   },
   async headers() {
