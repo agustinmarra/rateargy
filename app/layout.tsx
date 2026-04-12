@@ -1,9 +1,7 @@
 import type { Metadata } from 'next'
 import { Inter } from 'next/font/google'
 import './globals.css'
-import Navbar from '@/components/Navbar'
-import TickerBar from '@/components/TickerBar'
-import Footer from '@/components/Footer'
+import ClientShell from '@/components/ClientShell'
 
 const inter = Inter({
   subsets: ['latin'],
@@ -43,10 +41,7 @@ export default function RootLayout({
   return (
     <html lang="es-AR" className={`${inter.variable} h-full antialiased`}>
       <body className="min-h-full flex flex-col">
-        <TickerBar />
-        <Navbar />
-        <main className="flex-1">{children}</main>
-        <Footer />
+        <ClientShell>{children}</ClientShell>
       </body>
     </html>
   )
