@@ -15,15 +15,13 @@ export const metadata: Metadata = {
     template: '%s | rateargy',
   },
   description:
-    'Comparamos tarjetas de crédito, cuentas bancarias, préstamos, seguros e inversiones para que tomés las mejores decisiones financieras en Argentina. 100% gratis.',
+    'Comparamos tarjetas de crédito en Argentina para que tomés la mejor decisión financiera. 13 tarjetas. 100% gratis.',
   keywords: [
     'tarjetas de crédito argentina',
     'comparar tarjetas',
-    'préstamos personales',
-    'cuentas bancarias',
-    'inversiones argentina',
-    'dólar blue',
-    'finanzas personales',
+    'mejor tarjeta de crédito',
+    'ahorro tarjetas',
+    'finanzas personales argentina',
   ],
   openGraph: {
     title: 'rateargy — Comparador de productos financieros',

@@ -8,52 +8,22 @@ const COL_TARJETAS = [
   { label: 'Con cuotas sin interés', href: '/tarjetas?perfil=cuotas' },
 ]
 
-const COL_CUENTAS = [
-  { label: 'Comparar cuentas', href: '/cuentas' },
-  { label: 'Billeteras virtuales', href: '/billeteras' },
-  { label: 'Sin costo mensual', href: '/cuentas?filtro=sin-costo' },
-  { label: 'Con rendimiento', href: '/cuentas?filtro=rendimiento' },
-  { label: 'Bancos digitales', href: '/cuentas?filtro=digital' },
-]
-
-const COL_PRESTAMOS = [
-  { label: 'Comparar préstamos', href: '/prestamos' },
-  { label: 'Aprobación rápida', href: '/prestamos?filtro=rapido' },
-  { label: '100% online', href: '/prestamos?filtro=digital' },
-  { label: 'Bancos estatales', href: '/prestamos?filtro=estado' },
-  { label: 'Mayor plazo', href: '/prestamos?filtro=mayor-plazo' },
-]
-
-const COL_SEGUROS = [
-  { label: 'Comparar seguros', href: '/seguros' },
-  { label: 'Seguro todo riesgo', href: '/seguros?tipo=todo-riesgo' },
-  { label: 'Terceros completo', href: '/seguros?tipo=terceros' },
-  { label: 'Más económico', href: '/seguros?tipo=terceros' },
-  { label: 'Cotizar seguro', href: '/seguros' },
-]
-
-const COL_INVERSIONES = [
-  { label: 'Comparar inversiones', href: '/inversiones' },
-  { label: 'Plazos fijos', href: '/inversiones' },
-  { label: 'Fondos de inversión', href: '/inversiones' },
-  { label: 'Criptomonedas', href: '/inversiones' },
-  { label: 'Dólar blue hoy', href: '/' },
+const COL_RECURSOS = [
+  { label: 'Guías financieras', href: '/articulos' },
+  { label: 'Cómo elegir una tarjeta', href: '/articulos/como-elegir-tarjeta-de-credito-argentina-2025' },
+  { label: 'Dólar MEP paso a paso', href: '/articulos/como-comprar-dolar-mep-homebanking' },
+  { label: 'MP vs Ualá', href: '/articulos/mercado-pago-vs-uala-cual-rinde-mas' },
 ]
 
 const COL_EMPRESA = [
   { label: 'Sobre rateargy', href: '/nosotros' },
-  { label: 'Cómo funcionamos', href: '/como-funcionamos' },
-  { label: 'Blog financiero', href: '/blog' },
+  { label: 'Metodología', href: '/metodologia' },
   { label: 'Contacto', href: '/contacto' },
-  { label: 'Prensa', href: '/prensa' },
 ]
 
 const COLUMNS = [
   { title: 'Tarjetas de crédito', links: COL_TARJETAS },
-  { title: 'Cuentas y billeteras', links: COL_CUENTAS },
-  { title: 'Préstamos', links: COL_PRESTAMOS },
-  { title: 'Seguros', links: COL_SEGUROS },
-  { title: 'Inversiones', links: COL_INVERSIONES },
+  { title: 'Recursos', links: COL_RECURSOS },
   { title: 'Sobre rateargy', links: COL_EMPRESA },
 ]
 
@@ -73,17 +43,14 @@ export default function Footer() {
               </span>
             </Link>
             <p className="text-[#6b7280] text-sm leading-relaxed">
-              El comparador de productos financieros más completo de Argentina. Gratis, independiente y actualizado diariamente.
+              El comparador de tarjetas de crédito más completo de Argentina. Gratis, independiente y actualizado cada lunes.
             </p>
           </div>
           <div className="flex flex-wrap gap-3">
-            {['/tarjetas', '/cuentas', '/prestamos', '/seguros', '/inversiones'].map((href) => {
+            {['/tarjetas', '/articulos'].map((href) => {
               const labels: Record<string, string> = {
                 '/tarjetas': 'Tarjetas',
-                '/cuentas': 'Cuentas',
-                '/prestamos': 'Préstamos',
-                '/seguros': 'Seguros',
-                '/inversiones': 'Inversiones',
+                '/articulos': 'Guías',
               }
               return (
                 <Link
@@ -99,7 +66,7 @@ export default function Footer() {
         </div>
 
         {/* Link columns */}
-        <div className="grid grid-cols-2 sm:grid-cols-3 lg:grid-cols-6 gap-8 mb-10">
+        <div className="grid grid-cols-2 sm:grid-cols-3 gap-8 mb-10">
           {COLUMNS.map(({ title, links }) => (
             <div key={title}>
               <h4 className="font-semibold text-[#1a1a1a] text-xs uppercase tracking-wide mb-3">
@@ -139,9 +106,6 @@ export default function Footer() {
               </Link>
               <Link href="/privacidad" className="text-xs text-[#9ca3af] hover:text-[#6b7280] transition-colors">
                 Política de privacidad
-              </Link>
-              <Link href="/afiliados" className="text-xs text-[#9ca3af] hover:text-[#6b7280] transition-colors">
-                Política de afiliados
               </Link>
             </div>
           </div>

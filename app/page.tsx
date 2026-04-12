@@ -387,26 +387,14 @@ export default function Home() {
               }} />
             </a>
 
-            <nav style={{ display: "flex", alignItems: "center", gap: 8 }}>
-              <a href="/tarjetas" style={{ fontSize: 13, fontWeight: 600, color: "#374151", textDecoration: "none", padding: "6px 12px", borderRadius: 8, transition: "background 0.15s" }}
-                onMouseEnter={e => e.currentTarget.style.background="#f1f5f9"}
-                onMouseLeave={e => e.currentTarget.style.background="transparent"}>
-                Tarjetas
-              </a>
-              <a href="/inversiones" style={{ fontSize: 13, fontWeight: 600, color: "#374151", textDecoration: "none", padding: "6px 12px", borderRadius: 8, transition: "background 0.15s" }}
-                onMouseEnter={e => e.currentTarget.style.background="#f1f5f9"}
-                onMouseLeave={e => e.currentTarget.style.background="transparent"}>
-                Inversiones
-              </a>
-              <div style={{
-                display: "inline-flex", alignItems: "center", gap: 6,
-                background: "#f0fdf4", border: "1px solid #d1fae5",
-                borderRadius: 999, padding: "6px 14px",
-                fontSize: 12, fontWeight: 600, color: "#065f46",
-              }}>
-                ✓ Actualizado cada lunes
-              </div>
-            </nav>
+            <div style={{
+              display: "inline-flex", alignItems: "center", gap: 6,
+              background: "#f0fdf4", border: "1px solid #d1fae5",
+              borderRadius: 999, padding: "6px 14px",
+              fontSize: 12, fontWeight: 600, color: "#065f46",
+            }}>
+              ✓ Actualizado cada lunes
+            </div>
           </div>
         </header>
 
@@ -911,7 +899,7 @@ export default function Home() {
                   </span>
                 </a>
                 <p style={{ fontSize: 14, color: "#6b7280", lineHeight: 1.7, maxWidth: 320, margin: "0 0 20px" }}>
-                  El comparador financiero independiente de Argentina. Comparamos tarjetas, cuentas, inversiones y más para que tomés las mejores decisiones.
+                  El comparador financiero independiente de Argentina. Comparamos tarjetas de crédito y más para que tomés las mejores decisiones.
                 </p>
                 <div style={{ display: "inline-flex", alignItems: "center", gap: 6,
                   background: "rgba(16,185,129,0.1)", border: "1px solid rgba(16,185,129,0.2)",
@@ -929,9 +917,7 @@ export default function Home() {
                 </p>
                 {[
                   { label: "Tarjetas de crédito", href: "/tarjetas" },
-                  { label: "Inversiones", href: "/inversiones" },
-                  { label: "Cuentas bancarias", href: "/cuentas" },
-                  { label: "Préstamos", href: "/prestamos" },
+                  { label: "Guías financieras", href: "/articulos" },
                 ].map(({ label, href }) => (
                   <a key={label} href={href} style={{ display: "block", fontSize: 14,
                     color: "#9ca3af", textDecoration: "none", marginBottom: 10,

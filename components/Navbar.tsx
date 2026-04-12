@@ -6,10 +6,7 @@ import { Menu, X } from 'lucide-react'
 
 const NAV_LINKS = [
   { href: '/tarjetas', label: 'Tarjetas' },
-  { href: '/cuentas', label: 'Cuentas' },
-  { href: '/prestamos', label: 'Préstamos' },
-  { href: '/seguros', label: 'Seguros' },
-  { href: '/inversiones', label: 'Inversiones' },
+  { href: '/articulos', label: 'Guías' },
 ]
 
 export default function Navbar() {

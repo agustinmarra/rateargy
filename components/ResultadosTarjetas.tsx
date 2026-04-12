@@ -2,7 +2,7 @@
 
 import { useState, useEffect, type CSSProperties } from "react"
 import { motion, AnimatePresence } from "framer-motion"
-import { CreditCard, Percent, ShoppingCart, Zap, Plane, Pill, Car, ArrowUpRight } from "lucide-react"
+import { CreditCard, Percent, ShoppingCart, Zap, Plane, Pill, Car, ArrowUpRight, TrendingUp } from "lucide-react"
 import { TARJETAS, type Tarjeta, type CatKey, type Gastos } from "./tarjetas-data"
 
 // ─── Utilidades ──────────────────────────────────────────────────────────────
@@ -297,6 +297,89 @@ function BeneficiosMes({ resultados, gastos }: {
   )
 }
 
+// ─── Banner cambio recomendado ───────────────────────────────────────────────
+function BannerCambio({ tarjetaActualNombre, ganadosaNombre, diferenciaAhorro }: {
+  tarjetaActualNombre: string
+  ganadosaNombre: string
+  diferenciaAhorro: number
+}) {
+  const ahorroAnimado = useCountUp(diferenciaAhorro, 1200)
+
+  return (
+    <motion.div
+      initial={{ opacity: 0, scale: 0.97, y: -8 }}
+      animate={{ opacity: 1, scale: 1, y: 0 }}
+      exit={{ opacity: 0 }}
+      transition={{ type: "spring", stiffness: 300, damping: 25 }}
+      style={{
+        background: "linear-gradient(135deg, #0a7c4e 0%, #059669 50%, #34d399 100%)",
+        borderRadius: 16,
+        padding: "24px 28px",
+        marginBottom: 28,
+        position: "relative",
+        overflow: "hidden",
+        boxShadow: "0 8px 32px rgba(10,124,78,0.25), 0 0 0 1px rgba(255,255,255,0.1)",
+      }}
+    >
+      {/* Brillo decorativo 1 */}
+      <div aria-hidden style={{
+        position: "absolute", top: -60, right: -60, width: 200, height: 200,
+        borderRadius: "50%", background: "rgba(255,255,255,0.08)", pointerEvents: "none",
+      }} />
+      {/* Brillo decorativo 2 */}
+      <div aria-hidden style={{
+        position: "absolute", bottom: -40, left: -20, width: 140, height: 140,
+        borderRadius: "50%", background: "rgba(255,255,255,0.05)", pointerEvents: "none",
+      }} />
+
+      <div style={{
+        display: "flex", alignItems: "center", justifyContent: "space-between",
+        gap: 20, position: "relative", zIndex: 1, flexWrap: "wrap",
+      }}>
+        {/* Lado izquierdo */}
+        <div>
+          <div style={{
+            background: "rgba(255,255,255,0.15)", borderRadius: 12,
+            width: 48, height: 48, display: "flex", alignItems: "center",
+            justifyContent: "center", marginBottom: 12,
+          }}>
+            <TrendingUp size={24} color="white" />
+          </div>
+          <p style={{
+            fontSize: 12, fontWeight: 700, color: "rgba(255,255,255,0.7)",
+            letterSpacing: "0.06em", textTransform: "uppercase", marginBottom: 6,
+          }}>
+            Cambio recomendado
+          </p>
+          <p style={{ fontSize: 18, fontWeight: 800, color: "white", lineHeight: 1.2 }}>
+            Pasá de {tarjetaActualNombre} a {ganadosaNombre}
+          </p>
+        </div>
+
+        {/* Lado derecho */}
+        <div style={{
+          background: "rgba(255,255,255,0.15)", borderRadius: 12, padding: "16px 20px",
+          backdropFilter: "blur(10px)", border: "1px solid rgba(255,255,255,0.2)",
+          textAlign: "center", flexShrink: 0,
+        }}>
+          <p style={{ fontSize: 12, color: "rgba(255,255,255,0.8)", fontWeight: 600, marginBottom: 4 }}>
+            Ahorrarías
+          </p>
+          <p style={{ fontSize: 32, fontWeight: 900, color: "white", letterSpacing: "-0.03em", lineHeight: 1 }}>
+            {formatARS(ahorroAnimado)}
+          </p>
+          <p style={{ fontSize: 13, color: "rgba(255,255,255,0.7)", marginTop: 4 }}>
+            más por mes
+          </p>
+          <p style={{ fontSize: 11, color: "rgba(255,255,255,0.6)", marginTop: 6 }}>
+            = {formatARS(diferenciaAhorro * 12)} al año
+          </p>
+        </div>
+      </div>
+    </motion.div>
+  )
+}
+
 // ─── Ahorro animado ───────────────────────────────────────────────────────────
 function AhorroAnimado({ value }: { value: number }) {
   return <>{formatARS(useCountUp(value, 800))}</>
@@ -356,17 +439,14 @@ export default function ResultadosTarjetas({ resultados, gastos, tarjetaActual }
         </span>
       </div>
 
-      {/* ── Banner tarjeta actual */}
+      {/* ── Banner tarjeta actual — premium */}
       <AnimatePresence>
         {tarjetaActualData && tarjetaActual !== top1.id && (
-          <motion.div initial={{ opacity:0, y:-8 }} animate={{ opacity:1, y:0 }} exit={{ opacity:0 }}
-            style={{ marginBottom:20, borderRadius:14, padding:"12px 16px", fontSize:14,
-              background:"rgba(251,191,36,0.08)", border:"1px solid rgba(251,191,36,0.3)", color:"#92400e" }}>
-            Con tu tarjeta actual ({tarjetaActualData.nombre}) ahorrás{" "}
-            <strong>{formatARS(ahorroActual)}/mes</strong>. Cambiando a{" "}
-            <strong>{top1.nombre}</strong> ahorrarías{" "}
-            <strong style={{ color:"#059669" }}>{formatARS(top1.ahorro - ahorroActual)} más</strong>.
-          </motion.div>
+          <BannerCambio
+            tarjetaActualNombre={tarjetaActualData.nombre}
+            ganadosaNombre={top1.nombre}
+            diferenciaAhorro={(top1?.ahorro ?? 0) - ahorroActual}
+          />
         )}
       </AnimatePresence>
 
