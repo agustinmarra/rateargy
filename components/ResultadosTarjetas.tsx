@@ -2,6 +2,7 @@
 
 import { useState, useEffect, type CSSProperties } from "react"
 import { motion, AnimatePresence } from "framer-motion"
+import { CreditCard, Percent, ShoppingCart, Zap, Plane, Pill, Car, ArrowUpRight } from "lucide-react"
 import { TARJETAS, type Tarjeta, type CatKey, type Gastos } from "./tarjetas-data"
 
 // ─── Utilidades ──────────────────────────────────────────────────────────────
@@ -274,7 +275,21 @@ function Breakdown({
   )
 }
 
-// ─── Beneficios del mes ───────────────────────────────────────────────────────
+// ─── Lucide icon por categoría ───────────────────────────────────────────────
+type LucideIcon = React.ComponentType<{ size?: number; color?: string; strokeWidth?: number }>
+
+const CAT_LUCIDE: Record<CatKey, LucideIcon> = {
+  super:      ShoppingCart,
+  nafta:      Car,
+  farmacia:   Pill,
+  delivery:   Zap,
+  online:     CreditCard,
+  viajes:     Plane,
+  transporte: Car,
+  servicios:  Zap,
+}
+
+// ─── Beneficios de la semana — grid estilo NerdWallet ─────────────────────────
 function BeneficiosMes({
   resultados,
   gastos,
@@ -284,74 +299,171 @@ function BeneficiosMes({
 }) {
   type Bene = {
     catKey: CatKey
+    nombre: string
     banco: string
     pct: number
     tope: number
     dias?: string
+    ahorroReal: number
     key: string
   }
 
+  // Una card por categoría donde el usuario gasta: busca la mejor promo (mayor %)
   const beneficios: Bene[] = []
-  const top3 = resultados.slice(0, 3)
 
-  for (const t of top3) {
-    for (const cat of Object.keys(gastos) as CatKey[]) {
-      if (gastos[cat] > 0 && t.beneficios[cat]?.pct > 0) {
-        const b = t.beneficios[cat]
-        const key = `${t.id}-${cat}`
-        if (!beneficios.find((x) => x.key === key)) {
-          beneficios.push({
-            catKey: cat,
-            banco: t.banco,
-            pct: b.pct,
-            tope: b.tope,
-            dias: "dias" in b ? (b.dias as string | undefined) : undefined,
-            key,
-          })
-        }
+  for (const cat of Object.keys(gastos) as CatKey[]) {
+    if (gastos[cat] <= 0) continue
+
+    let bestTarjeta: (Tarjeta & { ahorro: number }) | null = null
+    let bestPct = 0
+
+    for (const t of resultados) {
+      const b = t.beneficios[cat]
+      if (b?.pct > bestPct) {
+        bestPct = b.pct
+        bestTarjeta = t
       }
     }
-    if (beneficios.length >= 4) break
+
+    if (bestTarjeta && bestPct > 0) {
+      const b = bestTarjeta.beneficios[cat]
+      const ahorroReal = Math.min(gastos[cat] * (b.pct / 100), b.tope || Infinity)
+      beneficios.push({
+        catKey: cat,
+        nombre: bestTarjeta.nombre,
+        banco: bestTarjeta.banco,
+        pct: b.pct,
+        tope: b.tope,
+        dias: "dias" in b ? (b.dias as string | undefined) : undefined,
+        ahorroReal,
+        key: `best-${cat}`,
+      })
+    }
   }
 
-  if (beneficios.length === 0) return null
+  // Ordenar por ahorro real descendente, mostrar hasta 6
+  const visibles = beneficios
+    .sort((a, b) => b.ahorroReal - a.ahorroReal)
+    .slice(0, 6)
+
+  if (visibles.length === 0) return null
 
   return (
-    <div className="mt-12">
-      <h2 className="text-lg font-bold mb-4" style={{ color: "#0a0a0a" }}>
-        Beneficios que aplican a tu perfil esta semana
-      </h2>
-      <div className="grid gap-3 sm:grid-cols-2">
-        {beneficios.slice(0, 4).map((b) => (
-          <div
-            key={b.key}
-            className="flex items-center gap-3 rounded-xl px-4 py-3"
-            style={{
-              background: "rgba(16,185,129,0.06)",
-              border: "1px solid rgba(16,185,129,0.15)",
-            }}
-          >
-            <span
-              className="rounded-lg flex items-center justify-center flex-shrink-0"
+    <div className="mt-14">
+      {/* Encabezado */}
+      <div className="flex items-center gap-3 mb-5">
+        <h2 className="text-xl font-bold" style={{ color: "#111827" }}>
+          Beneficios que aplican a tu perfil
+        </h2>
+        <span
+          style={{
+            background: "#d1fae5",
+            color: "#059669",
+            fontSize: 12,
+            fontWeight: 700,
+            padding: "3px 10px",
+            borderRadius: 999,
+            letterSpacing: "0.02em",
+          }}
+        >
+          Esta semana
+        </span>
+      </div>
+
+      {/* Grid 2 cols mobile → 3 cols desktop */}
+      <style>{`
+        .beneficios-grid { display: grid; grid-template-columns: repeat(2, 1fr); gap: 16px; }
+        @media (min-width: 768px) { .beneficios-grid { grid-template-columns: repeat(3, 1fr); } }
+      `}</style>
+      <div className="beneficios-grid">
+        {visibles.map((b) => {
+          const Icon = CAT_LUCIDE[b.catKey]
+          const label = CAT_META[b.catKey].label
+
+          // Descripción dinámica
+          const descParts: string[] = []
+          if (b.dias) descParts.push(`Los ${b.dias}`)
+          descParts.push(`${b.pct}% de descuento con ${b.banco}`)
+
+          return (
+            <motion.div
+              key={b.key}
+              whileHover={{
+                y: -2,
+                boxShadow: "0 4px 20px rgba(16,185,129,0.12)",
+                borderColor: "#10b981",
+              }}
+              transition={{ duration: 0.18 }}
               style={{
-                width: 36,
-                height: 36,
-                background: "rgba(16,185,129,0.12)",
+                background: "white",
+                border: "1px solid #e5e7eb",
+                borderRadius: 16,
+                padding: 24,
+                position: "relative",
+                cursor: "default",
               }}
             >
-              <CatIcon catKey={b.catKey} className="w-4 h-4" style={{ color: "#10b981" }} />
-            </span>
-            <div className="min-w-0">
-              <p className="font-semibold text-sm" style={{ color: "#0a0a0a" }}>
-                {b.pct}% en {CAT_META[b.catKey].label} con {b.banco}
+              {/* Fila superior: ícono izquierda + flecha derecha */}
+              <div style={{ display: "flex", alignItems: "flex-start", justifyContent: "space-between" }}>
+                {/* Ícono en círculo verde */}
+                <div
+                  style={{
+                    width: 44,
+                    height: 44,
+                    borderRadius: "50%",
+                    background: "#d1fae5",
+                    display: "flex",
+                    alignItems: "center",
+                    justifyContent: "center",
+                    flexShrink: 0,
+                  }}
+                >
+                  <Icon size={20} color="#10b981" strokeWidth={1.75} />
+                </div>
+
+                {/* Flecha navegación */}
+                <ArrowUpRight size={18} color="#9ca3af" strokeWidth={1.75} />
+              </div>
+
+              {/* Título */}
+              <p
+                style={{
+                  marginTop: 16,
+                  fontSize: 15,
+                  fontWeight: 600,
+                  color: "#111827",
+                  lineHeight: 1.3,
+                }}
+              >
+                {b.pct}% en {label}
               </p>
-              <p className="text-xs mt-0.5" style={{ color: "#6b7280" }}>
-                {b.dias ? `Los ${b.dias} · ` : ""}
-                {b.tope ? `Hasta ${formatARS(b.tope)}` : "Sin tope"}
+
+              {/* Descripción */}
+              <p
+                style={{
+                  marginTop: 6,
+                  fontSize: 13,
+                  color: "#6b7280",
+                  lineHeight: 1.5,
+                }}
+              >
+                {descParts.join(" · ")}
               </p>
-            </div>
-          </div>
-        ))}
+
+              {/* Ahorro calculado según gasto del usuario */}
+              <p
+                style={{
+                  marginTop: 12,
+                  fontSize: 13,
+                  fontWeight: 600,
+                  color: "#10b981",
+                }}
+              >
+                Hasta {formatARS(b.ahorroReal)} de ahorro
+              </p>
+            </motion.div>
+          )
+        })}
       </div>
     </div>
   )
