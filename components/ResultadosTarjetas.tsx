@@ -8,11 +8,7 @@ import { TARJETAS, type Tarjeta, type CatKey, type Gastos } from "./tarjetas-dat
 // ─── Utilidades ──────────────────────────────────────────────────────────────
 
 export function formatARS(n: number): string {
-  return new Intl.NumberFormat("es-AR", {
-    style: "currency",
-    currency: "ARS",
-    maximumFractionDigits: 0,
-  }).format(n)
+  return new Intl.NumberFormat("es-AR", { style: "currency", currency: "ARS", maximumFractionDigits: 0 }).format(n)
 }
 
 function getScorePct(ahorro: number, maxAhorro: number): number {
@@ -20,7 +16,7 @@ function getScorePct(ahorro: number, maxAhorro: number): number {
   return Math.round((ahorro / maxAhorro) * 100)
 }
 
-// ─── Hook: contador animado 0 → target en `duration` ms ──────────────────────
+// ─── Hook: contador 0 → target ────────────────────────────────────────────────
 function useCountUp(target: number, duration = 800) {
   const [value, setValue] = useState(0)
   useEffect(() => {
@@ -29,7 +25,7 @@ function useCountUp(target: number, duration = 800) {
     const start = performance.now()
     const tick = (now: number) => {
       const progress = Math.min((now - start) / duration, 1)
-      const eased = 1 - Math.pow(1 - progress, 3) // ease-out cubic
+      const eased = 1 - Math.pow(1 - progress, 3)
       setValue(Math.round(eased * target))
       if (progress < 1) requestAnimationFrame(tick)
     }
@@ -38,7 +34,7 @@ function useCountUp(target: number, duration = 800) {
   return value
 }
 
-// ─── SVG paths por categoría — exportados para usar en page.tsx también ──────
+// ─── SVG paths exportados ─────────────────────────────────────────────────────
 export const CAT_SVG_PATHS: Record<CatKey, string> = {
   super:      "M3 6h18l-1.5 9H4.5L3 6zM3 6L2 2H0M8 11V8m4 3V8",
   nafta:      "M5 4h10l2 4v10a1 1 0 01-1 1H4a1 1 0 01-1-1V8l2-4zM9 12h6",
@@ -52,22 +48,25 @@ export const CAT_SVG_PATHS: Record<CatKey, string> = {
 
 export function CatIcon({ catKey, className, style }: { catKey: CatKey; className?: string; style?: CSSProperties }) {
   return (
-    <svg
-      viewBox="0 0 24 24"
-      fill="none"
-      stroke="currentColor"
-      strokeWidth="1.5"
-      strokeLinecap="round"
-      strokeLinejoin="round"
-      className={className}
-      style={style}
-    >
+    <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" strokeWidth="1.5"
+      strokeLinecap="round" strokeLinejoin="round" className={className} style={style}>
       <path d={CAT_SVG_PATHS[catKey]} />
     </svg>
   )
 }
 
-// ─── Labels por categoría ─────────────────────────────────────────────────────
+// ─── Colores suaves por categoría (para los círculos del breakdown) ───────────
+const CAT_COLORS: Record<CatKey, { bg: string; color: string }> = {
+  super:      { bg: "#d1fae5", color: "#059669" },
+  nafta:      { bg: "#fef3c7", color: "#d97706" },
+  farmacia:   { bg: "#fce7f3", color: "#db2777" },
+  delivery:   { bg: "#ede9fe", color: "#7c3aed" },
+  online:     { bg: "#dbeafe", color: "#2563eb" },
+  viajes:     { bg: "#e0f2fe", color: "#0284c7" },
+  transporte: { bg: "#f3f4f6", color: "#6b7280" },
+  servicios:  { bg: "#fef9c3", color: "#ca8a04" },
+}
+
 const CAT_META: Record<CatKey, { label: string }> = {
   super:      { label: "Supermercados" },
   nafta:      { label: "Nafta" },
@@ -79,39 +78,23 @@ const CAT_META: Record<CatKey, { label: string }> = {
   servicios:  { label: "Servicios" },
 }
 
-// ─── SVG: chip de tarjeta ─────────────────────────────────────────────────────
+// ─── SVG: chip + contactless ──────────────────────────────────────────────────
 function ChipSVG({ scale = 1 }: { scale?: number }) {
-  const w = Math.round(24 * scale)
-  const h = Math.round(18 * scale)
   return (
-    <svg
-      viewBox="0 0 24 18"
-      style={{ width: w, height: h, flexShrink: 0 }}
-      fill="none"
-      stroke="rgba(255,255,255,0.55)"
-      strokeWidth="1"
-    >
+    <svg viewBox="0 0 24 18" style={{ width: Math.round(24*scale), height: Math.round(18*scale), flexShrink: 0 }}
+      fill="none" stroke="rgba(255,255,255,0.55)" strokeWidth="1">
       <rect x="1" y="1" width="22" height="16" rx="3" />
-      <line x1="1" y1="6" x2="23" y2="6" />
-      <line x1="1" y1="12" x2="23" y2="12" />
-      <line x1="8" y1="1" x2="8" y2="17" />
-      <line x1="16" y1="1" x2="16" y2="17" />
+      <line x1="1" y1="6" x2="23" y2="6" /><line x1="1" y1="12" x2="23" y2="12" />
+      <line x1="8" y1="1" x2="8" y2="17" /><line x1="16" y1="1" x2="16" y2="17" />
     </svg>
   )
 }
 
-// ─── SVG: símbolo contactless ─────────────────────────────────────────────────
 function ContactlessSVG({ scale = 1 }: { scale?: number }) {
-  const size = Math.round(18 * scale)
+  const s = Math.round(18*scale)
   return (
-    <svg
-      viewBox="0 0 18 18"
-      style={{ width: size, height: size, flexShrink: 0 }}
-      fill="none"
-      stroke="rgba(255,255,255,0.5)"
-      strokeWidth="1.5"
-      strokeLinecap="round"
-    >
+    <svg viewBox="0 0 18 18" style={{ width: s, height: s, flexShrink: 0 }}
+      fill="none" stroke="rgba(255,255,255,0.5)" strokeWidth="1.5" strokeLinecap="round">
       <circle cx="9" cy="9" r="1.5" fill="rgba(255,255,255,0.5)" stroke="none" />
       <path d="M12 6a4.24 4.24 0 010 6" />
       <path d="M14.5 3.5a7.78 7.78 0 010 11" />
@@ -123,28 +106,12 @@ function ContactlessSVG({ scale = 1 }: { scale?: number }) {
 function MiniCard({ tarjeta, size = "lg" }: { tarjeta: Tarjeta; size?: "sm" | "lg" }) {
   if (size === "sm") {
     return (
-      <div
-        className="rounded-lg flex-shrink-0"
-        style={{
-          background: tarjeta.gradiente,
-          width: 80,
-          height: 50,
-          position: "relative",
-          overflow: "hidden",
-        }}
-      >
-        {/* Chip pequeño */}
-        <div style={{ position: "absolute", top: 6, left: 6 }}>
-          <ChipSVG scale={0.55} />
-        </div>
-        {/* Contactless pequeño */}
-        <div style={{ position: "absolute", top: 5, right: 5 }}>
-          <ContactlessSVG scale={0.65} />
-        </div>
-        <span
-          className="absolute bottom-1.5 left-2 text-white font-bold"
-          style={{ fontSize: 6.5, opacity: 0.92, lineHeight: 1.2 }}
-        >
+      <div style={{ background: tarjeta.gradiente, width: 80, height: 50,
+        borderRadius: 10, position: "relative", overflow: "hidden", flexShrink: 0 }}>
+        <div style={{ position:"absolute", top:6, left:6 }}><ChipSVG scale={0.55} /></div>
+        <div style={{ position:"absolute", top:5, right:5 }}><ContactlessSVG scale={0.65} /></div>
+        <span style={{ position:"absolute", bottom:5, left:7,
+          fontSize:6.5, fontWeight:700, color:"white", opacity:0.9, lineHeight:1.2 }}>
           {tarjeta.banco}
         </span>
       </div>
@@ -152,125 +119,87 @@ function MiniCard({ tarjeta, size = "lg" }: { tarjeta: Tarjeta; size?: "sm" | "l
   }
 
   return (
-    <div
-      className="rounded-2xl relative overflow-hidden shadow-2xl"
-      style={{
-        background: tarjeta.gradiente,
-        width: "100%",
-        maxWidth: 340,
-        aspectRatio: "1.586 / 1",
-      }}
-    >
-      {/* Brillo sutil en el borde superior */}
-      <div
-        style={{
-          position: "absolute",
-          inset: 0,
-          background: "linear-gradient(145deg, rgba(255,255,255,0.15) 0%, transparent 50%)",
-          pointerEvents: "none",
-        }}
-      />
-
-      {/* Banco */}
-      <span
-        className="absolute top-4 left-5 text-white font-bold tracking-wide"
-        style={{ fontSize: 13, opacity: 0.95 }}
-      >
-        {tarjeta.banco}
-      </span>
-
-      {/* Chip — arriba izquierda, debajo del nombre */}
-      <div style={{ position: "absolute", top: "34%", left: "8%" }}>
-        <ChipSVG scale={1} />
-      </div>
-
-      {/* Contactless — arriba derecha */}
-      <div style={{ position: "absolute", top: "16%", right: "7%" }}>
-        <ContactlessSVG scale={1} />
-      </div>
-
-      {/* Número */}
-      <span
-        className="absolute text-white font-mono tracking-widest"
-        style={{ fontSize: 13, bottom: "36%", left: "8%", opacity: 0.75 }}
-      >
+    <div style={{ background: tarjeta.gradiente, width:"100%", maxWidth:340,
+      aspectRatio:"1.586/1", borderRadius:20, position:"relative", overflow:"hidden",
+      boxShadow:"0 16px 48px rgba(0,0,0,0.2)" }}>
+      <div style={{ position:"absolute", inset:0,
+        background:"linear-gradient(145deg, rgba(255,255,255,0.15) 0%, transparent 50%)", pointerEvents:"none" }} />
+      <span style={{ position:"absolute", top:16, left:20, fontSize:13, fontWeight:700,
+        color:"white", opacity:0.95, letterSpacing:"0.02em" }}>{tarjeta.banco}</span>
+      <div style={{ position:"absolute", top:"34%", left:"8%" }}><ChipSVG scale={1} /></div>
+      <div style={{ position:"absolute", top:"16%", right:"7%" }}><ContactlessSVG scale={1} /></div>
+      <span style={{ position:"absolute", fontSize:13, bottom:"36%", left:"8%",
+        color:"white", fontFamily:"monospace", letterSpacing:"0.2em", opacity:0.75 }}>
         •••• •••• •••• 4521
       </span>
-
-      {/* Titular y vencimiento */}
-      <span
-        className="absolute text-white font-semibold tracking-wider"
-        style={{ fontSize: 9.5, bottom: "13%", left: "8%", opacity: 0.85 }}
-      >
+      <span style={{ position:"absolute", fontSize:9.5, bottom:"13%", left:"8%",
+        color:"white", fontWeight:600, letterSpacing:"0.06em", opacity:0.85 }}>
         RATEARGY USER&nbsp;&nbsp;&nbsp;12/28
       </span>
-
-      {/* Red */}
-      <span
-        className="absolute bottom-4 right-5 text-white font-bold tracking-widest"
-        style={{ fontSize: 12, opacity: 0.75 }}
-      >
+      <span style={{ position:"absolute", bottom:16, right:20, fontSize:12, fontWeight:700,
+        color:"white", letterSpacing:"0.08em", opacity:0.75 }}>
         {tarjeta.red === "Mastercard" ? "MC" : tarjeta.red.toUpperCase()}
       </span>
     </div>
   )
 }
 
-// ─── Breakdown por categoría (solo top 1) ─────────────────────────────────────
-function Breakdown({
-  tarjeta,
-  gastos,
-}: {
-  tarjeta: Tarjeta & { ahorro: number }
-  gastos: Gastos
-}) {
-  const rows = (Object.keys(gastos) as CatKey[]).filter(
-    (cat) => gastos[cat] > 0 && tarjeta.beneficios[cat]?.pct > 0
-  )
+// ─── Breakdown por categoría — PROBLEMA 6 ────────────────────────────────────
+function Breakdown({ tarjeta, gastos }: { tarjeta: Tarjeta & { ahorro: number }; gastos: Gastos }) {
+  // Muestra TODAS las categorías donde el usuario gasta (con o sin beneficio)
+  const rows = (Object.keys(gastos) as CatKey[]).filter((cat) => gastos[cat] > 0)
   if (rows.length === 0) return null
 
   return (
-    <div className="mt-5 overflow-x-auto">
-      <table className="w-full text-sm">
-        <thead>
-          <tr
-            className="text-xs uppercase tracking-wide border-b"
-            style={{ color: "#94a3b8", borderColor: "rgba(0,0,0,0.06)" }}
-          >
-            <th className="pb-2 text-left font-medium">Categoría</th>
-            <th className="pb-2 text-right font-medium">Gasto</th>
-            <th className="pb-2 text-right font-medium">Desc.</th>
-            <th className="pb-2 text-right font-medium">Ahorro</th>
-          </tr>
-        </thead>
-        <tbody>
-          {rows.map((cat) => {
-            const b = tarjeta.beneficios[cat]
-            const ahorroCat = Math.min(gastos[cat] * (b.pct / 100), b.tope || Infinity)
-            const meta = CAT_META[cat]
-            return (
-              <tr key={cat} className="border-b" style={{ borderColor: "rgba(0,0,0,0.04)" }}>
-                <td className="py-2 text-gray-700">
-                  <span className="flex items-center gap-1.5">
-                    <CatIcon catKey={cat} className="w-3.5 h-3.5 text-gray-400 flex-shrink-0" />
-                    {meta.label}
-                    {"dias" in b && b.dias ? (
-                      <span className="text-[10px] text-gray-400">({b.dias as string})</span>
-                    ) : null}
-                  </span>
-                </td>
-                <td className="py-2 text-right text-gray-500 text-xs">{formatARS(gastos[cat])}</td>
-                <td className="py-2 text-right font-semibold text-xs" style={{ color: "#10b981" }}>
-                  {b.pct}%
-                </td>
-                <td className="py-2 text-right font-semibold text-xs" style={{ color: "#059669" }}>
-                  {formatARS(ahorroCat)}
-                </td>
-              </tr>
-            )
-          })}
-        </tbody>
-      </table>
+    <div style={{ marginTop: 24 }}>
+      <p style={{ fontSize: 12, fontWeight: 600, color: "#94a3b8", textTransform: "uppercase",
+        letterSpacing: "0.06em", marginBottom: 8 }}>Detalle por categoría</p>
+      <div>
+        {rows.map((cat) => {
+          const b = tarjeta.beneficios[cat]
+          const tieneDesc = b?.pct > 0
+          const ahorroCat = tieneDesc ? Math.min(gastos[cat] * (b.pct / 100), b.tope || Infinity) : 0
+          const { bg, color } = CAT_COLORS[cat]
+
+          return (
+            <div key={cat} style={{
+              display: "flex", alignItems: "center", gap: 12,
+              padding: "12px 0", borderBottom: "1px solid #f9fafb",
+              background: tieneDesc ? "transparent" : "#fafafa",
+            }}>
+              {/* Ícono en círculo de color */}
+              <div style={{ width:32, height:32, borderRadius:"50%", background: bg,
+                display:"flex", alignItems:"center", justifyContent:"center", flexShrink:0 }}>
+                <CatIcon catKey={cat} className="w-3.5 h-3.5" style={{ color }} />
+              </div>
+
+              {/* Nombre + días */}
+              <div style={{ flex: 1, minWidth: 0 }}>
+                <p style={{ fontSize:14, fontWeight:500, color:"#111827", margin:0, lineHeight:1.3 }}>
+                  {CAT_META[cat].label}
+                  {"dias" in b && b.dias ? (
+                    <span style={{ fontSize:11, color:"#9ca3af", marginLeft:4 }}>({b.dias as string})</span>
+                  ) : null}
+                </p>
+                {!tieneDesc && (
+                  <p style={{ fontSize:12, color:"#9ca3af", margin:0 }}>Sin beneficio en esta categoría</p>
+                )}
+              </div>
+
+              {/* Gasto */}
+              <span style={{ fontSize:14, color:"#6b7280", flexShrink:0 }}>
+                {formatARS(gastos[cat])}
+              </span>
+
+              {/* Ahorro */}
+              <span style={{ fontSize:14, fontWeight:700, color: tieneDesc ? "#10b981" : "#d1d5db",
+                flexShrink:0, minWidth:72, textAlign:"right" }}>
+                {tieneDesc ? `+ ${formatARS(ahorroCat)}` : "—"}
+              </span>
+            </div>
+          )
+        })}
+      </div>
     </div>
   )
 }
@@ -279,186 +208,85 @@ function Breakdown({
 type LucideIcon = React.ComponentType<{ size?: number; color?: string; strokeWidth?: number }>
 
 const CAT_LUCIDE: Record<CatKey, LucideIcon> = {
-  super:      ShoppingCart,
-  nafta:      Car,
-  farmacia:   Pill,
-  delivery:   Zap,
-  online:     CreditCard,
-  viajes:     Plane,
-  transporte: Car,
-  servicios:  Zap,
+  super: ShoppingCart, nafta: Car, farmacia: Pill, delivery: Zap,
+  online: CreditCard, viajes: Plane, transporte: Car, servicios: Zap,
 }
 
-// ─── Beneficios de la semana — grid estilo NerdWallet ─────────────────────────
-function BeneficiosMes({
-  resultados,
-  gastos,
-}: {
+// ─── Beneficios de la semana — grid estilo NerdWallet ────────────────────────
+function BeneficiosMes({ resultados, gastos }: {
   resultados: Array<Tarjeta & { ahorro: number }>
   gastos: Gastos
 }) {
-  type Bene = {
-    catKey: CatKey
-    nombre: string
-    banco: string
-    pct: number
-    tope: number
-    dias?: string
-    ahorroReal: number
-    key: string
-  }
+  type Bene = { catKey: CatKey; nombre: string; banco: string; pct: number; tope: number; dias?: string; ahorroReal: number; key: string }
 
-  // Una card por categoría donde el usuario gasta: busca la mejor promo (mayor %)
   const beneficios: Bene[] = []
-
   for (const cat of Object.keys(gastos) as CatKey[]) {
     if (gastos[cat] <= 0) continue
-
     let bestTarjeta: (Tarjeta & { ahorro: number }) | null = null
     let bestPct = 0
-
     for (const t of resultados) {
       const b = t.beneficios[cat]
-      if (b?.pct > bestPct) {
-        bestPct = b.pct
-        bestTarjeta = t
-      }
+      if (b?.pct > bestPct) { bestPct = b.pct; bestTarjeta = t }
     }
-
     if (bestTarjeta && bestPct > 0) {
       const b = bestTarjeta.beneficios[cat]
-      const ahorroReal = Math.min(gastos[cat] * (b.pct / 100), b.tope || Infinity)
       beneficios.push({
-        catKey: cat,
-        nombre: bestTarjeta.nombre,
-        banco: bestTarjeta.banco,
-        pct: b.pct,
-        tope: b.tope,
+        catKey: cat, nombre: bestTarjeta.nombre, banco: bestTarjeta.banco,
+        pct: b.pct, tope: b.tope,
         dias: "dias" in b ? (b.dias as string | undefined) : undefined,
-        ahorroReal,
+        ahorroReal: Math.min(gastos[cat] * (b.pct / 100), b.tope || Infinity),
         key: `best-${cat}`,
       })
     }
   }
 
-  // Ordenar por ahorro real descendente, mostrar hasta 6
-  const visibles = beneficios
-    .sort((a, b) => b.ahorroReal - a.ahorroReal)
-    .slice(0, 6)
-
+  const visibles = beneficios.sort((a, b) => b.ahorroReal - a.ahorroReal).slice(0, 6)
   if (visibles.length === 0) return null
 
   return (
-    <div className="mt-14">
-      {/* Encabezado */}
-      <div className="flex items-center gap-3 mb-5">
-        <h2 className="text-xl font-bold" style={{ color: "#111827" }}>
+    <div style={{ marginTop: 56 }}>
+      <style>{`
+        .beneficios-grid { display:grid; grid-template-columns:repeat(2,1fr); gap:16px; }
+        @media (min-width:768px) { .beneficios-grid { grid-template-columns:repeat(3,1fr); } }
+      `}</style>
+
+      <div style={{ display:"flex", alignItems:"center", gap:12, marginBottom:20 }}>
+        <h2 style={{ fontSize:32, fontWeight:800, letterSpacing:"-0.02em", color:"#111827", margin:0 }}>
           Beneficios que aplican a tu perfil
         </h2>
-        <span
-          style={{
-            background: "#d1fae5",
-            color: "#059669",
-            fontSize: 12,
-            fontWeight: 700,
-            padding: "3px 10px",
-            borderRadius: 999,
-            letterSpacing: "0.02em",
-          }}
-        >
+        <span style={{ background:"#d1fae5", color:"#059669", fontSize:12, fontWeight:700,
+          padding:"3px 10px", borderRadius:999, letterSpacing:"0.02em", whiteSpace:"nowrap" }}>
           Esta semana
         </span>
       </div>
 
-      {/* Grid 2 cols mobile → 3 cols desktop */}
-      <style>{`
-        .beneficios-grid { display: grid; grid-template-columns: repeat(2, 1fr); gap: 16px; }
-        @media (min-width: 768px) { .beneficios-grid { grid-template-columns: repeat(3, 1fr); } }
-      `}</style>
       <div className="beneficios-grid">
         {visibles.map((b) => {
           const Icon = CAT_LUCIDE[b.catKey]
-          const label = CAT_META[b.catKey].label
-
-          // Descripción dinámica
           const descParts: string[] = []
           if (b.dias) descParts.push(`Los ${b.dias}`)
-          descParts.push(`${b.pct}% de descuento con ${b.banco}`)
+          descParts.push(`${b.pct}% con ${b.banco}`)
 
           return (
-            <motion.div
-              key={b.key}
-              whileHover={{
-                y: -2,
-                boxShadow: "0 4px 20px rgba(16,185,129,0.12)",
-                borderColor: "#10b981",
-              }}
+            <motion.div key={b.key}
+              whileHover={{ y: -2, boxShadow: "0 4px 20px rgba(16,185,129,0.12)", borderColor: "#10b981" }}
               transition={{ duration: 0.18 }}
-              style={{
-                background: "white",
-                border: "1px solid #e5e7eb",
-                borderRadius: 16,
-                padding: 24,
-                position: "relative",
-                cursor: "default",
-              }}
-            >
-              {/* Fila superior: ícono izquierda + flecha derecha */}
-              <div style={{ display: "flex", alignItems: "flex-start", justifyContent: "space-between" }}>
-                {/* Ícono en círculo verde */}
-                <div
-                  style={{
-                    width: 44,
-                    height: 44,
-                    borderRadius: "50%",
-                    background: "#d1fae5",
-                    display: "flex",
-                    alignItems: "center",
-                    justifyContent: "center",
-                    flexShrink: 0,
-                  }}
-                >
+              style={{ background:"white", border:"1px solid #e5e7eb", borderRadius:16, padding:24,
+                position:"relative", cursor:"default" }}>
+              <div style={{ display:"flex", alignItems:"flex-start", justifyContent:"space-between" }}>
+                <div style={{ width:44, height:44, borderRadius:"50%", background:"#d1fae5",
+                  display:"flex", alignItems:"center", justifyContent:"center", flexShrink:0 }}>
                   <Icon size={20} color="#10b981" strokeWidth={1.75} />
                 </div>
-
-                {/* Flecha navegación */}
                 <ArrowUpRight size={18} color="#9ca3af" strokeWidth={1.75} />
               </div>
-
-              {/* Título */}
-              <p
-                style={{
-                  marginTop: 16,
-                  fontSize: 15,
-                  fontWeight: 600,
-                  color: "#111827",
-                  lineHeight: 1.3,
-                }}
-              >
-                {b.pct}% en {label}
+              <p style={{ marginTop:16, fontSize:15, fontWeight:600, color:"#111827", lineHeight:1.3 }}>
+                {b.pct}% en {CAT_META[b.catKey].label}
               </p>
-
-              {/* Descripción */}
-              <p
-                style={{
-                  marginTop: 6,
-                  fontSize: 13,
-                  color: "#6b7280",
-                  lineHeight: 1.5,
-                }}
-              >
+              <p style={{ marginTop:6, fontSize:13, color:"#6b7280", lineHeight:1.5 }}>
                 {descParts.join(" · ")}
               </p>
-
-              {/* Ahorro calculado según gasto del usuario */}
-              <p
-                style={{
-                  marginTop: 12,
-                  fontSize: 13,
-                  fontWeight: 600,
-                  color: "#10b981",
-                }}
-              >
+              <p style={{ marginTop:12, fontSize:13, fontWeight:600, color:"#10b981" }}>
                 Hasta {formatARS(b.ahorroReal)} de ahorro
               </p>
             </motion.div>
@@ -469,248 +297,209 @@ function BeneficiosMes({
   )
 }
 
-// ─── Ahorro animado (top 1) ───────────────────────────────────────────────────
+// ─── Ahorro animado ───────────────────────────────────────────────────────────
 function AhorroAnimado({ value }: { value: number }) {
-  const display = useCountUp(value, 800)
-  return <>{formatARS(display)}</>
+  return <>{formatARS(useCountUp(value, 800))}</>
 }
 
-// ─── Componente principal de resultados ──────────────────────────────────────
+// ─── Barra de score — PROBLEMA 5 ─────────────────────────────────────────────
+function ScoreBar({ pct, isTop1 = false }: { pct: number; isTop1?: boolean }) {
+  return (
+    <div>
+      <div style={{ height:8, borderRadius:999, background:"#f3f4f6", overflow:"hidden" }}>
+        <motion.div
+          style={{ height:"100%", borderRadius:999,
+            background: isTop1
+              ? "linear-gradient(90deg, #10b981, #059669)"
+              : "linear-gradient(90deg, #6366f1, #818cf8)" }}
+          initial={{ width: 0 }}
+          animate={{ width: `${pct}%` }}
+          transition={{ duration: 0.7, ease: "easeOut" }}
+        />
+      </div>
+      <p style={{ fontSize:12, color:"#9ca3af", marginTop:4 }}>
+        {pct}% del máximo posible
+      </p>
+    </div>
+  )
+}
+
+// ─── Componente principal ─────────────────────────────────────────────────────
 interface ResultadosTarjetasProps {
   resultados: Array<Tarjeta & { ahorro: number }>
   gastos: Gastos
   tarjetaActual: string
 }
 
-export default function ResultadosTarjetas({
-  resultados,
-  gastos,
-  tarjetaActual,
-}: ResultadosTarjetasProps) {
-  const totalGasto = Object.values(gastos).reduce((a, b) => a + b, 0)
-  const maxAhorro = resultados[0]?.ahorro ?? 0
+export default function ResultadosTarjetas({ resultados, gastos, tarjetaActual }: ResultadosTarjetasProps) {
+  const totalGasto   = Object.values(gastos).reduce((a, b) => a + b, 0)
+  const maxAhorro    = resultados[0]?.ahorro ?? 0
   const tarjetaActualData = TARJETAS.find((t) => t.id === tarjetaActual)
   const ahorroActual = resultados.find((t) => t.id === tarjetaActual)?.ahorro ?? 0
-  const top1 = resultados[0]
+  const top1         = resultados[0]
 
   return (
     <motion.div
       initial={{ opacity: 0, y: 24 }}
       animate={{ opacity: 1, y: 0 }}
       transition={{ type: "spring", stiffness: 300, damping: 30 }}
-      className="mt-12"
     >
-      {/* ── Header resultados ── */}
-      <div className="flex flex-wrap items-center gap-3 mb-6">
-        <h2 className="text-2xl font-bold" style={{ color: "#0a0a0a" }}>
+      {/* ── Header ranking — PROBLEMA 2: títulos 32px 800 */}
+      <div style={{ display:"flex", flexWrap:"wrap", alignItems:"center", gap:12, marginBottom:24 }}>
+        <h2 style={{ fontSize:32, fontWeight:800, letterSpacing:"-0.02em", color:"#111827", margin:0 }}>
           Tu ranking personalizado
         </h2>
-        <span
-          className="text-sm font-semibold px-3 py-1 rounded-full"
-          style={{
-            background: "rgba(16,185,129,0.1)",
-            color: "#059669",
-            border: "1px solid rgba(16,185,129,0.2)",
-          }}
-        >
-          Gasto total: {formatARS(totalGasto)}/mes
+        <span style={{ background:"rgba(16,185,129,0.1)", color:"#059669",
+          border:"1px solid rgba(16,185,129,0.2)", borderRadius:999,
+          fontSize:14, fontWeight:600, padding:"4px 14px" }}>
+          {formatARS(totalGasto)}/mes
         </span>
       </div>
 
-      {/* ── Banner tarjeta actual ── */}
+      {/* ── Banner tarjeta actual */}
       <AnimatePresence>
         {tarjetaActualData && tarjetaActual !== top1.id && (
-          <motion.div
-            initial={{ opacity: 0, y: -8 }}
-            animate={{ opacity: 1, y: 0 }}
-            exit={{ opacity: 0 }}
-            className="mb-6 rounded-xl px-4 py-3 text-sm"
-            style={{
-              background: "rgba(251,191,36,0.08)",
-              border: "1px solid rgba(251,191,36,0.3)",
-              color: "#92400e",
-            }}
-          >
+          <motion.div initial={{ opacity:0, y:-8 }} animate={{ opacity:1, y:0 }} exit={{ opacity:0 }}
+            style={{ marginBottom:20, borderRadius:14, padding:"12px 16px", fontSize:14,
+              background:"rgba(251,191,36,0.08)", border:"1px solid rgba(251,191,36,0.3)", color:"#92400e" }}>
             Con tu tarjeta actual ({tarjetaActualData.nombre}) ahorrás{" "}
             <strong>{formatARS(ahorroActual)}/mes</strong>. Cambiando a{" "}
             <strong>{top1.nombre}</strong> ahorrarías{" "}
-            <strong style={{ color: "#059669" }}>{formatARS(top1.ahorro - ahorroActual)} más</strong>.
+            <strong style={{ color:"#059669" }}>{formatARS(top1.ahorro - ahorroActual)} más</strong>.
           </motion.div>
         )}
       </AnimatePresence>
 
-      {/* ── TOP 1 destacado ── */}
+      {/* ════════════ TOP 1 — PROBLEMA 4 ════════════ */}
       <motion.div
-        initial={{ opacity: 0, scale: 0.97 }}
-        animate={{ opacity: 1, scale: 1 }}
-        transition={{ type: "spring", stiffness: 280, damping: 28, delay: 0.08 }}
-        className="rounded-2xl p-6 mb-6"
+        initial={{ opacity:0, scale:0.97 }} animate={{ opacity:1, scale:1 }}
+        transition={{ type:"spring", stiffness:280, damping:28, delay:0.08 }}
         style={{
-          background: "rgba(255,255,255,0.95)",
-          backdropFilter: "blur(20px)",
-          border: "2px solid rgba(16,185,129,0.35)",
-          boxShadow: "0 20px 60px rgba(16,185,129,0.12), 0 4px 16px rgba(0,0,0,0.06)",
+          padding:40,                                     // PROBLEMA 4
+          borderRadius:24,                                // PROBLEMA 4
+          background:"linear-gradient(135deg, #ffffff 0%, #f0fdf4 100%)", // PROBLEMA 4
+          boxShadow:"0 20px 60px rgba(0,0,0,0.08), 0 0 0 1px rgba(16,185,129,0.2)", // PROBLEMA 4
+          borderLeft:"4px solid #10b981",                // PROBLEMA 4
+          marginBottom:16,
+          position:"relative",
+          overflow:"hidden",
         }}
       >
-        {/* Badge */}
-        <div className="flex items-center gap-2 mb-5">
-          <span
-            className="text-xs font-bold px-3 py-1 rounded-full tracking-wide"
-            style={{ background: "#10b981", color: "white" }}
-          >
-            ★ Mejor para vos
+        {/* Badge — PROBLEMA 4 */}
+        <div style={{ display:"flex", alignItems:"center", gap:10, marginBottom:20 }}>
+          <span style={{
+            background:"#10b981", color:"white",
+            fontSize:12, fontWeight:600,                  // PROBLEMA 4
+            padding:"6px 14px", borderRadius:999,         // PROBLEMA 4
+            letterSpacing:"0.04em",                       // PROBLEMA 4
+          }}>
+            Mejor para vos
           </span>
-          <span className="text-gray-400 text-sm">{top1.banco}</span>
+          <span style={{ fontSize:13, fontWeight:500, color:"#6b7280" }}>{top1.banco}</span>
         </div>
 
         <div className="grid md:grid-cols-2 gap-6 items-center">
-          {/* Tarjeta física */}
           <MiniCard tarjeta={top1} size="lg" />
 
-          {/* Info */}
           <div>
-            <h3 className="text-xl font-bold mb-1" style={{ color: "#0a0a0a" }}>
+            {/* Nombre — PROBLEMA 2: 18px 700 */}
+            <h3 style={{ fontSize:18, fontWeight:700, color:"#111827", margin:"0 0 4px" }}>
               {top1.nombre}
             </h3>
-            <p className="text-sm mb-4" style={{ color: "#94a3b8" }}>
+            {/* Banco — PROBLEMA 2: 13px 500 */}
+            <p style={{ fontSize:13, fontWeight:500, color:"#6b7280", marginBottom:20 }}>
               {top1.red}
             </p>
 
-            {/* Ahorro con contador animado */}
-            <div className="mb-4">
-              <span className="text-4xl font-extrabold" style={{ color: "#10b981" }}>
+            {/* Ahorro — PROBLEMA 2: 48px 900 */}
+            <div style={{ marginBottom:20 }}>
+              <span style={{ fontSize:48, fontWeight:900, color:"#10b981", lineHeight:1 }}>
                 <AhorroAnimado value={top1.ahorro} />
               </span>
-              <span className="font-medium ml-1" style={{ color: "#6b7280" }}>/mes</span>
-              <p className="text-sm mt-1" style={{ color: "#94a3b8" }}>
+              <span style={{ fontSize:16, fontWeight:500, color:"#6b7280", marginLeft:4 }}>/mes</span>
+              <p style={{ fontSize:14, color:"#9ca3af", marginTop:4 }}>
                 = {formatARS(top1.ahorro * 12)} al año
               </p>
             </div>
 
             {/* Pills */}
-            <div className="flex flex-wrap gap-2 mb-4">
+            <div style={{ display:"flex", flexWrap:"wrap", gap:8, marginBottom:20 }}>
               {top1.pills.map((p) => (
-                <span
-                  key={p}
-                  className="text-xs font-semibold px-2.5 py-1 rounded-lg"
-                  style={{
-                    background: "rgba(16,185,129,0.08)",
-                    color: "#059669",
-                    border: "1px solid rgba(16,185,129,0.15)",
-                  }}
-                >
-                  {p}
-                </span>
+                <span key={p} style={{
+                  fontSize:12, fontWeight:600, padding:"4px 10px", borderRadius:8,
+                  background:"rgba(16,185,129,0.08)", color:"#059669",
+                  border:"1px solid rgba(16,185,129,0.15)",
+                }}>{p}</span>
               ))}
             </div>
 
-            {/* Score 100% */}
-            <div className="flex items-center gap-2">
-              <div
-                className="flex-1 h-2 rounded-full overflow-hidden"
-                style={{ background: "rgba(16,185,129,0.1)" }}
-              >
-                <motion.div
-                  className="h-full rounded-full"
-                  style={{ background: "linear-gradient(90deg, #10b981, #059669)" }}
-                  initial={{ width: 0 }}
-                  animate={{ width: "100%" }}
-                  transition={{ duration: 0.8, delay: 0.3, ease: "easeOut" }}
-                />
-              </div>
-              <span className="text-xs font-semibold" style={{ color: "#10b981" }}>
-                Score 100%
-              </span>
-            </div>
+            {/* Score — PROBLEMA 5: 8px, "X% del máximo posible" */}
+            <ScoreBar pct={100} isTop1 />
           </div>
         </div>
 
-        {/* Breakdown */}
+        {/* Breakdown — PROBLEMA 6 */}
         <Breakdown tarjeta={top1} gastos={gastos} />
       </motion.div>
 
-      {/* ── Ranking completo (#2 en adelante) ── */}
-      <div className="space-y-2">
+      {/* ════════════ RANKING #2+ — PROBLEMA 4 ════════════ */}
+      <div style={{ display:"flex", flexDirection:"column", gap:16, marginBottom:0 }}>
         {resultados.slice(1).map((t, idx) => {
-          const score = getScorePct(t.ahorro, maxAhorro)
-          const diff = t.ahorro - ahorroActual
+          const score    = getScorePct(t.ahorro, maxAhorro)
+          const diff     = t.ahorro - ahorroActual
           const showDiff = tarjetaActualData && t.id !== tarjetaActual
 
           return (
             <motion.div
               key={t.id}
-              initial={{ opacity: 0, y: 10 }}
-              animate={{ opacity: 1, y: 0 }}
-              transition={{
-                type: "spring",
-                stiffness: 300,
-                damping: 30,
-                delay: Math.min(idx * 0.04, 0.6),
-              }}
-              className="flex items-center gap-4 px-4 py-3 rounded-xl cursor-default"
+              initial={{ opacity:0, y:10 }} animate={{ opacity:1, y:0 }}
+              transition={{ type:"spring", stiffness:300, damping:30, delay: Math.min(idx*0.04, 0.6) }}
+              whileHover={{ y:-2, boxShadow:"0 8px 32px rgba(0,0,0,0.08)", borderColor:"#d1fae5" }}
               style={{
-                background: "rgba(255,255,255,0.85)",
-                border: "1px solid rgba(0,0,0,0.06)",
-                transition: "box-shadow 0.2s, transform 0.2s, border-color 0.2s",
-              }}
-              whileHover={{
-                y: -2,
-                boxShadow: "0 8px 24px rgba(99,102,241,0.1)",
-                borderColor: "rgba(99,102,241,0.25)",
+                padding:"20px 24px",                      // PROBLEMA 4
+                borderRadius:16,                          // PROBLEMA 4
+                border:"1px solid #f3f4f6",               // PROBLEMA 4
+                boxShadow:"0 2px 8px rgba(0,0,0,0.04)",  // PROBLEMA 4
+                background:"white",
+                display:"flex", alignItems:"center", gap:16,
+                position:"relative", overflow:"hidden",
+                cursor:"default",
+                transition:"box-shadow 0.2s ease, transform 0.2s ease, border-color 0.2s ease",
               }}
             >
-              {/* Número */}
-              <span
-                className="text-xl font-black w-7 flex-shrink-0 text-center select-none"
-                style={{ color: "#e2e8f0" }}
-              >
-                {idx + 2}
-              </span>
+              {/* Número decorativo — PROBLEMA 4: absolute top-right 32px #f3f4f6 */}
+              <span style={{
+                position:"absolute", top:8, right:14,
+                fontSize:32, fontWeight:900, color:"#f3f4f6",
+                lineHeight:1, userSelect:"none", pointerEvents:"none",
+              }}>{idx + 2}</span>
 
-              {/* Mini tarjeta */}
               <MiniCard tarjeta={t} size="sm" />
 
-              {/* Info */}
-              <div className="flex-1 min-w-0">
-                <p className="font-semibold text-sm truncate" style={{ color: "#1e293b" }}>
+              <div style={{ flex:1, minWidth:0, position:"relative", zIndex:1 }}>
+                {/* Nombre — PROBLEMA 2 */}
+                <p style={{ fontSize:15, fontWeight:700, color:"#111827", margin:"0 0 2px",
+                  overflow:"hidden", textOverflow:"ellipsis", whiteSpace:"nowrap" }}>
                   {t.nombre}
                 </p>
-                <p className="text-xs truncate" style={{ color: "#94a3b8" }}>
+                {/* Banco — PROBLEMA 2 */}
+                <p style={{ fontSize:13, fontWeight:500, color:"#6b7280", margin:"0 0 10px",
+                  overflow:"hidden", textOverflow:"ellipsis", whiteSpace:"nowrap" }}>
                   {t.banco}
                 </p>
-
-                {/* Barra de score — indigo para #2+ */}
-                <div className="mt-1.5 flex items-center gap-2">
-                  <div
-                    className="flex-1 h-1 rounded-full overflow-hidden"
-                    style={{ background: "rgba(0,0,0,0.06)" }}
-                  >
-                    <motion.div
-                      className="h-full rounded-full"
-                      style={{ background: "linear-gradient(90deg, #6366f1, #818cf8)" }}
-                      initial={{ width: 0 }}
-                      animate={{ width: `${score}%` }}
-                      transition={{ duration: 0.6, delay: Math.min(idx * 0.04, 0.6) + 0.1 }}
-                    />
-                  </div>
-                  <span className="text-[10px] flex-shrink-0" style={{ color: "#6366f1", fontWeight: 600 }}>
-                    {score}%
-                  </span>
-                </div>
+                {/* Barra score — PROBLEMA 5 */}
+                <ScoreBar pct={score} isTop1={false} />
               </div>
 
-              {/* Ahorro + diff */}
-              <div className="text-right flex-shrink-0">
-                <p className="font-semibold text-sm" style={{ color: "#10b981" }}>
+              {/* Ahorro */}
+              <div style={{ textAlign:"right", flexShrink:0, position:"relative", zIndex:1 }}>
+                <p style={{ fontSize:15, fontWeight:700, color:"#10b981", margin:0 }}>
                   {formatARS(t.ahorro)}/mes
                 </p>
                 {showDiff && (
-                  <p
-                    className="text-[11px] font-medium mt-0.5"
-                    style={{ color: diff >= 0 ? "#10b981" : "#f87171" }}
-                  >
-                    {diff >= 0 ? "+" : ""}
-                    {formatARS(diff)} vs tu tarjeta
+                  <p style={{ fontSize:12, fontWeight:600, marginTop:3,
+                    color: diff >= 0 ? "#10b981" : "#f87171" }}>
+                    {diff >= 0 ? "+" : ""}{formatARS(diff)} vs tu tarjeta
                   </p>
                 )}
               </div>
