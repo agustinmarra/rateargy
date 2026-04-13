@@ -40,14 +40,6 @@ const COMO_FUNCIONA = [
   { Icono: Trophy,     num: "03", title: "Elegís la mejor",      desc: "Ranking ordenado por ahorro real mensual para tu perfil de gasto." },
 ]
 
-const BENEFICIOS_DESTACADOS = [
-  { banco: "Patagonia Visa",   pct: 35, lugar: "La Anónima",         cat: "Supermercados", dia: "Jueves",   tope: 15000, color: "#2d6a4f", gradBg: "linear-gradient(135deg, #ecfdf5 0%, #d1fae5 100%)" },
-  { banco: "Supervielle",      pct: 50, lugar: "Farmacity",          cat: "Farmacia",      dia: "Todos",    tope:  5000, color: "#e85d04", gradBg: "linear-gradient(135deg, #fff7ed 0%, #fed7aa 100%)" },
-  { banco: "BNA Gold",         pct: 30, lugar: "Coto / Carrefour",   cat: "Supermercados", dia: "Miércoles",tope: 12000, color: "#003580", gradBg: "linear-gradient(135deg, #eff6ff 0%, #dbeafe 100%)" },
-  { banco: "Cuenta DNI",       pct: 30, lugar: "PedidosYa / Rappi",  cat: "Delivery",      dia: "Finde",    tope:  5000, color: "#0f766e", gradBg: "linear-gradient(135deg, #f0fdfa 0%, #ccfbf1 100%)" },
-  { banco: "Naranja X",        pct: 20, lugar: "MercadoLibre / web", cat: "Online",        dia: "Todos",    tope: 10000, color: "#e05a00", gradBg: "linear-gradient(135deg, #fff7ed 0%, #ffedd5 100%)" },
-  { banco: "BBVA Platinum",    pct: 15, lugar: "Despegar / Almundo", cat: "Viajes",        dia: "Todos",    tope: 20000, color: "#004481", gradBg: "linear-gradient(135deg, #eff6ff 0%, #dbeafe 100%)" },
-]
 
 const GUIAS = [
   { Icono: CreditCard, titulo: "Cómo elegir tu tarjeta", desc: "Los 5 factores clave para no equivocarte en Argentina.", href: "/articulos/como-elegir-tarjeta-de-credito-argentina-2025" },
@@ -359,13 +351,6 @@ export default function Home() {
           .hero-grid { grid-template-columns: 1fr; gap: 40px; }
           .hero-preview { display: none; }
         }
-        .beneficios-grid {
-          display: grid;
-          grid-template-columns: repeat(3, 1fr);
-          gap: 20px;
-        }
-        @media (max-width: 900px) { .beneficios-grid { grid-template-columns: repeat(2, 1fr); } }
-        @media (max-width: 520px)  { .beneficios-grid { grid-template-columns: 1fr; } }
         .guias-grid {
           display: grid;
           grid-template-columns: repeat(3, 1fr);
@@ -924,191 +909,107 @@ export default function Home() {
           </div>
         </div>
 
-        {/* ════ BENEFICIOS DESTACADOS ════ */}
+        {/* ════ GUÍAS ════ */}
         <section style={{ padding: "96px 24px 96px", background: "#f9fafb" }}>
           <div style={{ maxWidth: 1120, margin: "0 auto" }}>
+
+            {/* Header */}
             <div style={{ textAlign: "center", marginBottom: 56 }}>
               <div style={{ display:"inline-flex", alignItems:"center", gap:6,
                 background:"#f0fdf4", border:"1px solid #d1fae5",
                 borderRadius:999, padding:"5px 14px", marginBottom:16,
                 fontSize:11, fontWeight:700, letterSpacing:"0.1em", textTransform:"uppercase", color:"#065f46" }}>
-                <span style={{ width:6, height:6, borderRadius:"50%", background:"#10b981", display:"inline-block" }} />
-                Beneficios vigentes · Actualizado lunes
+                <BookOpen size={11} color="#059669" />
+                Guías financieras
               </div>
-              <h2 style={{ fontSize: "clamp(28px,3.2vw,44px)", fontWeight: 900, letterSpacing: "-0.04em",
-                color: "#0a0a0a", margin: "0 0 14px" }}>
-                Los descuentos más destacados
+              <h2 style={{ fontSize: "clamp(28px,3.2vw,44px)", fontWeight: 900,
+                letterSpacing: "-0.045em", color: "#0a0a0a", margin: "0 0 14px" }}>
+                Aprendé a tomar mejores decisiones
               </h2>
-              <p style={{ fontSize: 17, color: "#6b7280", margin: 0, lineHeight: 1.6 }}>
-                Beneficios reales vigentes. Calculamos el ahorro exacto para tu perfil.
+              <p style={{ fontSize: 17, color: "#6b7280", maxWidth: 480, margin: "0 auto", lineHeight: 1.7 }}>
+                Contenido educativo sobre finanzas personales en Argentina.
               </p>
             </div>
 
-            <div className="beneficios-grid">
-              {BENEFICIOS_DESTACADOS.map(({ banco, pct, lugar, cat, dia, tope, color, gradBg }, i) => (
-                <motion.div
-                  key={banco}
-                  initial={{ opacity: 0, y: 16 }} whileInView={{ opacity: 1, y: 0 }}
-                  viewport={{ once: true }} transition={{ duration: 0.4, delay: i * 0.07 }}
-                  whileHover={{ y: -5, boxShadow: "0 20px 56px rgba(0,0,0,0.11)" }}
-                  style={{
-                    minHeight: 200,
-                    padding: "24px 22px",
-                    background: gradBg,
-                    border: "1.5px solid rgba(0,0,0,0.06)",
-                    borderRadius: 22,
-                    position: "relative", overflow: "hidden",
-                    cursor: "default",
-                    display: "flex", flexDirection: "column", justifyContent: "space-between",
-                  }}
-                >
-                  {/* Blob decorativo */}
-                  <div aria-hidden style={{
-                    position: "absolute", bottom: -28, right: -28, width: 110, height: 110,
-                    borderRadius: "50%", background: color, opacity: 0.09, pointerEvents: "none",
-                  }} />
+            <div className="guias-grid">
+              {GUIAS.map(({ Icono, titulo, desc }, i) => {
+                const gradientes = [
+                  { bg: "linear-gradient(135deg, #ecfdf5 0%, #d1fae5 100%)", iconBg: "linear-gradient(135deg, #10b981 0%, #059669 100%)", accent: "#059669" },
+                  { bg: "linear-gradient(135deg, #eff6ff 0%, #dbeafe 100%)", iconBg: "linear-gradient(135deg, #3b82f6 0%, #2563eb 100%)", accent: "#2563eb" },
+                  { bg: "linear-gradient(135deg, #fdf4ff 0%, #f3e8ff 100%)", iconBg: "linear-gradient(135deg, #a855f7 0%, #9333ea 100%)", accent: "#9333ea" },
+                ]
+                const { bg, iconBg, accent } = gradientes[i % 3]
 
-                  {/* Top: iniciales + badge día */}
-                  <div style={{ display: "flex", alignItems: "flex-start", justifyContent: "space-between", marginBottom: 16 }}>
+                return (
+                  <motion.div
+                    key={titulo}
+                    initial={{ opacity: 0, y: 20 }} whileInView={{ opacity: 1, y: 0 }}
+                    viewport={{ once: true }} transition={{ duration: 0.45, delay: i * 0.1 }}
+                    whileHover={{ y: -6, boxShadow: "0 24px 56px rgba(0,0,0,0.1)" }}
+                    style={{
+                      background: bg,
+                      border: "1.5px solid rgba(0,0,0,0.05)",
+                      borderRadius: 26,
+                      padding: "36px 32px",
+                      boxShadow: "0 4px 20px rgba(0,0,0,0.05)",
+                      display: "flex", flexDirection: "column",
+                      minHeight: 280,
+                      position: "relative", overflow: "hidden",
+                      cursor: "default",
+                    }}
+                  >
+                    {/* Orb decorativo de fondo */}
+                    <div aria-hidden style={{
+                      position:"absolute", bottom:-40, right:-40, width:160, height:160,
+                      borderRadius:"50%", background:accent, opacity:0.07, pointerEvents:"none",
+                    }} />
+
+                    {/* Ícono */}
                     <div style={{
-                      width: 48, height: 48, borderRadius: 14, background: color,
+                      width: 60, height: 60, borderRadius: 18,
+                      background: iconBg,
                       display: "flex", alignItems: "center", justifyContent: "center",
-                      fontSize: 15, fontWeight: 800, color: "#fff", flexShrink: 0,
-                      boxShadow: `0 6px 16px ${color}44`,
+                      marginBottom: 24,
+                      boxShadow: `0 8px 24px ${accent}33`,
+                      flexShrink: 0,
                     }}>
-                      {banco.split(" ")[0][0]}{banco.split(" ")[1]?.[0] ?? ""}
+                      <Icono size={28} color="#fff" strokeWidth={1.75} />
                     </div>
-                    <div style={{
-                      background: "rgba(255,255,255,0.85)", backdropFilter: "blur(8px)",
-                      borderRadius: 999, padding: "4px 11px",
-                      fontSize: 11, fontWeight: 700, color: color,
-                      border: `1px solid ${color}33`,
-                    }}>
-                      {dia}
-                    </div>
-                  </div>
 
-                  {/* Cuerpo */}
-                  <div>
-                    {/* Porcentaje */}
-                    <p style={{ fontSize: 32, fontWeight: 900, color, margin: "0 0 2px", letterSpacing: "-0.03em", lineHeight: 1 }}>
-                      {pct}%
-                    </p>
-                    {/* Categoría */}
-                    <p style={{ fontSize: 13, fontWeight: 700, color: "#374151", margin: "0 0 5px" }}>
-                      {cat}
-                    </p>
-                    {/* Lugar */}
-                    <p style={{ fontSize: 13, fontWeight: 500, color: "#6b7280", margin: "0 0 4px", lineHeight: 1.4 }}>
-                      {lugar}
-                    </p>
-                    {/* Banco */}
-                    <p style={{ fontSize: 12, color: "#9ca3af", margin: "0 0 14px" }}>
-                      con {banco}
-                    </p>
-                    {/* Tope */}
-                    <div style={{ display: "flex", alignItems: "center", justifyContent: "space-between", gap: 8 }}>
-                      <span style={{ fontSize: 11, color: "#9ca3af" }}>
-                        Tope: {new Intl.NumberFormat("es-AR", { style:"currency", currency:"ARS", maximumFractionDigits:0 }).format(tope)}/mes
+                    {/* Contenido */}
+                    <div style={{ flex: 1 }}>
+                      <h3 style={{
+                        fontSize: 19, fontWeight: 900, color: "#0a0a0a",
+                        margin: "0 0 12px", lineHeight: 1.25, letterSpacing: "-0.03em",
+                      }}>
+                        {titulo}
+                      </h3>
+                      <p style={{ fontSize: 15, color: "#6b7280", margin: 0, lineHeight: 1.7 }}>
+                        {desc}
+                      </p>
+                    </div>
+
+                    {/* Footer */}
+                    <div style={{ marginTop: 28, display: "flex", alignItems: "center", justifyContent: "space-between" }}>
+                      <span style={{
+                        fontSize: 13, fontWeight: 700, color: accent,
+                        display: "inline-flex", alignItems: "center", gap: 6,
+                        background: "rgba(255,255,255,0.7)", padding: "7px 14px",
+                        borderRadius: 10, border: `1px solid ${accent}22`,
+                      }}>
+                        Leer guía <ArrowRight size={13} />
                       </span>
                       <span style={{
-                        fontSize: 11, fontWeight: 700, color,
-                        background: "rgba(255,255,255,0.7)", borderRadius: 8, padding: "3px 8px",
-                        border: `1px solid ${color}22`,
+                        fontSize: 11, fontWeight: 600, color: "#9ca3af",
+                        background: "rgba(255,255,255,0.6)", padding: "4px 10px",
+                        borderRadius: 999,
                       }}>
-                        Vigente
+                        Próximamente
                       </span>
                     </div>
-                  </div>
-                </motion.div>
-              ))}
-            </div>
-
-            <div style={{ textAlign: "center", marginTop: 40 }}>
-              <motion.a
-                href="/tarjetas"
-                whileHover={{ y: -2, boxShadow: "0 8px 24px rgba(16,185,129,0.2)" }}
-                style={{
-                  display: "inline-flex", alignItems: "center", gap: 8,
-                  fontSize: 15, fontWeight: 700, color: "#059669",
-                  textDecoration: "none", padding: "12px 24px",
-                  background: "white",
-                  border: "1.5px solid #d1fae5", borderRadius: 14,
-                }}
-              >
-                Ver todas las tarjetas y beneficios
-                <ArrowRight size={16} />
-              </motion.a>
-            </div>
-          </div>
-        </section>
-
-        {/* ════ GUÍAS ════ */}
-        <section style={{ padding: "96px 24px 96px", background: "#ffffff" }}>
-          <div style={{ maxWidth: 1120, margin: "0 auto" }}>
-            <div style={{ display: "flex", alignItems: "flex-end", justifyContent: "space-between",
-              flexWrap: "wrap", gap: 16, marginBottom: 48 }}>
-              <div>
-                <div style={{ display:"inline-flex", alignItems:"center", gap:6,
-                  background:"#f0fdf4", border:"1px solid #d1fae5",
-                  borderRadius:999, padding:"5px 14px", marginBottom:16,
-                  fontSize:11, fontWeight:700, letterSpacing:"0.1em", textTransform:"uppercase", color:"#065f46" }}>
-                  <BookOpen size={11} color="#059669" />
-                  Guías financieras
-                </div>
-                <h2 style={{ fontSize: "clamp(26px,3vw,40px)", fontWeight: 900,
-                  letterSpacing: "-0.04em", color: "#0a0a0a", margin: 0 }}>
-                  Aprendé a tomar mejores decisiones
-                </h2>
-              </div>
-              <motion.a
-                href="/articulos"
-                whileHover={{ y: -1 }}
-                style={{ fontSize: 14, fontWeight: 700, color: "#059669",
-                  textDecoration: "none", display: "flex", alignItems: "center", gap: 4,
-                  padding: "10px 18px", borderRadius: 12, border: "1.5px solid #d1fae5", background: "white" }}>
-                Ver todas <ArrowRight size={14} />
-              </motion.a>
-            </div>
-
-            <div className="guias-grid">
-              {GUIAS.map(({ Icono, titulo, desc, href }, i) => (
-                <motion.a
-                  key={titulo}
-                  href={href}
-                  initial={{ opacity: 0, y: 16 }} whileInView={{ opacity: 1, y: 0 }}
-                  viewport={{ once: true }} transition={{ duration: 0.4, delay: i * 0.09 }}
-                  style={{
-                    display: "block", textDecoration: "none",
-                    padding: "32px 28px",
-                    background: "#fff", border: "1.5px solid #e5e7eb",
-                    borderRadius: 24,
-                    boxShadow: "0 2px 12px rgba(0,0,0,0.04)",
-                  }}
-                  whileHover={{ y: -5, boxShadow: "0 20px 48px rgba(0,0,0,0.1)", borderColor: "#10b981" }}
-                >
-                  <div style={{
-                    width: 52, height: 52, borderRadius: 16,
-                    background: "linear-gradient(135deg, #f0fdf4 0%, #d1fae5 100%)",
-                    display: "flex", alignItems: "center", justifyContent: "center",
-                    marginBottom: 20,
-                    boxShadow: "0 4px 12px rgba(16,185,129,0.15)",
-                  }}>
-                    <Icono size={24} color="#059669" strokeWidth={1.75} />
-                  </div>
-                  <h3 style={{ fontSize: 17, fontWeight: 800, color: "#111827", margin: "0 0 10px", lineHeight: 1.3, letterSpacing: "-0.02em" }}>
-                    {titulo}
-                  </h3>
-                  <p style={{ fontSize: 14, color: "#6b7280", margin: "0 0 20px", lineHeight: 1.65 }}>
-                    {desc}
-                  </p>
-                  <span style={{ fontSize: 13, fontWeight: 700, color: "#059669",
-                    display: "inline-flex", alignItems: "center", gap: 6,
-                    background: "#f0fdf4", padding: "6px 12px", borderRadius: 8 }}>
-                    Leer guía <ArrowRight size={13} />
-                  </span>
-                </motion.a>
-              ))}
+                  </motion.div>
+                )
+              })}
             </div>
           </div>
         </section>
