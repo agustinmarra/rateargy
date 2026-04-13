@@ -30,25 +30,32 @@ const TIPOS: { key: "super" | "premium" | "diesel"; label: string; desc: string 
   { key: "diesel",  label: "Diesel",  desc: "Gasoil"                },
 ]
 
+// ACTUALIZAR ACÁ CADA VEZ QUE SUBAN LOS PRECIOS
+// Fuente: verificar en ypf.com, shell.com.ar o infobae.com/economia
+// Última actualización: abril 2026
 const ESTACIONES = [
   {
     id: "ypf",   nombre: "YPF",   color: "#0052A5",
-    precios: { super: 1080, premium: 1250, diesel: 1050 },
+    // Súper: $1.999 | Infinia: $2.207 | Diesel 500: $2.065
+    precios: { super: 1999, premium: 2207, diesel: 2065 },
     nota: "Red más grande del país",
   },
   {
     id: "shell", nombre: "Shell", color: "#E4181C",
-    precios: { super: 1060, premium: 1230, diesel: 1030 },
+    // Súper: $2.049 | V-Power: $2.365 | Diesel: $2.019
+    precios: { super: 2049, premium: 2365, diesel: 2019 },
     nota: "V-Power reconocida mundialmente",
   },
   {
     id: "axion", nombre: "Axion", color: "#C8181A",
-    precios: { super: 1050, premium: 1220, diesel: 1020 },
+    // Súper: $2.039 | Extreme: est. $2.280 | Eurodiesel: est. $2.040
+    precios: { super: 2039, premium: 2280, diesel: 2040 },
     nota: "Precio competitivo con Extreme",
   },
   {
     id: "puma",  nombre: "Puma",  color: "#2A7A2A",
-    precios: { super: 1020, premium: 1200, diesel: 1000 },
+    // Súper: ~$1.974 | Premium: est. $2.100 | Diesel: est. $1.960
+    precios: { super: 1974, premium: 2100, diesel: 1960 },
     nota: "Precio más bajo del mercado",
   },
 ]
@@ -410,6 +417,11 @@ export default function NaftaCalculadora() {
             })}
           </div>
         </div>
+
+        {/* Nota de precios */}
+        <p style={{ fontSize: 11, color: "#d1d5db", textAlign: "center", margin: "-24px 0 40px", lineHeight: 1.6 }}>
+          Precios de referencia en CABA al 1° de abril 2026. Los precios varían por zona y se actualizan periódicamente.
+        </p>
 
         {/* ── Promos tarjetas ────────────────────────────────────────────────────── */}
         <div style={{ marginBottom: 48 }}>
