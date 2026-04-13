@@ -539,7 +539,7 @@ export default function Home() {
         {/* ════ SECCIÓN CALCULADORA ════ */}
         <div style={{
           background: "linear-gradient(180deg, #ffffff 0%, #f0fdf6 35%, #f7fdf9 65%, #ffffff 100%)",
-          padding: "0 24px 104px",
+          padding: "80px 24px 104px",
         }}>
           <div style={{ maxWidth: 1120, margin: "0 auto" }}>
 
@@ -576,27 +576,27 @@ export default function Home() {
               }}
             >
               {/* Grid inputs */}
-              <div style={{ display: "grid", gridTemplateColumns: "repeat(auto-fill, minmax(200px, 1fr))", gap: 20, marginBottom: 24 }}>
+              <div style={{ display: "grid", gridTemplateColumns: "repeat(auto-fill, minmax(220px, 1fr))", gap: 24, marginBottom: 28 }}>
                 {CAT_FIELDS.map(({ label, key }, idx) => (
                   <motion.div key={key}
                     initial={{ opacity: 0, y: 12 }} animate={{ opacity: 1, y: 0 }}
                     transition={{ duration: 0.3, delay: idx * 0.06 }}
                   >
                     <label htmlFor={`input-${key}`} style={{
-                      display: "flex", alignItems: "center", gap: 6,
+                      display: "flex", alignItems: "center", gap: 7,
                       fontSize: 13, fontWeight: 600, color: "#374151",
-                      letterSpacing: "0.02em", marginBottom: 8, cursor: "pointer",
+                      letterSpacing: "0.02em", marginBottom: 10, cursor: "pointer",
                     }}>
-                      <CatIcon catKey={key} className="w-3.5 h-3.5 flex-shrink-0" style={{ color: "#94a3b8" }} />
+                      <CatIcon catKey={key} className="w-4 h-4 flex-shrink-0" style={{ color: "#6b7280" }} />
                       {label}
                     </label>
 
                     <div style={{ position: "relative" }}>
-                      <div style={{ position:"absolute", inset:0, right:"auto", width:38,
+                      <div style={{ position:"absolute", inset:0, right:"auto", width:44,
                         display:"flex", alignItems:"center", justifyContent:"center", pointerEvents:"none" }}>
-                        <CatIcon catKey={key} className="w-4 h-4" style={{ color: "#94a3b8" }} />
+                        <CatIcon catKey={key} className="w-5 h-5" style={{ color: "#94a3b8" }} />
                       </div>
-                      <div style={{ position:"absolute", inset:0, left:36, right:"auto", width:16,
+                      <div style={{ position:"absolute", inset:0, left:42, right:"auto", width:18,
                         display:"flex", alignItems:"center", pointerEvents:"none",
                         fontSize:15, color:"#94a3b8", fontWeight:500, userSelect:"none" }}>$</div>
                       <input
@@ -606,9 +606,9 @@ export default function Home() {
                         onChange={(e) => updateGasto(key, e.target.value)}
                         style={{
                           width:"100%", boxSizing:"border-box",
-                          padding:"12px 14px 12px 54px",
+                          padding:"16px 16px 16px 62px",
                           background:"#f8fafc", border:"1.5px solid #e2e8f0",
-                          borderRadius:12, fontSize: 16, color:"#0f172a", outline:"none",
+                          borderRadius:14, fontSize: 16, color:"#0f172a", outline:"none",
                           transition:"border-color 0.15s, box-shadow 0.15s",
                         }}
                         onFocus={(e) => { e.target.style.borderColor="#10b981"; e.target.style.boxShadow="0 0 0 3px rgba(16,185,129,0.1)"; e.target.style.background="#fff" }}
@@ -753,27 +753,28 @@ export default function Home() {
                     animate={{ opacity: 1, y: 0 }}
                     style={{
                       display: "flex", alignItems: "center", justifyContent: "space-between",
-                      padding: "14px 18px",
-                      background: "linear-gradient(135deg, #f0fdf7 0%, #f8fafc 100%)",
-                      border: "1px solid #bbf7d0",
-                      borderRadius: 12,
-                      marginTop: 16,
+                      padding: "20px 24px",
+                      background: "linear-gradient(135deg, #f0fdf7 0%, #dcfce7 60%, #f0fdf7 100%)",
+                      border: "1.5px solid #86efac",
+                      borderRadius: 16,
+                      marginTop: 20,
+                      boxShadow: "0 4px 20px rgba(16,185,129,0.12)",
                     }}
                   >
-                    <div style={{ display: "flex", alignItems: "center", gap: 10 }}>
-                      <div style={{ width: 36, height: 36, borderRadius: 10, background: "#0a7c4e", display: "flex", alignItems: "center", justifyContent: "center" }}>
-                        <BarChart2 size={18} color="white" />
+                    <div style={{ display: "flex", alignItems: "center", gap: 14 }}>
+                      <div style={{ width: 48, height: 48, borderRadius: 14, background: "linear-gradient(135deg, #10b981 0%, #059669 100%)", display: "flex", alignItems: "center", justifyContent: "center", boxShadow: "0 4px 12px rgba(16,185,129,0.3)", flexShrink: 0 }}>
+                        <BarChart2 size={22} color="white" />
                       </div>
                       <div>
-                        <div style={{ fontSize: 11, fontWeight: 700, color: "#94a3b8", textTransform: "uppercase", letterSpacing: "0.06em" }}>Gasto mensual total</div>
-                        <div style={{ fontSize: 22, fontWeight: 900, color: "#0f172a", letterSpacing: "-0.02em", lineHeight: 1.2 }}>
+                        <div style={{ fontSize: 11, fontWeight: 700, color: "#6b7280", textTransform: "uppercase", letterSpacing: "0.08em" }}>Gasto mensual total</div>
+                        <div style={{ fontSize: 28, fontWeight: 900, color: "#0f172a", letterSpacing: "-0.03em", lineHeight: 1.1 }}>
                           {formatARS(getTotalGasto(gastos))}
                         </div>
                       </div>
                     </div>
-                    <div style={{ textAlign: "right" }}>
-                      <div style={{ fontSize: 11, fontWeight: 700, color: "#94a3b8", textTransform: "uppercase", letterSpacing: "0.06em" }}>Al año serían</div>
-                      <div style={{ fontSize: 16, fontWeight: 700, color: "#0a7c4e", letterSpacing: "-0.01em" }}>
+                    <div style={{ textAlign: "right", flexShrink: 0 }}>
+                      <div style={{ fontSize: 11, fontWeight: 700, color: "#6b7280", textTransform: "uppercase", letterSpacing: "0.08em" }}>Al año serían</div>
+                      <div style={{ fontSize: 20, fontWeight: 800, color: "#059669", letterSpacing: "-0.02em" }}>
                         {formatARS(getTotalGasto(gastos) * 12)}
                       </div>
                     </div>
@@ -860,39 +861,55 @@ export default function Home() {
                 key="como-funciona"
                 initial={{ opacity: 0, y: 16 }} animate={{ opacity: 1, y: 0 }}
                 exit={{ opacity: 0, y: -8 }} transition={{ duration: 0.4, delay: 0.2 }}
-                style={{ padding: "96px 0 0" }}
+                style={{ padding: "96px 0 80px" }}
               >
-                <h2 style={{ fontSize: "clamp(28px,3.2vw,44px)", fontWeight: 900, letterSpacing: "-0.04em",
-                  color: "#0a0a0a", marginBottom: 56, textAlign: "center" }}>
-                  Cómo funciona
-                </h2>
-                <div style={{ display: "grid", gridTemplateColumns: "repeat(auto-fit, minmax(260px, 1fr))", gap: 24 }}>
+                {/* Eyebrow */}
+                <div style={{ textAlign: "center", marginBottom: 56 }}>
+                  <div style={{ display:"inline-flex", alignItems:"center", gap:6,
+                    background:"#f0fdf4", border:"1px solid #d1fae5",
+                    borderRadius:999, padding:"5px 14px", marginBottom:16,
+                    fontSize:11, fontWeight:700, letterSpacing:"0.1em", textTransform:"uppercase", color:"#065f46" }}>
+                    <span style={{ width:6, height:6, borderRadius:"50%", background:"#10b981", display:"inline-block" }} />
+                    Simple y transparente
+                  </div>
+                  <h2 style={{ fontSize: "clamp(28px,3.2vw,44px)", fontWeight: 900, letterSpacing: "-0.04em",
+                    color: "#0a0a0a", margin: "0 0 16px" }}>
+                    Cómo funciona
+                  </h2>
+                  <p style={{ fontSize: 17, color: "#6b7280", maxWidth: 440, margin: "0 auto", lineHeight: 1.7 }}>
+                    En menos de un minuto sabés qué tarjeta te conviene más.
+                  </p>
+                </div>
+
+                <div style={{ display: "grid", gridTemplateColumns: "repeat(auto-fit, minmax(280px, 1fr))", gap: 28 }}>
                   {COMO_FUNCIONA.map(({ Icono, num, title, desc }, i) => (
                     <motion.div key={num}
                       initial={{ opacity: 0, y: 16 }} animate={{ opacity: 1, y: 0 }}
                       transition={{ delay: 0.25 + i * 0.09 }}
-                      style={{ position: "relative", padding: "36px 28px 32px",
-                        background: "rgba(255,255,255,0.95)", borderRadius: 24,
+                      whileHover={{ y: -4, boxShadow: "0 24px 56px rgba(0,0,0,0.09)" }}
+                      style={{ position: "relative", padding: "40px 32px 36px",
+                        background: "#fff", borderRadius: 28,
                         border: "1px solid rgba(0,0,0,0.06)",
-                        boxShadow: "0 8px 32px rgba(0,0,0,0.06)" }}
+                        boxShadow: "0 8px 32px rgba(0,0,0,0.05)",
+                        transition: "box-shadow 0.25s", }}
                     >
                       <span style={{
-                        position: "absolute", top: 12, left: 20,
-                        fontSize: 88, fontWeight: 900, lineHeight: 1,
-                        color: "#10b981", opacity: 0.07,
+                        position: "absolute", top: 16, left: 24,
+                        fontSize: 96, fontWeight: 900, lineHeight: 1,
+                        color: "#10b981", opacity: 0.06,
                         userSelect: "none", pointerEvents: "none",
                       }}>{num}</span>
                       <div style={{ position: "relative" }}>
                         <div style={{
-                          width: 52, height: 52, borderRadius: 16,
+                          width: 56, height: 56, borderRadius: 18,
                           background: "linear-gradient(135deg, #d1fae5 0%, #a7f3d0 100%)",
-                          display: "flex", alignItems: "center", justifyContent: "center", marginBottom: 20,
-                          boxShadow: "0 4px 12px rgba(16,185,129,0.2)",
+                          display: "flex", alignItems: "center", justifyContent: "center", marginBottom: 24,
+                          boxShadow: "0 6px 16px rgba(16,185,129,0.2)",
                         }}>
-                          <Icono size={24} color="#059669" strokeWidth={1.75} />
+                          <Icono size={26} color="#059669" strokeWidth={1.75} />
                         </div>
-                        <h3 style={{ fontSize: 18, fontWeight: 800, color: "#111827", margin: "0 0 10px", letterSpacing: "-0.02em" }}>{title}</h3>
-                        <p style={{ fontSize: 14, color: "#6b7280", margin: 0, lineHeight: 1.65 }}>{desc}</p>
+                        <h3 style={{ fontSize: 19, fontWeight: 800, color: "#111827", margin: "0 0 12px", letterSpacing: "-0.025em" }}>{title}</h3>
+                        <p style={{ fontSize: 15, color: "#6b7280", margin: 0, lineHeight: 1.7 }}>{desc}</p>
                       </div>
                     </motion.div>
                   ))}
@@ -1072,7 +1089,7 @@ export default function Home() {
                 </p>
                 {[
                   { label: "Tarjetas de crédito", href: "/tarjetas" },
-                  { label: "Guías financieras", href: "/articulos" },
+                  { label: "Inversiones", href: "/inversiones" },
                 ].map(({ label, href }) => (
                   <a key={label} href={href} style={{ display: "block", fontSize: 14,
                     color: "#9ca3af", textDecoration: "none", marginBottom: 10,
