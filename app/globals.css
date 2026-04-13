@@ -103,3 +103,13 @@ p, span, label, a, button, input {
 
 html { scroll-behavior: smooth; }
 ::selection { background: rgba(29,185,84,0.18); color: #1a1a1a; }
+
+/* ── Navbar shared animations ── */
+@keyframes navbar-pulse {
+  0%, 100% { opacity: 1; transform: scale(1); }
+  50%       { opacity: 0.45; transform: scale(1.5); }
+}
+.navbar-link:hover {
+  color: #111827 !important;
+  background: #f9fafb !important;
+}

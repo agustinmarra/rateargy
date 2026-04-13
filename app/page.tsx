@@ -337,10 +337,6 @@ export default function Home() {
           0%   { transform: translateX(-100%); }
           100% { transform: translateX(300%); }
         }
-        @keyframes pulse-dot {
-          0%, 100% { opacity: 1; transform: scale(1); }
-          50%       { opacity: 0.5; transform: scale(1.4); }
-        }
         @keyframes float {
           0%, 100% { transform: translateY(0px); }
           50%       { transform: translateY(-8px); }
@@ -372,9 +368,6 @@ export default function Home() {
           0%   { transform: translateX(0); }
           100% { transform: translateX(-50%); }
         }
-        .nav-link { transition: color 0.15s, background 0.15s; }
-        .nav-link:hover { color: #111827 !important; background: #f9fafb !important; }
-        .nav-link-active { color: #059669 !important; background: rgba(16,185,129,0.08) !important; }
       `}</style>
 
       <div style={{ position: "relative", minHeight: "100vh", background: "#ffffff", overflow: "clip" }}>
@@ -390,66 +383,13 @@ export default function Home() {
           background:"radial-gradient(circle, rgba(16,185,129,0.05) 0%, transparent 70%)",
           top:"40%", right:"5%", pointerEvents:"none", zIndex:0 }} />
 
-        {/* ════ HEADER ════ */}
-        <header style={{
-          position: "sticky", top: 0, zIndex: 50, height: 64,
-          background: "rgba(255,255,255,0.9)",
-          backdropFilter: "blur(20px)", WebkitBackdropFilter: "blur(20px)",
-          borderBottom: "1px solid rgba(0,0,0,0.06)",
-        }}>
-          <div style={{
-            maxWidth: 1120, margin: "0 auto", padding: "0 24px",
-            height: "100%", display: "flex", alignItems: "center", justifyContent: "space-between", gap: 16,
-          }}>
-            {/* Logo */}
-            <a href="/" style={{ textDecoration: "none", flexShrink: 0, display: "flex", alignItems: "center", gap: 8 }}>
-              <span style={{ fontSize: 21, fontWeight: 800, letterSpacing: "-0.03em" }}>
-                <span style={{ color: "#10b981" }}>r</span>
-                <span style={{ color: "#111827" }}>ateargy</span>
-              </span>
-              <span style={{
-                display: "inline-block", width: 7, height: 7, borderRadius: "50%",
-                background: "#10b981", animation: "pulse-dot 2s ease-in-out infinite",
-              }} />
-            </a>
-
-            {/* Nav links */}
-            <nav style={{ display: "flex", alignItems: "center", gap: 2, flex: 1, justifyContent: "center" }}>
-              {[
-                { label: "Tarjetas", href: "/tarjetas", active: true },
-                { label: "Nafta",    href: "/nafta",    active: false },
-                { label: "Guías",    href: "/articulos",active: false },
-                { label: "Contacto", href: "/contacto", active: false },
-              ].map(({ label, href, active }) => (
-                <a key={label} href={href}
-                  className={`nav-link ${active ? "nav-link-active" : ""}`}
-                  style={{
-                    textDecoration: "none", padding: "6px 13px", borderRadius: 8,
-                    fontSize: 14, fontWeight: active ? 600 : 500,
-                    color: active ? "#059669" : "#6b7280",
-                    background: active ? "rgba(16,185,129,0.08)" : "transparent",
-                  }}
-                >
-                  {label}
-                </a>
-              ))}
-            </nav>
-
-            {/* Right: live badge */}
-            <div style={{ display: "flex", alignItems: "center", gap: 6, flexShrink: 0 }}>
-              <span style={{ width: 6, height: 6, borderRadius: "50%", background: "#10b981", display: "inline-block", animation: "pulse-dot 2s ease-in-out infinite" }} />
-              <span style={{ fontSize: 12, fontWeight: 600, color: "#6b7280" }}>Actualizado lunes</span>
-            </div>
-          </div>
-        </header>
-
         <div style={{
           position: "relative", zIndex: 1,
           maxWidth: 1120, margin: "0 auto", padding: "0 24px 0",
         }}>
 
           {/* ════ SECCIÓN 1: HERO (dos columnas) ════ */}
-          <section style={{ paddingTop: 112, paddingBottom: 96 }}>
+          <section style={{ paddingTop: 80, paddingBottom: 80 }}>
             <div className="hero-grid">
 
               {/* Columna izquierda */}

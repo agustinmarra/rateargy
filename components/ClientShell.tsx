@@ -5,8 +5,8 @@ import Navbar from "./Navbar"
 import Footer from "./Footer"
 
 /**
- * Wrapper que oculta Navbar / Footer en la landing (/).
- * El resto de las páginas internas los siguen recibiendo normalmente.
+ * Wrapper global: Navbar en todas las páginas.
+ * Footer solo en páginas internas (home tiene su propio footer oscuro).
  */
 export default function ClientShell({ children }: { children: React.ReactNode }) {
   const pathname = usePathname()
@@ -14,7 +14,7 @@ export default function ClientShell({ children }: { children: React.ReactNode })
 
   return (
     <>
-      {!isHome && <Navbar />}
+      <Navbar />
       {children}
       {!isHome && <Footer />}
     </>
