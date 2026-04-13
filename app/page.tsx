@@ -29,7 +29,7 @@ const GASTOS_VACIO: Gastos = {
 }
 
 const STATS = [
-  { value: "13", label: "tarjetas comparadas" },
+  { value: "20", label: "tarjetas comparadas" },
   { value: "100%", label: "gratis, sin registro" },
   { value: "Lunes", label: "actualización semanal" },
 ]
@@ -41,12 +41,12 @@ const COMO_FUNCIONA = [
 ]
 
 const BENEFICIOS_DESTACADOS = [
-  { banco: "Patagonia Visa",     beneficio: "35% La Anónima",  cat: "Supermercados", color: "#2d6a4f" },
-  { banco: "Supervielle Visa",   beneficio: "50% farmacias",   cat: "Farmacia",      color: "#e85d04" },
-  { banco: "BNA Gold",           beneficio: "30% super mié.",  cat: "Supermercados", color: "#003580" },
-  { banco: "Cuenta DNI",         beneficio: "30% delivery finde", cat: "Delivery",   color: "#0f766e" },
-  { banco: "Naranja X",          beneficio: "20% online",      cat: "Online",        color: "#e05a00" },
-  { banco: "BBVA Platinum",      beneficio: "15% viajes",      cat: "Viajes",        color: "#004481" },
+  { banco: "Patagonia Visa",   pct: 35, lugar: "La Anónima",         cat: "Supermercados", dia: "Jueves",   tope: 15000, color: "#2d6a4f", gradBg: "linear-gradient(135deg, #ecfdf5 0%, #d1fae5 100%)" },
+  { banco: "Supervielle",      pct: 50, lugar: "Farmacity",          cat: "Farmacia",      dia: "Todos",    tope:  5000, color: "#e85d04", gradBg: "linear-gradient(135deg, #fff7ed 0%, #fed7aa 100%)" },
+  { banco: "BNA Gold",         pct: 30, lugar: "Coto / Carrefour",   cat: "Supermercados", dia: "Miércoles",tope: 12000, color: "#003580", gradBg: "linear-gradient(135deg, #eff6ff 0%, #dbeafe 100%)" },
+  { banco: "Cuenta DNI",       pct: 30, lugar: "PedidosYa / Rappi",  cat: "Delivery",      dia: "Finde",    tope:  5000, color: "#0f766e", gradBg: "linear-gradient(135deg, #f0fdfa 0%, #ccfbf1 100%)" },
+  { banco: "Naranja X",        pct: 20, lugar: "MercadoLibre / web", cat: "Online",        dia: "Todos",    tope: 10000, color: "#e05a00", gradBg: "linear-gradient(135deg, #fff7ed 0%, #ffedd5 100%)" },
+  { banco: "BBVA Platinum",    pct: 15, lugar: "Despegar / Almundo", cat: "Viajes",        dia: "Todos",    tope: 20000, color: "#004481", gradBg: "linear-gradient(135deg, #eff6ff 0%, #dbeafe 100%)" },
 ]
 
 const GUIAS = [
@@ -149,7 +149,7 @@ function DashboardPreview() {
           borderRadius: 8, padding: "4px 10px",
           fontSize: 11, fontWeight: 700, color: "#065f46",
         }}>
-          13 tarjetas
+          20 tarjetas
         </div>
       </div>
 
@@ -340,45 +340,57 @@ export default function Home() {
           0%, 100% { opacity: 1; transform: scale(1); }
           50%       { opacity: 0.5; transform: scale(1.4); }
         }
+        @keyframes float {
+          0%, 100% { transform: translateY(0px); }
+          50%       { transform: translateY(-8px); }
+        }
         input[type=number]::-webkit-inner-spin-button,
         input[type=number]::-webkit-outer-spin-button { -webkit-appearance: none; margin: 0; }
         input[type=number] { -moz-appearance: textfield; }
-        .calc-card { padding: 40px; }
-        @media (max-width: 640px) { .calc-card { padding: 20px; } }
+        .calc-card { padding: 52px; }
+        @media (max-width: 640px) { .calc-card { padding: 24px; } }
         .hero-grid {
           display: grid;
           grid-template-columns: 1fr 1fr;
-          gap: 48px;
+          gap: 64px;
           align-items: center;
         }
-        @media (max-width: 900px) {
-          .hero-grid { grid-template-columns: 1fr; }
+        @media (max-width: 960px) {
+          .hero-grid { grid-template-columns: 1fr; gap: 40px; }
           .hero-preview { display: none; }
         }
         .beneficios-grid {
           display: grid;
           grid-template-columns: repeat(3, 1fr);
-          gap: 16px;
+          gap: 20px;
         }
-        @media (max-width: 768px) { .beneficios-grid { grid-template-columns: repeat(2, 1fr); } }
-        @media (max-width: 480px) { .beneficios-grid { grid-template-columns: 1fr; } }
+        @media (max-width: 900px) { .beneficios-grid { grid-template-columns: repeat(2, 1fr); } }
+        @media (max-width: 520px)  { .beneficios-grid { grid-template-columns: 1fr; } }
         .guias-grid {
           display: grid;
           grid-template-columns: repeat(3, 1fr);
-          gap: 20px;
+          gap: 24px;
         }
         @media (max-width: 768px) { .guias-grid { grid-template-columns: 1fr; } }
+        .partners-track { animation: marquee 30s linear infinite; }
+        @keyframes marquee {
+          0%   { transform: translateX(0); }
+          100% { transform: translateX(-50%); }
+        }
       `}</style>
 
-      <div style={{ position: "relative", minHeight: "100vh", background: "#fafafa", overflow: "hidden" }}>
+      <div style={{ position: "relative", minHeight: "100vh", background: "#ffffff", overflow: "hidden" }}>
 
         {/* Orbs decorativos */}
+        <div aria-hidden style={{ position:"absolute", width:900, height:900, borderRadius:"50%",
+          background:"radial-gradient(circle, rgba(16,185,129,0.09) 0%, transparent 65%)",
+          top:-320, left:-220, pointerEvents:"none", zIndex:0 }} />
         <div aria-hidden style={{ position:"absolute", width:700, height:700, borderRadius:"50%",
-          background:"radial-gradient(circle, rgba(16,185,129,0.07) 0%, transparent 70%)",
-          top:-250, left:-150, pointerEvents:"none", zIndex:0 }} />
-        <div aria-hidden style={{ position:"absolute", width:600, height:600, borderRadius:"50%",
-          background:"radial-gradient(circle, rgba(99,102,241,0.05) 0%, transparent 70%)",
-          bottom:0, right:-200, pointerEvents:"none", zIndex:0 }} />
+          background:"radial-gradient(circle, rgba(99,102,241,0.06) 0%, transparent 65%)",
+          bottom:-100, right:-250, pointerEvents:"none", zIndex:0 }} />
+        <div aria-hidden style={{ position:"absolute", width:400, height:400, borderRadius:"50%",
+          background:"radial-gradient(circle, rgba(16,185,129,0.05) 0%, transparent 70%)",
+          top:"40%", right:"5%", pointerEvents:"none", zIndex:0 }} />
 
         {/* ════ HEADER ════ */}
         <header style={{
@@ -419,7 +431,7 @@ export default function Home() {
         }}>
 
           {/* ════ SECCIÓN 1: HERO (dos columnas) ════ */}
-          <section style={{ paddingTop: 80, paddingBottom: 72 }}>
+          <section style={{ paddingTop: 112, paddingBottom: 96 }}>
             <div className="hero-grid">
 
               {/* Columna izquierda */}
@@ -441,16 +453,16 @@ export default function Home() {
                 <motion.h1
                   initial={{ opacity: 0, y: 16 }} animate={{ opacity: 1, y: 0 }} transition={{ duration: 0.45, delay: 0.05 }}
                   style={{
-                    fontSize: "clamp(36px, 4.5vw, 60px)",
-                    fontWeight: 900, letterSpacing: "-0.04em",
+                    fontSize: "clamp(40px, 5vw, 68px)",
+                    fontWeight: 900, letterSpacing: "-0.045em",
                     lineHeight: 1.0, color: "#0a0a0a",
-                    margin: "0 0 24px",
+                    margin: "0 0 28px",
                   }}
                 >
                   La tarjeta que más<br />
                   te conviene,{" "}
                   <span style={{
-                    background: "linear-gradient(135deg, #10b981 0%, #6366f1 100%)",
+                    background: "linear-gradient(135deg, #10b981 0%, #059669 60%, #6366f1 100%)",
                     WebkitBackgroundClip: "text", WebkitTextFillColor: "transparent", backgroundClip: "text",
                   }}>
                     calculada.
@@ -460,53 +472,58 @@ export default function Home() {
                 {/* Subtítulo */}
                 <motion.p
                   initial={{ opacity: 0, y: 12 }} animate={{ opacity: 1, y: 0 }} transition={{ duration: 0.4, delay: 0.1 }}
-                  style={{ fontSize: 18, fontWeight: 400, color: "#4b5563",
-                    maxWidth: 480, lineHeight: 1.7, margin: "0 0 36px" }}
+                  style={{ fontSize: 19, fontWeight: 400, color: "#4b5563",
+                    maxWidth: 500, lineHeight: 1.75, margin: "0 0 40px" }}
                 >
                   Ingresá tus gastos mensuales y te mostramos exactamente
-                  cuánto ahorrás con cada tarjeta argentina. 13 tarjetas. Gratis.
+                  cuánto ahorrás con cada tarjeta argentina. 20 tarjetas. Gratis.
                 </motion.p>
 
                 {/* CTA Button */}
                 <motion.div
                   initial={{ opacity: 0, y: 8 }} animate={{ opacity: 1, y: 0 }} transition={{ duration: 0.4, delay: 0.15 }}
-                  style={{ display: "flex", gap: 12, flexWrap: "wrap" }}
+                  style={{ display: "flex", gap: 14, flexWrap: "wrap", alignItems: "center" }}
                 >
                   <motion.button
                     onClick={scrollToCalculadora}
-                    whileHover={{ y: -2, boxShadow: "0 16px 40px rgba(16,185,129,0.35)" }}
+                    whileHover={{ y: -3, boxShadow: "0 20px 48px rgba(16,185,129,0.4)" }}
                     whileTap={{ scale: 0.97 }}
                     style={{
                       position: "relative", overflow: "hidden",
-                      display: "inline-flex", alignItems: "center", gap: 8,
+                      display: "inline-flex", alignItems: "center", gap: 10,
                       background: "linear-gradient(135deg, #10b981 0%, #059669 100%)",
-                      color: "#fff", border: "none", borderRadius: 14,
-                      padding: "14px 28px", fontSize: 15, fontWeight: 700,
+                      color: "#fff", border: "none", borderRadius: 16,
+                      padding: "16px 32px", fontSize: 16, fontWeight: 700,
                       cursor: "pointer",
-                      boxShadow: "0 8px 24px rgba(16,185,129,0.3)",
+                      boxShadow: "0 12px 32px rgba(16,185,129,0.35)",
                     }}
                   >
                     <span aria-hidden style={{
                       position:"absolute", top:0, bottom:0, width:"40%",
-                      background:"linear-gradient(90deg, transparent 0%, rgba(255,255,255,0.15) 50%, transparent 100%)",
+                      background:"linear-gradient(90deg, transparent 0%, rgba(255,255,255,0.18) 50%, transparent 100%)",
                       animation:"slideShimmer 2.5s infinite", pointerEvents:"none",
                     }} />
                     Calculá tu ahorro gratis
-                    <ArrowRight size={16} />
+                    <ArrowRight size={18} />
                   </motion.button>
+
+                  <span style={{ fontSize: 13, color: "#9ca3af", fontWeight: 500 }}>
+                    Sin registro · En segundos
+                  </span>
                 </motion.div>
 
                 {/* Stats strip */}
                 <motion.div
                   initial={{ opacity: 0 }} animate={{ opacity: 1 }} transition={{ duration: 0.5, delay: 0.25 }}
-                  style={{ display: "flex", gap: 28, marginTop: 36, flexWrap: "wrap" }}
+                  style={{ display: "flex", gap: 36, marginTop: 48, flexWrap: "wrap",
+                    paddingTop: 40, borderTop: "1px solid #f3f4f6" }}
                 >
                   {STATS.map(({ value, label }) => (
                     <div key={label}>
-                      <p style={{ fontSize: 24, fontWeight: 800, color: "#111827", margin: 0, letterSpacing: "-0.02em" }}>
+                      <p style={{ fontSize: 28, fontWeight: 900, color: "#111827", margin: 0, letterSpacing: "-0.03em" }}>
                         {value}
                       </p>
-                      <p style={{ fontSize: 12, color: "#6b7280", margin: "2px 0 0" }}>{label}</p>
+                      <p style={{ fontSize: 13, color: "#6b7280", margin: "3px 0 0" }}>{label}</p>
                     </div>
                   ))}
                 </motion.div>
@@ -523,7 +540,7 @@ export default function Home() {
           <section style={{ marginBottom: 80 }}>
             <p style={{ fontSize: 11, fontWeight: 700, letterSpacing: "0.1em", textTransform: "uppercase",
               color: "#94a3b8", textAlign: "center", marginBottom: 20 }}>
-              Comparamos 13 tarjetas líderes de Argentina
+              Comparamos 20 tarjetas líderes de Argentina
             </p>
             <div className="partners-wrap">
               <MarqueeLogos />
@@ -533,22 +550,25 @@ export default function Home() {
 
         {/* ════ SECCIÓN CALCULADORA ════ */}
         <div style={{
-          background: "linear-gradient(180deg, #fafafa 0%, #f0fdf4 50%, #fafafa 100%)",
-          padding: "0 24px 80px",
+          background: "linear-gradient(180deg, #ffffff 0%, #f0fdf4 40%, #ffffff 100%)",
+          padding: "0 24px 96px",
         }}>
           <div style={{ maxWidth: 1120, margin: "0 auto" }}>
 
             {/* Encabezado de sección */}
-            <div style={{ textAlign: "center", marginBottom: 48 }}>
-              <p style={{ fontSize: 11, fontWeight: 700, letterSpacing: "0.12em", textTransform: "uppercase",
-                color: "#10b981", margin: "0 0 12px" }}>
+            <div style={{ textAlign: "center", marginBottom: 56 }}>
+              <div style={{ display:"inline-flex", alignItems:"center", gap:6,
+                background:"#f0fdf4", border:"1px solid #d1fae5",
+                borderRadius:999, padding:"5px 14px", marginBottom:16,
+                fontSize:11, fontWeight:700, letterSpacing:"0.1em", textTransform:"uppercase", color:"#065f46" }}>
+                <span style={{ width:6, height:6, borderRadius:"50%", background:"#10b981", display:"inline-block" }} />
                 Calculadora personalizada
-              </p>
-              <h2 style={{ fontSize: "clamp(28px, 3.5vw, 44px)", fontWeight: 900,
-                letterSpacing: "-0.03em", color: "#0a0a0a", margin: "0 0 16px" }}>
+              </div>
+              <h2 style={{ fontSize: "clamp(30px, 3.5vw, 48px)", fontWeight: 900,
+                letterSpacing: "-0.04em", color: "#0a0a0a", margin: "0 0 16px" }}>
                 ¿Cuánto podés ahorrar?
               </h2>
-              <p style={{ fontSize: 17, color: "#6b7280", maxWidth: 480, margin: "0 auto", lineHeight: 1.6 }}>
+              <p style={{ fontSize: 18, color: "#6b7280", maxWidth: 500, margin: "0 auto", lineHeight: 1.7 }}>
                 Ingresá tus gastos mensuales y calculamos el ranking al instante.
               </p>
             </div>
@@ -559,11 +579,11 @@ export default function Home() {
               className="calc-card"
               initial={{ opacity: 0, y: 20 }} animate={{ opacity: 1, y: 0 }} transition={{ duration: 0.5, delay: 0.15 }}
               style={{
-                background: "rgba(255,255,255,0.95)",
-                backdropFilter: "blur(20px)", WebkitBackdropFilter: "blur(20px)",
-                border: "1px solid rgba(255,255,255,0.9)",
-                boxShadow: "0 32px 80px rgba(0,0,0,0.08), 0 0 0 1px rgba(0,0,0,0.03), inset 0 1px 0 rgba(255,255,255,1)",
-                borderRadius: 24,
+                background: "rgba(255,255,255,0.98)",
+                backdropFilter: "blur(24px)", WebkitBackdropFilter: "blur(24px)",
+                border: "1px solid rgba(0,0,0,0.06)",
+                boxShadow: "0 48px 100px rgba(0,0,0,0.1), 0 0 0 1px rgba(0,0,0,0.04), inset 0 1px 0 rgba(255,255,255,1)",
+                borderRadius: 28,
                 scrollMarginTop: 80,
               }}
             >
@@ -781,12 +801,12 @@ export default function Home() {
                 whileTap={!loading && totalGasto > 0 ? { scale: 0.98 } : {}}
                 style={{
                   position:"relative", overflow:"hidden",
-                  width:"100%", height:52, marginTop: 28,
+                  width:"100%", height:60, marginTop: 28,
                   background: totalGasto === 0 || loading
                     ? "linear-gradient(135deg, #94a3b8 0%, #64748b 100%)"
                     : "linear-gradient(135deg, #10b981 0%, #059669 100%)",
-                  color:"white", border:"none", borderRadius:14,
-                  fontSize:15, fontWeight:700,
+                  color:"white", border:"none", borderRadius:18,
+                  fontSize:16, fontWeight:700,
                   cursor: totalGasto === 0 || loading ? "not-allowed" : "pointer",
                   display:"flex", alignItems:"center", justifyContent:"center", gap:8,
                   boxShadow: totalGasto > 0 && !loading ? "0 8px 24px rgba(16,185,129,0.3)" : "none",
@@ -849,38 +869,39 @@ export default function Home() {
                 key="como-funciona"
                 initial={{ opacity: 0, y: 16 }} animate={{ opacity: 1, y: 0 }}
                 exit={{ opacity: 0, y: -8 }} transition={{ duration: 0.4, delay: 0.2 }}
-                style={{ padding: "80px 0 0" }}
+                style={{ padding: "96px 0 0" }}
               >
-                <h2 style={{ fontSize: "clamp(26px,3vw,40px)", fontWeight: 900, letterSpacing: "-0.02em",
-                  color: "#111827", marginBottom: 48, textAlign: "center" }}>
+                <h2 style={{ fontSize: "clamp(28px,3.2vw,44px)", fontWeight: 900, letterSpacing: "-0.04em",
+                  color: "#0a0a0a", marginBottom: 56, textAlign: "center" }}>
                   Cómo funciona
                 </h2>
-                <div style={{ display: "grid", gridTemplateColumns: "repeat(auto-fit, minmax(240px, 1fr))", gap: 28 }}>
+                <div style={{ display: "grid", gridTemplateColumns: "repeat(auto-fit, minmax(260px, 1fr))", gap: 24 }}>
                   {COMO_FUNCIONA.map(({ Icono, num, title, desc }, i) => (
                     <motion.div key={num}
-                      initial={{ opacity: 0, y: 12 }} animate={{ opacity: 1, y: 0 }}
-                      transition={{ delay: 0.25 + i * 0.08 }}
-                      style={{ position: "relative", padding: "32px 24px 28px",
-                        background: "rgba(255,255,255,0.9)", borderRadius: 20,
-                        border: "1px solid rgba(0,0,0,0.05)",
-                        boxShadow: "0 4px 20px rgba(0,0,0,0.04)" }}
+                      initial={{ opacity: 0, y: 16 }} animate={{ opacity: 1, y: 0 }}
+                      transition={{ delay: 0.25 + i * 0.09 }}
+                      style={{ position: "relative", padding: "36px 28px 32px",
+                        background: "rgba(255,255,255,0.95)", borderRadius: 24,
+                        border: "1px solid rgba(0,0,0,0.06)",
+                        boxShadow: "0 8px 32px rgba(0,0,0,0.06)" }}
                     >
                       <span style={{
-                        position: "absolute", top: 8, left: 16,
-                        fontSize: 80, fontWeight: 900, lineHeight: 1,
-                        color: "#10b981", opacity: 0.1,
+                        position: "absolute", top: 12, left: 20,
+                        fontSize: 88, fontWeight: 900, lineHeight: 1,
+                        color: "#10b981", opacity: 0.07,
                         userSelect: "none", pointerEvents: "none",
                       }}>{num}</span>
                       <div style={{ position: "relative" }}>
                         <div style={{
-                          width: 48, height: 48, borderRadius: "50%",
-                          background: "#d1fae5", display: "flex",
-                          alignItems: "center", justifyContent: "center", marginBottom: 16,
+                          width: 52, height: 52, borderRadius: 16,
+                          background: "linear-gradient(135deg, #d1fae5 0%, #a7f3d0 100%)",
+                          display: "flex", alignItems: "center", justifyContent: "center", marginBottom: 20,
+                          boxShadow: "0 4px 12px rgba(16,185,129,0.2)",
                         }}>
-                          <Icono size={22} color="#059669" strokeWidth={1.75} />
+                          <Icono size={24} color="#059669" strokeWidth={1.75} />
                         </div>
-                        <h3 style={{ fontSize: 18, fontWeight: 700, color: "#111827", margin: "0 0 8px" }}>{title}</h3>
-                        <p style={{ fontSize: 14, color: "#6b7280", margin: 0, lineHeight: 1.6 }}>{desc}</p>
+                        <h3 style={{ fontSize: 18, fontWeight: 800, color: "#111827", margin: "0 0 10px", letterSpacing: "-0.02em" }}>{title}</h3>
+                        <p style={{ fontSize: 14, color: "#6b7280", margin: 0, lineHeight: 1.65 }}>{desc}</p>
                       </div>
                     </motion.div>
                   ))}
@@ -904,91 +925,136 @@ export default function Home() {
         </div>
 
         {/* ════ BENEFICIOS DESTACADOS ════ */}
-        <section style={{ padding: "80px 24px 80px", background: "#fff" }}>
+        <section style={{ padding: "96px 24px 96px", background: "#f9fafb" }}>
           <div style={{ maxWidth: 1120, margin: "0 auto" }}>
-            <div style={{ textAlign: "center", marginBottom: 48 }}>
-              <p style={{ fontSize: 11, fontWeight: 700, letterSpacing: "0.12em", textTransform: "uppercase",
-                color: "#10b981", margin: "0 0 12px" }}>
-                Mejores beneficios del momento
-              </p>
-              <h2 style={{ fontSize: "clamp(26px,3vw,40px)", fontWeight: 900, letterSpacing: "-0.03em",
-                color: "#0a0a0a", margin: "0 0 12px" }}>
+            <div style={{ textAlign: "center", marginBottom: 56 }}>
+              <div style={{ display:"inline-flex", alignItems:"center", gap:6,
+                background:"#f0fdf4", border:"1px solid #d1fae5",
+                borderRadius:999, padding:"5px 14px", marginBottom:16,
+                fontSize:11, fontWeight:700, letterSpacing:"0.1em", textTransform:"uppercase", color:"#065f46" }}>
+                <span style={{ width:6, height:6, borderRadius:"50%", background:"#10b981", display:"inline-block" }} />
+                Beneficios vigentes · Actualizado lunes
+              </div>
+              <h2 style={{ fontSize: "clamp(28px,3.2vw,44px)", fontWeight: 900, letterSpacing: "-0.04em",
+                color: "#0a0a0a", margin: "0 0 14px" }}>
                 Los descuentos más destacados
               </h2>
-              <p style={{ fontSize: 16, color: "#6b7280", margin: 0 }}>
-                Actualizados cada lunes con los beneficios vigentes.
+              <p style={{ fontSize: 17, color: "#6b7280", margin: 0, lineHeight: 1.6 }}>
+                Beneficios reales vigentes. Calculamos el ahorro exacto para tu perfil.
               </p>
             </div>
 
             <div className="beneficios-grid">
-              {BENEFICIOS_DESTACADOS.map(({ banco, beneficio, cat, color }, i) => (
+              {BENEFICIOS_DESTACADOS.map(({ banco, pct, lugar, cat, dia, tope, color, gradBg }, i) => (
                 <motion.div
                   key={banco}
-                  initial={{ opacity: 0, y: 12 }} whileInView={{ opacity: 1, y: 0 }}
-                  viewport={{ once: true }} transition={{ duration: 0.35, delay: i * 0.06 }}
+                  initial={{ opacity: 0, y: 16 }} whileInView={{ opacity: 1, y: 0 }}
+                  viewport={{ once: true }} transition={{ duration: 0.4, delay: i * 0.07 }}
+                  whileHover={{ y: -4, boxShadow: "0 16px 48px rgba(0,0,0,0.1)", borderColor: color + "55" }}
                   style={{
-                    padding: "20px 20px 18px",
-                    background: "#f8fafc",
-                    border: "1.5px solid #e2e8f0",
-                    borderRadius: 16,
-                    transition: "transform 0.2s, box-shadow 0.2s",
+                    minHeight: 180,
+                    padding: "28px 24px 24px",
+                    background: gradBg,
+                    border: "1.5px solid rgba(0,0,0,0.06)",
+                    borderRadius: 22,
+                    position: "relative", overflow: "hidden",
+                    cursor: "default",
                   }}
-                  whileHover={{ y: -3, boxShadow: "0 8px 24px rgba(0,0,0,0.08)" }}
                 >
-                  <div style={{ display: "flex", alignItems: "center", gap: 10, marginBottom: 12 }}>
-                    <div style={{ width: 36, height: 36, borderRadius: "50%", background: color,
-                      display: "flex", alignItems: "center", justifyContent: "center",
-                      fontSize: 13, fontWeight: 700, color: "#fff", flexShrink: 0 }}>
-                      {banco.split(" ")[0][0]}{banco.split(" ")[1]?.[0] ?? ""}
+                  {/* Blob decorativo fondo */}
+                  <div aria-hidden style={{
+                    position: "absolute", bottom: -30, right: -30, width: 120, height: 120,
+                    borderRadius: "50%", background: color, opacity: 0.08, pointerEvents: "none",
+                  }} />
+
+                  {/* Header: logo inicial + banco + cat */}
+                  <div style={{ display: "flex", alignItems: "center", justifyContent: "space-between", marginBottom: 20 }}>
+                    <div style={{ display: "flex", alignItems: "center", gap: 10 }}>
+                      <div style={{
+                        width: 40, height: 40, borderRadius: 12, background: color,
+                        display: "flex", alignItems: "center", justifyContent: "center",
+                        fontSize: 14, fontWeight: 800, color: "#fff", flexShrink: 0,
+                        boxShadow: `0 4px 12px ${color}44`,
+                      }}>
+                        {banco.split(" ")[0][0]}{banco.split(" ")[1]?.[0] ?? ""}
+                      </div>
+                      <div>
+                        <p style={{ fontSize: 13, fontWeight: 700, color: "#1f2937", margin: 0, lineHeight: 1.2 }}>{banco}</p>
+                        <p style={{ fontSize: 11, color: "#6b7280", margin: 0 }}>{cat}</p>
+                      </div>
                     </div>
-                    <div>
-                      <p style={{ fontSize: 12, fontWeight: 600, color: "#374151", margin: 0 }}>{banco}</p>
-                      <p style={{ fontSize: 11, color: "#94a3b8", margin: 0 }}>{cat}</p>
+                    {/* Día badge */}
+                    <div style={{
+                      background: "rgba(255,255,255,0.8)", backdropFilter: "blur(8px)",
+                      borderRadius: 999, padding: "3px 10px",
+                      fontSize: 11, fontWeight: 700, color: color,
+                      border: `1px solid ${color}33`,
+                    }}>
+                      {dia}
                     </div>
                   </div>
-                  <p style={{ fontSize: 22, fontWeight: 900, color: "#10b981", margin: 0, letterSpacing: "-0.02em" }}>
-                    {beneficio}
+
+                  {/* Porcentaje grande */}
+                  <p style={{ fontSize: 28, fontWeight: 900, color: color, margin: "0 0 4px", letterSpacing: "-0.03em", lineHeight: 1 }}>
+                    {pct}%
+                  </p>
+                  {/* Lugar */}
+                  <p style={{ fontSize: 14, fontWeight: 600, color: "#374151", margin: "0 0 8px", lineHeight: 1.3 }}>
+                    {lugar}
+                  </p>
+                  {/* Tope */}
+                  <p style={{ fontSize: 12, color: "#6b7280", margin: 0 }}>
+                    Hasta {new Intl.NumberFormat("es-AR", { style:"currency", currency:"ARS", maximumFractionDigits:0 }).format(tope)}/mes
                   </p>
                 </motion.div>
               ))}
             </div>
 
-            <div style={{ textAlign: "center", marginTop: 32 }}>
-              <a href="/tarjetas" style={{
-                display: "inline-flex", alignItems: "center", gap: 6,
-                fontSize: 14, fontWeight: 700, color: "#10b981",
-                textDecoration: "none", padding: "10px 20px",
-                border: "1.5px solid #a7f3d0", borderRadius: 10,
-                transition: "background 0.15s",
-              }}
-                onMouseEnter={e => e.currentTarget.style.background="#f0fdf4"}
-                onMouseLeave={e => e.currentTarget.style.background="transparent"}>
+            <div style={{ textAlign: "center", marginTop: 40 }}>
+              <motion.a
+                href="/tarjetas"
+                whileHover={{ y: -2, boxShadow: "0 8px 24px rgba(16,185,129,0.2)" }}
+                style={{
+                  display: "inline-flex", alignItems: "center", gap: 8,
+                  fontSize: 15, fontWeight: 700, color: "#059669",
+                  textDecoration: "none", padding: "12px 24px",
+                  background: "white",
+                  border: "1.5px solid #d1fae5", borderRadius: 14,
+                }}
+              >
                 Ver todas las tarjetas y beneficios
-                <ArrowRight size={14} />
-              </a>
+                <ArrowRight size={16} />
+              </motion.a>
             </div>
           </div>
         </section>
 
         {/* ════ GUÍAS ════ */}
-        <section style={{ padding: "80px 24px 80px", background: "#fafafa" }}>
+        <section style={{ padding: "96px 24px 96px", background: "#ffffff" }}>
           <div style={{ maxWidth: 1120, margin: "0 auto" }}>
             <div style={{ display: "flex", alignItems: "flex-end", justifyContent: "space-between",
-              flexWrap: "wrap", gap: 16, marginBottom: 40 }}>
+              flexWrap: "wrap", gap: 16, marginBottom: 48 }}>
               <div>
-                <p style={{ fontSize: 11, fontWeight: 700, letterSpacing: "0.12em", textTransform: "uppercase",
-                  color: "#10b981", margin: "0 0 10px" }}>
+                <div style={{ display:"inline-flex", alignItems:"center", gap:6,
+                  background:"#f0fdf4", border:"1px solid #d1fae5",
+                  borderRadius:999, padding:"5px 14px", marginBottom:16,
+                  fontSize:11, fontWeight:700, letterSpacing:"0.1em", textTransform:"uppercase", color:"#065f46" }}>
+                  <BookOpen size={11} color="#059669" />
                   Guías financieras
-                </p>
-                <h2 style={{ fontSize: "clamp(24px,2.8vw,36px)", fontWeight: 900,
-                  letterSpacing: "-0.03em", color: "#0a0a0a", margin: 0 }}>
+                </div>
+                <h2 style={{ fontSize: "clamp(26px,3vw,40px)", fontWeight: 900,
+                  letterSpacing: "-0.04em", color: "#0a0a0a", margin: 0 }}>
                   Aprendé a tomar mejores decisiones
                 </h2>
               </div>
-              <a href="/articulos" style={{ fontSize: 13, fontWeight: 700, color: "#10b981",
-                textDecoration: "none", display: "flex", alignItems: "center", gap: 4 }}>
-                Ver todas las guías <ArrowRight size={14} />
-              </a>
+              <motion.a
+                href="/articulos"
+                whileHover={{ y: -1 }}
+                style={{ fontSize: 14, fontWeight: 700, color: "#059669",
+                  textDecoration: "none", display: "flex", alignItems: "center", gap: 4,
+                  padding: "10px 18px", borderRadius: 12, border: "1.5px solid #d1fae5", background: "white" }}>
+                Ver todas <ArrowRight size={14} />
+              </motion.a>
             </div>
 
             <div className="guias-grid">
@@ -996,34 +1062,36 @@ export default function Home() {
                 <motion.a
                   key={titulo}
                   href={href}
-                  initial={{ opacity: 0, y: 12 }} whileInView={{ opacity: 1, y: 0 }}
-                  viewport={{ once: true }} transition={{ duration: 0.35, delay: i * 0.08 }}
+                  initial={{ opacity: 0, y: 16 }} whileInView={{ opacity: 1, y: 0 }}
+                  viewport={{ once: true }} transition={{ duration: 0.4, delay: i * 0.09 }}
                   style={{
                     display: "block", textDecoration: "none",
-                    padding: "28px 24px",
-                    background: "#fff", border: "1.5px solid #e2e8f0",
-                    borderRadius: 18,
-                    transition: "transform 0.2s, box-shadow 0.2s, border-color 0.2s",
+                    padding: "32px 28px",
+                    background: "#fff", border: "1.5px solid #e5e7eb",
+                    borderRadius: 24,
+                    boxShadow: "0 2px 12px rgba(0,0,0,0.04)",
                   }}
-                  whileHover={{ y: -4, boxShadow: "0 12px 32px rgba(0,0,0,0.08)", borderColor: "#10b981" }}
+                  whileHover={{ y: -5, boxShadow: "0 20px 48px rgba(0,0,0,0.1)", borderColor: "#10b981" }}
                 >
                   <div style={{
-                    width: 44, height: 44, borderRadius: 12,
-                    background: "#f0fdf4",
+                    width: 52, height: 52, borderRadius: 16,
+                    background: "linear-gradient(135deg, #f0fdf4 0%, #d1fae5 100%)",
                     display: "flex", alignItems: "center", justifyContent: "center",
-                    marginBottom: 16,
+                    marginBottom: 20,
+                    boxShadow: "0 4px 12px rgba(16,185,129,0.15)",
                   }}>
-                    <Icono size={20} color="#059669" strokeWidth={1.75} />
+                    <Icono size={24} color="#059669" strokeWidth={1.75} />
                   </div>
-                  <h3 style={{ fontSize: 16, fontWeight: 700, color: "#111827", margin: "0 0 8px", lineHeight: 1.3 }}>
+                  <h3 style={{ fontSize: 17, fontWeight: 800, color: "#111827", margin: "0 0 10px", lineHeight: 1.3, letterSpacing: "-0.02em" }}>
                     {titulo}
                   </h3>
-                  <p style={{ fontSize: 13, color: "#6b7280", margin: "0 0 16px", lineHeight: 1.6 }}>
+                  <p style={{ fontSize: 14, color: "#6b7280", margin: "0 0 20px", lineHeight: 1.65 }}>
                     {desc}
                   </p>
-                  <span style={{ fontSize: 13, fontWeight: 700, color: "#10b981",
-                    display: "flex", alignItems: "center", gap: 4 }}>
-                    Leer guía <ArrowRight size={12} />
+                  <span style={{ fontSize: 13, fontWeight: 700, color: "#059669",
+                    display: "inline-flex", alignItems: "center", gap: 6,
+                    background: "#f0fdf4", padding: "6px 12px", borderRadius: 8 }}>
+                    Leer guía <ArrowRight size={13} />
                   </span>
                 </motion.a>
               ))}
@@ -1034,7 +1102,7 @@ export default function Home() {
         {/* ════ FOOTER OSCURO ════ */}
         <footer style={{
           background: "#0a0a0a",
-          padding: "56px 24px 40px",
+          padding: "72px 24px 48px",
           color: "#fff",
         }}>
           <div style={{ maxWidth: 1120, margin: "0 auto" }}>
