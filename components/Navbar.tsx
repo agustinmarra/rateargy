@@ -89,7 +89,6 @@ export default function Navbar() {
           style={{
             padding: 8, background: 'none', border: 'none',
             cursor: 'pointer', color: '#6b7280',
-            display: 'flex', alignItems: 'center',
           }}
         >
           {open ? <X size={20} /> : <Menu size={20} />}

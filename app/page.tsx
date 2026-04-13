@@ -3,7 +3,7 @@
 import { useState, useEffect, useCallback, useRef } from "react"
 import { motion, AnimatePresence } from "framer-motion"
 import dynamic from "next/dynamic"
-import { Calculator, BarChart2, Trophy, ArrowRight, Shield, Zap, TrendingUp, BookOpen, CreditCard, Banknote, PiggyBank, ChevronDown, X, Check } from "lucide-react"
+import { Calculator, BarChart2, Trophy, ArrowRight, BookOpen, CreditCard, Banknote, PiggyBank, ChevronDown, X, Check } from "lucide-react"
 import { TARJETAS, rankear, type Gastos, type CatKey } from "@/components/tarjetas-data"
 import { formatARS, CatIcon } from "@/components/ResultadosTarjetas"
 import { BancoLogo } from "@/components/BancoLogo"
@@ -29,9 +29,9 @@ const GASTOS_VACIO: Gastos = {
 }
 
 const STATS = [
-  { value: "20", label: "tarjetas comparadas" },
-  { value: "100%", label: "gratis, sin registro" },
-  { value: "Lunes", label: "actualización semanal" },
+  { value: "20",  label: "tarjetas comparadas" },
+  { value: "8",   label: "categorías de gasto" },
+  { value: "~3m", label: "para ver tu ranking" },
 ]
 
 const COMO_FUNCIONA = [
@@ -194,28 +194,6 @@ function DashboardPreview() {
         ))}
       </div>
 
-      {/* CTA */}
-      <div style={{ marginTop: 16, paddingTop: 16, borderTop: "1px solid #f1f5f9" }}>
-        <p style={{ fontSize: 12, color: "#94a3b8", margin: "0 0 10px", textAlign: "center" }}>
-          ↓ Ingresá tus gastos reales para ver tu ranking personalizado
-        </p>
-        <div style={{ display: "flex", gap: 8 }}>
-          {[
-            { icon: Shield, label: "Sin registro" },
-            { icon: Zap,    label: "En segundos" },
-            { icon: TrendingUp, label: "100% gratis" },
-          ].map(({ icon: Icon, label }) => (
-            <div key={label} style={{
-              flex: 1, display: "flex", alignItems: "center", justifyContent: "center", gap: 4,
-              background: "#f8fafc", borderRadius: 8, padding: "6px 4px",
-              fontSize: 10, fontWeight: 600, color: "#64748b",
-            }}>
-              <Icon size={10} />
-              {label}
-            </div>
-          ))}
-        </div>
-      </div>
     </motion.div>
   )
 }
@@ -254,6 +232,165 @@ function MarqueeLogos() {
         ))}
       </div>
     </div>
+  )
+}
+
+// ─── Perfil típico para teaser ────────────────────────────────────────────────
+const PERFIL_TIPICO: Gastos = {
+  super: 80000, nafta: 30000, farmacia: 15000, delivery: 20000,
+  online: 25000, viajes: 0, transporte: 5000, servicios: 10000,
+}
+
+// Gradientes representativos (sin importar ResultadosTarjetas)
+const TEASER_GRADIENTS: Record<string, string> = {
+  "galicia-eminent": "linear-gradient(135deg, #134e32 0%, #1a7f4f 60%, #22c55e 100%)",
+  "galicia":         "linear-gradient(135deg, #0f3d24 0%, #1a6b3f 60%, #259a5b 100%)",
+  "bbva":            "linear-gradient(135deg, #00437f 0%, #005cbf 60%, #1a7ae0 100%)",
+  "bbva-platinum":   "linear-gradient(135deg, #1a1a2e 0%, #22304a 60%, #2d4169 100%)",
+  "santander":       "linear-gradient(135deg, #7a0000 0%, #b80000 60%, #e60000 100%)",
+  "santander-gold":  "linear-gradient(135deg, #5c3d00 0%, #96680a 60%, #c9940f 100%)",
+  "macro":           "linear-gradient(135deg, #0a3370 0%, #1254a8 60%, #1a6fd4 100%)",
+  "naranja-x":       "linear-gradient(135deg, #b33a00 0%, #e65200 60%, #ff6a1a 100%)",
+  "uala":            "linear-gradient(135deg, #3d006b 0%, #6200b3 60%, #8c00e6 100%)",
+  "bna":             "linear-gradient(135deg, #002952 0%, #003d7a 60%, #0055ab 100%)",
+}
+
+// ─── MiniTeaser ───────────────────────────────────────────────────────────────
+function MiniTeaser({ onCTA }: { onCTA: () => void }) {
+  const top3 = rankear(PERFIL_TIPICO).slice(0, 3)
+
+  return (
+    <section style={{ paddingBottom: 8 }}>
+      {/* Header */}
+      <div style={{
+        display: "flex", alignItems: "flex-end", justifyContent: "space-between",
+        flexWrap: "wrap", gap: 16, marginBottom: 28,
+      }}>
+        <div>
+          <p style={{
+            fontSize: 11, fontWeight: 700, letterSpacing: "0.08em",
+            textTransform: "uppercase", color: "#94a3b8", margin: "0 0 8px",
+          }}>
+            Perfil gasto típico · actualizado esta semana
+          </p>
+          <h2 style={{
+            fontSize: "clamp(22px, 2.5vw, 34px)", fontWeight: 900,
+            letterSpacing: "-0.035em", color: "#0a0a0a", margin: 0, lineHeight: 1.1,
+          }}>
+            Ejemplo de ahorro real esta semana
+          </h2>
+        </div>
+        <button
+          onClick={onCTA}
+          style={{
+            display: "inline-flex", alignItems: "center", gap: 7,
+            padding: "10px 20px", borderRadius: 12,
+            background: "linear-gradient(135deg, #ecfdf5 0%, #d1fae5 100%)",
+            border: "1px solid rgba(16,185,129,0.25)",
+            color: "#059669", fontSize: 13, fontWeight: 700, cursor: "pointer",
+            boxShadow: "0 2px 8px rgba(16,185,129,0.1)",
+            flexShrink: 0,
+          }}
+        >
+          Calculá el tuyo
+          <ArrowRight size={14} />
+        </button>
+      </div>
+
+      {/* Cards */}
+      <div className="teaser-grid">
+        {top3.map((t, i) => {
+          const grad = TEASER_GRADIENTS[t.id] ?? t.gradiente
+          const medals = ["🥇", "🥈", "🥉"]
+
+          return (
+            <motion.div
+              key={t.id}
+              initial={{ opacity: 0, y: 20 }}
+              animate={{ opacity: 1, y: 0 }}
+              transition={{ duration: 0.4, delay: 0.1 + i * 0.08 }}
+              style={{
+                background: i === 0
+                  ? "linear-gradient(145deg, #f0fdf4 0%, #dcfce7 100%)"
+                  : "#ffffff",
+                border: `1.5px solid ${i === 0 ? "rgba(16,185,129,0.25)" : "#f3f4f6"}`,
+                borderRadius: 20,
+                padding: "24px",
+                position: "relative", overflow: "hidden",
+                boxShadow: i === 0
+                  ? "0 8px 32px rgba(16,185,129,0.12)"
+                  : "0 4px 16px rgba(0,0,0,0.04)",
+              }}
+            >
+              {/* Orb decorativo */}
+              <div aria-hidden style={{
+                position: "absolute", bottom: -30, right: -30, width: 120, height: 120,
+                borderRadius: "50%",
+                background: i === 0 ? "rgba(16,185,129,0.08)" : "rgba(0,0,0,0.03)",
+                pointerEvents: "none",
+              }} />
+
+              {/* Posición + mini card */}
+              <div style={{ display: "flex", alignItems: "center", gap: 12, marginBottom: 16 }}>
+                <span style={{ fontSize: 20, flexShrink: 0 }}>{medals[i]}</span>
+                <div style={{
+                  width: 52, height: 32, borderRadius: 8,
+                  background: grad, flexShrink: 0,
+                  boxShadow: "0 4px 12px rgba(0,0,0,0.2)",
+                  position: "relative", overflow: "hidden",
+                }}>
+                  <div style={{
+                    position: "absolute", inset: 0,
+                    background: "linear-gradient(145deg, rgba(255,255,255,0.15) 0%, transparent 60%)",
+                  }} />
+                </div>
+                <div style={{ flex: 1, minWidth: 0 }}>
+                  <p style={{ fontSize: 13, fontWeight: 700, color: "#111827", margin: 0, overflow: "hidden", textOverflow: "ellipsis", whiteSpace: "nowrap" }}>
+                    {t.nombre}
+                  </p>
+                  <p style={{ fontSize: 11, color: "#9ca3af", margin: 0 }}>{t.banco}</p>
+                </div>
+              </div>
+
+              {/* Ahorro */}
+              <div style={{ marginBottom: 12 }}>
+                <p style={{ fontSize: 11, fontWeight: 600, color: "#9ca3af", textTransform: "uppercase", letterSpacing: "0.06em", margin: "0 0 2px" }}>
+                  Ahorro mensual estimado
+                </p>
+                <p style={{
+                  fontSize: "clamp(24px, 2.5vw, 30px)", fontWeight: 900,
+                  color: i === 0 ? "#059669" : "#111827",
+                  margin: 0, letterSpacing: "-0.03em", lineHeight: 1,
+                }}>
+                  {formatARS(t.ahorro)}
+                </p>
+                <p style={{ fontSize: 12, color: "#9ca3af", margin: "4px 0 0" }}>
+                  {formatARS(t.ahorro * 12)} al año
+                </p>
+              </div>
+
+              {/* Pills top beneficios */}
+              <div style={{ display: "flex", flexWrap: "wrap", gap: 6 }}>
+                {t.pills.slice(0, 2).map(p => (
+                  <span key={p} style={{
+                    fontSize: 11, fontWeight: 600,
+                    padding: "3px 8px", borderRadius: 6,
+                    background: i === 0 ? "rgba(16,185,129,0.1)" : "#f3f4f6",
+                    color: i === 0 ? "#059669" : "#6b7280",
+                  }}>
+                    {p}
+                  </span>
+                ))}
+              </div>
+            </motion.div>
+          )
+        })}
+      </div>
+
+      <p style={{ fontSize: 12, color: "#9ca3af", textAlign: "center", marginTop: 16 }}>
+        Basado en un gasto típico mensual · Los montos reales varían según tu perfil
+      </p>
+    </section>
   )
 }
 
@@ -362,6 +499,12 @@ export default function Home() {
           gap: 24px;
         }
         @media (max-width: 768px) { .guias-grid { grid-template-columns: 1fr; } }
+        .teaser-grid {
+          display: grid;
+          grid-template-columns: repeat(3, 1fr);
+          gap: 20px;
+        }
+        @media (max-width: 768px) { .teaser-grid { grid-template-columns: 1fr; } }
         @media (max-width: 768px) { .footer-grid { grid-template-columns: 1fr !important; gap: 32px !important; } }
         .partners-track { animation: marquee 30s linear infinite; }
         @keyframes marquee {
@@ -496,28 +639,40 @@ export default function Home() {
             </div>
           </section>
 
-          {/* Trust bar */}
+          {/* ════ TRUST BAR ════ */}
           <motion.div
-            initial={{ opacity: 0 }} animate={{ opacity: 1 }} transition={{ duration: 0.5, delay: 0.35 }}
-            style={{ display:"flex", alignItems:"center", justifyContent:"center", flexWrap:"wrap", gap:0, paddingBottom: 48 }}
+            initial={{ opacity: 0, y: 12 }} animate={{ opacity: 1, y: 0 }} transition={{ duration: 0.5, delay: 0.35 }}
+            style={{
+              display: "flex", alignItems: "stretch",
+              background: "linear-gradient(135deg, #f8fafc 0%, #f0fdf4 100%)",
+              border: "1px solid rgba(16,185,129,0.12)",
+              borderRadius: 20, overflow: "hidden",
+              marginBottom: 64,
+              boxShadow: "0 2px 16px rgba(0,0,0,0.04)",
+            }}
           >
             {[
-              "Usado por +15.000 argentinos esta semana",
-              "Actualizado cada lunes",
-              "100% gratis y sin registro",
-            ].map((text, i, arr) => (
-              <span key={text} style={{ display:"flex", alignItems:"center", gap:6 }}>
-                <span style={{ display:"flex", alignItems:"center", gap:6, fontSize:13, color:"#6b7280", fontWeight:500, padding:"0 16px" }}>
-                  <span style={{ width:5, height:5, borderRadius:"50%", background:"#10b981", display:"inline-block", flexShrink:0 }} />
-                  {text}
-                </span>
-                {i < arr.length - 1 && <span style={{ color:"#d1d5db" }}>·</span>}
-              </span>
+              { num: "+15.000", label: "argentinos esta semana" },
+              { num: "Cada lunes", label: "datos actualizados" },
+              { num: "100%", label: "gratis · sin registro" },
+            ].map(({ num, label }, i) => (
+              <div key={label} style={{
+                flex: 1, textAlign: "center", padding: "24px 16px",
+                borderRight: i < 2 ? "1px solid rgba(16,185,129,0.1)" : "none",
+              }}>
+                <p style={{ fontSize: "clamp(20px, 2.5vw, 28px)", fontWeight: 900, color: "#0a0a0a", margin: "0 0 4px", letterSpacing: "-0.03em" }}>
+                  {num}
+                </p>
+                <p style={{ fontSize: 13, color: "#6b7280", margin: 0, fontWeight: 500 }}>{label}</p>
+              </div>
             ))}
           </motion.div>
 
+          {/* ════ MINI TEASER ════ */}
+          <MiniTeaser onCTA={scrollToCalculadora} />
+
           {/* ── Separador hero → marquee ── */}
-          <div aria-hidden style={{ height:1, background:"linear-gradient(90deg, transparent, #e5e7eb 30%, #e5e7eb 70%, transparent)", marginBottom:56 }} />
+          <div aria-hidden style={{ height:1, background:"linear-gradient(90deg, transparent, #e5e7eb 30%, #e5e7eb 70%, transparent)", marginBottom:56, marginTop: 64 }} />
 
           {/* ════ MARQUEE — logos bancos ════ */}
           <section style={{ marginBottom: 96 }}>
