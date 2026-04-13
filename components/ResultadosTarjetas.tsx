@@ -321,14 +321,15 @@ function BeneficiosMes({ resultados, gastos }: {
       {/* Header de sección */}
       <div style={{ marginBottom: 40 }}>
         <div style={{
-          display:"inline-flex", alignItems:"center", gap:6,
-          background:"linear-gradient(135deg, #d1fae5 0%, #a7f3d0 100%)",
-          color:"#065f46", fontSize:11, fontWeight:700,
-          padding:"5px 14px", borderRadius:999, letterSpacing:"0.08em",
-          textTransform:"uppercase", border:"1px solid #6ee7b7",
+          display:"inline-flex", alignItems:"center", gap:7,
+          background:"linear-gradient(135deg, #ecfdf5 0%, #d1fae5 100%)",
+          color:"#059669", fontSize:11, fontWeight:700,
+          padding:"7px 16px", borderRadius:999, letterSpacing:"0.08em",
+          textTransform:"uppercase", border:"1px solid rgba(16,185,129,0.25)",
           marginBottom:16,
+          boxShadow:"0 2px 10px rgba(16,185,129,0.15), inset 0 1px 0 rgba(255,255,255,0.8)",
         }}>
-          <span style={{ width:6, height:6, borderRadius:"50%", background:"#10b981", display:"inline-block" }} />
+          <span style={{ width:6, height:6, borderRadius:"50%", background:"#10b981", display:"inline-block", boxShadow:"0 0 6px rgba(16,185,129,0.6)" }} />
           Esta semana
         </div>
         <h2 style={{ fontSize:"clamp(28px, 3vw, 40px)", fontWeight:900, letterSpacing:"-0.04em", color:"#0a0a0a", margin:0, lineHeight:1.1 }}>
@@ -548,11 +549,16 @@ interface ResultadosTarjetasProps {
 }
 
 export default function ResultadosTarjetas({ resultados, gastos, tarjetaActual }: ResultadosTarjetasProps) {
+  const [verTodas, setVerTodas] = useState(false)
+
   const totalGasto   = Object.values(gastos).reduce((a, b) => a + b, 0)
   const maxAhorro    = resultados[0]?.ahorro ?? 0
   const tarjetaActualData = TARJETAS.find((t) => t.id === tarjetaActual)
   const ahorroActual = resultados.find((t) => t.id === tarjetaActual)?.ahorro ?? 0
   const top1         = resultados[0]
+
+  // Por defecto: top 5 (posiciones 2-5 en el ranking, la 1 se muestra aparte)
+  const rankingVisible = verTodas ? resultados.slice(1) : resultados.slice(1, 5)
 
   return (
     <motion.div
@@ -707,7 +713,7 @@ export default function ResultadosTarjetas({ resultados, gastos, tarjetaActual }
 
       {/* ════════════ RANKING #2+ ════════════ */}
       <div style={{ display:"flex", flexDirection:"column", gap:16, marginBottom:0 }}>
-        {resultados.slice(1).map((t, idx) => {
+        {rankingVisible.map((t, idx) => {
           const score    = getScorePct(t.ahorro, maxAhorro)
           const diff     = t.ahorro - ahorroActual
           const showDiff = tarjetaActualData && t.id !== tarjetaActual
@@ -769,6 +775,42 @@ export default function ResultadosTarjetas({ resultados, gastos, tarjetaActual }
           )
         })}
       </div>
+
+      {/* ── Botón Ver todas ── */}
+      <AnimatePresence>
+        {!verTodas && resultados.length > 5 && (
+          <motion.div
+            key="ver-todas-btn"
+            initial={{ opacity: 0, y: 8 }}
+            animate={{ opacity: 1, y: 0 }}
+            exit={{ opacity: 0, y: -8 }}
+            transition={{ duration: 0.3 }}
+            style={{ marginTop: 8, textAlign: "center" }}
+          >
+            <motion.button
+              onClick={() => setVerTodas(true)}
+              whileHover={{ y: -2, boxShadow: "0 16px 40px rgba(16,185,129,0.22)" }}
+              whileTap={{ scale: 0.98 }}
+              style={{
+                display: "inline-flex", alignItems: "center", gap: 10,
+                padding: "16px 36px",
+                background: "linear-gradient(135deg, #f0fdf4 0%, #dcfce7 100%)",
+                border: "1.5px solid rgba(16,185,129,0.3)",
+                borderRadius: 16, cursor: "pointer",
+                fontSize: 15, fontWeight: 700, color: "#059669",
+                boxShadow: "0 4px 16px rgba(16,185,129,0.12)",
+                width: "100%",
+                justifyContent: "center",
+              }}
+            >
+              Ver las {resultados.length} tarjetas completas
+              <svg viewBox="0 0 20 20" fill="none" stroke="currentColor" strokeWidth="2.5" strokeLinecap="round" style={{ width:18, height:18 }}>
+                <path d="M10 4v12M4 10l6 6 6-6" />
+              </svg>
+            </motion.button>
+          </motion.div>
+        )}
+      </AnimatePresence>
 
       {/* ── Beneficios del mes ── */}
       <BeneficiosMes resultados={resultados} gastos={gastos} />

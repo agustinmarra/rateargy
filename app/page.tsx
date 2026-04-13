@@ -129,17 +129,19 @@ function DashboardPreview() {
       {/* Header del widget */}
       <div style={{ display: "flex", alignItems: "center", justifyContent: "space-between", marginBottom: 18 }}>
         <div>
-          <p style={{ fontSize: 11, fontWeight: 700, letterSpacing: "0.1em", textTransform: "uppercase", color: "#94a3b8", margin: 0 }}>
-            Tu ranking
+          <p style={{ fontSize: 11, fontWeight: 700, letterSpacing: "0.08em", textTransform: "uppercase", color: "#94a3b8", margin: 0 }}>
+            Ejemplo real · esta semana
           </p>
           <p style={{ fontSize: 14, fontWeight: 600, color: "#111827", margin: "2px 0 0" }}>
-            Perfil: gasto típico mensual
+            Gasto típico de un argentino
           </p>
         </div>
         <div style={{
-          background: "#f0fdf4", border: "1px solid #d1fae5",
-          borderRadius: 8, padding: "4px 10px",
-          fontSize: 11, fontWeight: 700, color: "#065f46",
+          background: "linear-gradient(135deg, #ecfdf5 0%, #d1fae5 100%)",
+          border: "1px solid rgba(16,185,129,0.25)",
+          borderRadius: 10, padding: "5px 11px",
+          fontSize: 11, fontWeight: 700, color: "#059669",
+          boxShadow: "0 2px 8px rgba(16,185,129,0.12)",
         }}>
           20 tarjetas
         </div>
@@ -221,7 +223,14 @@ function DashboardPreview() {
 // ─── MarqueeLogos ─────────────────────────────────────────────────────────────
 
 function MarqueeLogos() {
-  const items = [...TARJETAS, ...TARJETAS] // duplicar para loop
+  // Dedup: un item por banco (puede haber varias tarjetas del mismo banco)
+  const seen = new Set<string>()
+  const unique = TARJETAS.filter(t => {
+    if (seen.has(t.banco)) return false
+    seen.add(t.banco)
+    return true
+  })
+  const items = [...unique, ...unique] // duplicar para loop infinito
   return (
     <div style={{ overflow: "hidden", position: "relative", padding: "6px 0" }}>
       {/* Fade izquierdo */}
@@ -357,14 +366,18 @@ export default function Home() {
           gap: 24px;
         }
         @media (max-width: 768px) { .guias-grid { grid-template-columns: 1fr; } }
+        @media (max-width: 768px) { .footer-grid { grid-template-columns: 1fr !important; gap: 32px !important; } }
         .partners-track { animation: marquee 30s linear infinite; }
         @keyframes marquee {
           0%   { transform: translateX(0); }
           100% { transform: translateX(-50%); }
         }
+        .nav-link { transition: color 0.15s, background 0.15s; }
+        .nav-link:hover { color: #111827 !important; background: #f9fafb !important; }
+        .nav-link-active { color: #059669 !important; background: rgba(16,185,129,0.08) !important; }
       `}</style>
 
-      <div style={{ position: "relative", minHeight: "100vh", background: "#ffffff", overflow: "hidden" }}>
+      <div style={{ position: "relative", minHeight: "100vh", background: "#ffffff", overflow: "clip" }}>
 
         {/* Orbs decorativos */}
         <div aria-hidden style={{ position:"absolute", width:900, height:900, borderRadius:"50%",
@@ -380,32 +393,52 @@ export default function Home() {
         {/* ════ HEADER ════ */}
         <header style={{
           position: "sticky", top: 0, zIndex: 50, height: 64,
-          background: "rgba(255,255,255,0.82)",
-          backdropFilter: "blur(14px)", WebkitBackdropFilter: "blur(14px)",
+          background: "rgba(255,255,255,0.9)",
+          backdropFilter: "blur(20px)", WebkitBackdropFilter: "blur(20px)",
           borderBottom: "1px solid rgba(0,0,0,0.06)",
         }}>
           <div style={{
             maxWidth: 1120, margin: "0 auto", padding: "0 24px",
-            height: "100%", display: "flex", alignItems: "center", justifyContent: "space-between",
+            height: "100%", display: "flex", alignItems: "center", justifyContent: "space-between", gap: 16,
           }}>
+            {/* Logo */}
             <a href="/" style={{ textDecoration: "none", flexShrink: 0, display: "flex", alignItems: "center", gap: 8 }}>
-              <span style={{ fontSize: 22, fontWeight: 800, letterSpacing: "-0.03em" }}>
+              <span style={{ fontSize: 21, fontWeight: 800, letterSpacing: "-0.03em" }}>
                 <span style={{ color: "#10b981" }}>r</span>
                 <span style={{ color: "#111827" }}>ateargy</span>
               </span>
               <span style={{
-                display: "inline-block", width: 8, height: 8, borderRadius: "50%",
+                display: "inline-block", width: 7, height: 7, borderRadius: "50%",
                 background: "#10b981", animation: "pulse-dot 2s ease-in-out infinite",
               }} />
             </a>
 
-            <div style={{
-              display: "inline-flex", alignItems: "center", gap: 6,
-              background: "#f0fdf4", border: "1px solid #d1fae5",
-              borderRadius: 999, padding: "6px 14px",
-              fontSize: 12, fontWeight: 600, color: "#065f46",
-            }}>
-              ✓ Actualizado cada lunes
+            {/* Nav links */}
+            <nav style={{ display: "flex", alignItems: "center", gap: 2, flex: 1, justifyContent: "center" }}>
+              {[
+                { label: "Tarjetas", href: "/tarjetas", active: true },
+                { label: "Nafta",    href: "/nafta",    active: false },
+                { label: "Guías",    href: "/articulos",active: false },
+                { label: "Contacto", href: "/contacto", active: false },
+              ].map(({ label, href, active }) => (
+                <a key={label} href={href}
+                  className={`nav-link ${active ? "nav-link-active" : ""}`}
+                  style={{
+                    textDecoration: "none", padding: "6px 13px", borderRadius: 8,
+                    fontSize: 14, fontWeight: active ? 600 : 500,
+                    color: active ? "#059669" : "#6b7280",
+                    background: active ? "rgba(16,185,129,0.08)" : "transparent",
+                  }}
+                >
+                  {label}
+                </a>
+              ))}
+            </nav>
+
+            {/* Right: live badge */}
+            <div style={{ display: "flex", alignItems: "center", gap: 6, flexShrink: 0 }}>
+              <span style={{ width: 6, height: 6, borderRadius: "50%", background: "#10b981", display: "inline-block", animation: "pulse-dot 2s ease-in-out infinite" }} />
+              <span style={{ fontSize: 12, fontWeight: 600, color: "#6b7280" }}>Actualizado lunes</span>
             </div>
           </div>
         </header>
@@ -424,13 +457,15 @@ export default function Home() {
                 {/* Eyebrow */}
                 <motion.div
                   initial={{ opacity: 0, y: 8 }} animate={{ opacity: 1, y: 0 }} transition={{ duration: 0.4 }}
-                  style={{ display: "inline-flex", alignItems: "center", gap: 6,
-                    background: "#f0fdf4", border: "1px solid #d1fae5",
-                    borderRadius: 999, padding: "5px 12px",
-                    fontSize: 11, fontWeight: 700, letterSpacing: "0.1em",
-                    textTransform: "uppercase", color: "#065f46", marginBottom: 24 }}
+                  style={{ display: "inline-flex", alignItems: "center", gap: 7,
+                    background: "linear-gradient(135deg, #ecfdf5 0%, #d1fae5 100%)",
+                    border: "1px solid rgba(16,185,129,0.25)",
+                    borderRadius: 999, padding: "7px 16px",
+                    fontSize: 11, fontWeight: 700, letterSpacing: "0.08em",
+                    textTransform: "uppercase", color: "#059669", marginBottom: 24,
+                    boxShadow: "0 2px 10px rgba(16,185,129,0.15), inset 0 1px 0 rgba(255,255,255,0.8)" }}
                 >
-                  <span style={{ width: 6, height: 6, borderRadius: "50%", background: "#10b981", display: "inline-block" }} />
+                  <span style={{ width: 6, height: 6, borderRadius: "50%", background: "#10b981", display: "inline-block", boxShadow: "0 0 6px rgba(16,185,129,0.6)" }} />
                   Comparador financiero · Argentina · 2026
                 </motion.div>
 
@@ -521,6 +556,26 @@ export default function Home() {
             </div>
           </section>
 
+          {/* Trust bar */}
+          <motion.div
+            initial={{ opacity: 0 }} animate={{ opacity: 1 }} transition={{ duration: 0.5, delay: 0.35 }}
+            style={{ display:"flex", alignItems:"center", justifyContent:"center", flexWrap:"wrap", gap:0, paddingBottom: 48 }}
+          >
+            {[
+              "Usado por +15.000 argentinos esta semana",
+              "Actualizado cada lunes",
+              "100% gratis y sin registro",
+            ].map((text, i, arr) => (
+              <span key={text} style={{ display:"flex", alignItems:"center", gap:6 }}>
+                <span style={{ display:"flex", alignItems:"center", gap:6, fontSize:13, color:"#6b7280", fontWeight:500, padding:"0 16px" }}>
+                  <span style={{ width:5, height:5, borderRadius:"50%", background:"#10b981", display:"inline-block", flexShrink:0 }} />
+                  {text}
+                </span>
+                {i < arr.length - 1 && <span style={{ color:"#d1d5db" }}>·</span>}
+              </span>
+            ))}
+          </motion.div>
+
           {/* ── Separador hero → marquee ── */}
           <div aria-hidden style={{ height:1, background:"linear-gradient(90deg, transparent, #e5e7eb 30%, #e5e7eb 70%, transparent)", marginBottom:56 }} />
 
@@ -545,11 +600,13 @@ export default function Home() {
 
             {/* Encabezado de sección */}
             <div style={{ textAlign: "center", marginBottom: 56 }}>
-              <div style={{ display:"inline-flex", alignItems:"center", gap:6,
-                background:"#f0fdf4", border:"1px solid #d1fae5",
-                borderRadius:999, padding:"5px 14px", marginBottom:16,
-                fontSize:11, fontWeight:700, letterSpacing:"0.1em", textTransform:"uppercase", color:"#065f46" }}>
-                <span style={{ width:6, height:6, borderRadius:"50%", background:"#10b981", display:"inline-block" }} />
+              <div style={{ display:"inline-flex", alignItems:"center", gap:7,
+                background:"linear-gradient(135deg, #ecfdf5 0%, #d1fae5 100%)",
+                border:"1px solid rgba(16,185,129,0.25)",
+                borderRadius:999, padding:"7px 16px", marginBottom:16,
+                fontSize:11, fontWeight:700, letterSpacing:"0.08em", textTransform:"uppercase", color:"#059669",
+                boxShadow:"0 2px 10px rgba(16,185,129,0.15), inset 0 1px 0 rgba(255,255,255,0.8)" }}>
+                <span style={{ width:6, height:6, borderRadius:"50%", background:"#10b981", display:"inline-block", boxShadow:"0 0 6px rgba(16,185,129,0.6)" }} />
                 Calculadora personalizada
               </div>
               <h2 style={{ fontSize: "clamp(30px, 3.5vw, 48px)", fontWeight: 900,
@@ -865,11 +922,13 @@ export default function Home() {
               >
                 {/* Eyebrow */}
                 <div style={{ textAlign: "center", marginBottom: 56 }}>
-                  <div style={{ display:"inline-flex", alignItems:"center", gap:6,
-                    background:"#f0fdf4", border:"1px solid #d1fae5",
-                    borderRadius:999, padding:"5px 14px", marginBottom:16,
-                    fontSize:11, fontWeight:700, letterSpacing:"0.1em", textTransform:"uppercase", color:"#065f46" }}>
-                    <span style={{ width:6, height:6, borderRadius:"50%", background:"#10b981", display:"inline-block" }} />
+                  <div style={{ display:"inline-flex", alignItems:"center", gap:7,
+                    background:"linear-gradient(135deg, #ecfdf5 0%, #d1fae5 100%)",
+                    border:"1px solid rgba(16,185,129,0.25)",
+                    borderRadius:999, padding:"7px 16px", marginBottom:16,
+                    fontSize:11, fontWeight:700, letterSpacing:"0.08em", textTransform:"uppercase", color:"#059669",
+                    boxShadow:"0 2px 10px rgba(16,185,129,0.15), inset 0 1px 0 rgba(255,255,255,0.8)" }}>
+                    <span style={{ width:6, height:6, borderRadius:"50%", background:"#10b981", display:"inline-block", boxShadow:"0 0 6px rgba(16,185,129,0.6)" }} />
                     Simple y transparente
                   </div>
                   <h2 style={{ fontSize: "clamp(28px,3.2vw,44px)", fontWeight: 900, letterSpacing: "-0.04em",
@@ -945,9 +1004,11 @@ export default function Home() {
             {/* Header */}
             <div style={{ textAlign: "center", marginBottom: 64 }}>
               <div style={{ display:"inline-flex", alignItems:"center", gap:7,
-                background:"#f0fdf4", border:"1px solid #d1fae5",
-                borderRadius:999, padding:"6px 16px", marginBottom:18,
-                fontSize:11, fontWeight:700, letterSpacing:"0.1em", textTransform:"uppercase", color:"#065f46" }}>
+                background:"linear-gradient(135deg, #ecfdf5 0%, #d1fae5 100%)",
+                border:"1px solid rgba(16,185,129,0.25)",
+                borderRadius:999, padding:"7px 16px", marginBottom:18,
+                fontSize:11, fontWeight:700, letterSpacing:"0.08em", textTransform:"uppercase", color:"#059669",
+                boxShadow:"0 2px 10px rgba(16,185,129,0.15), inset 0 1px 0 rgba(255,255,255,0.8)" }}>
                 <BookOpen size={11} color="#059669" />
                 Guías financieras
               </div>
@@ -1147,11 +1208,6 @@ export default function Home() {
           </div>
         </footer>
 
-        <style>{`
-          @media (max-width: 768px) {
-            .footer-grid { grid-template-columns: 1fr !important; gap: 32px !important; }
-          }
-        `}</style>
       </div>
 
       <Toast msg={toastMsg} />
