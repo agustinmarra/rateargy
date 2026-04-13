@@ -237,8 +237,8 @@ function MarqueeLogos() {
 
 // ─── Perfil típico para teaser ────────────────────────────────────────────────
 const PERFIL_TIPICO: Gastos = {
-  super: 80000, nafta: 30000, farmacia: 15000, delivery: 20000,
-  online: 25000, viajes: 0, transporte: 5000, servicios: 10000,
+  super: 200000, nafta: 50000, farmacia: 50000, delivery: 25000,
+  online: 30000, viajes: 0, transporte: 5000, servicios: 10000,
 }
 
 // Gradientes representativos (sin importar ResultadosTarjetas)
