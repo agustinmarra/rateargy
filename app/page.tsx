@@ -332,6 +332,10 @@ export default function Home() {
           0%   { transform: translateX(-100%); }
           100% { transform: translateX(300%); }
         }
+        @keyframes shine {
+          0%   { transform: translateX(-100%); }
+          100% { transform: translateX(300%); }
+        }
         @keyframes pulse-dot {
           0%, 100% { opacity: 1; transform: scale(1); }
           50%       { opacity: 0.5; transform: scale(1.4); }

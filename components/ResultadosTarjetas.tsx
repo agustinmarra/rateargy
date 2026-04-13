@@ -2,7 +2,7 @@
 
 import { useState, useEffect, type CSSProperties } from "react"
 import { motion, AnimatePresence } from "framer-motion"
-import { CreditCard, Percent, ShoppingCart, Zap, Plane, Pill, Car, ArrowUpRight, TrendingUp } from "lucide-react"
+import { CreditCard, Percent, ShoppingCart, Zap, Plane, Pill, Car, ArrowUpRight, TrendingUp, Share2, Bookmark } from "lucide-react"
 import { TARJETAS, type Tarjeta, type CatKey, type Gastos } from "./tarjetas-data"
 
 // ─── Utilidades ──────────────────────────────────────────────────────────────
@@ -78,38 +78,67 @@ const CAT_META: Record<CatKey, { label: string }> = {
   servicios:  { label: "Servicios" },
 }
 
+// ─── Gradientes premium por tarjeta (override visual, no toca tarjetas-data) ──
+const GRADIENTES_PREMIUM: Record<string, string> = {
+  "galicia-eminent": "linear-gradient(135deg, #134e32 0%, #1a7f4f 60%, #22c55e 100%)",
+  "galicia":         "linear-gradient(135deg, #0f3d24 0%, #1a6b3f 60%, #259a5b 100%)",
+  "bbva":            "linear-gradient(135deg, #00437f 0%, #005cbf 60%, #1a7ae0 100%)",
+  "bbva-platinum":   "linear-gradient(135deg, #1a1a2e 0%, #22304a 60%, #2d4169 100%)",
+  "santander":       "linear-gradient(135deg, #7a0000 0%, #b80000 60%, #e60000 100%)",
+  "santander-gold":  "linear-gradient(135deg, #5c3d00 0%, #96680a 60%, #c9940f 100%)",
+  "macro":           "linear-gradient(135deg, #0a3370 0%, #1254a8 60%, #1a6fd4 100%)",
+  "macro-visa":      "linear-gradient(135deg, #003d80 0%, #0055b3 60%, #1a70d1 100%)",
+  "naranja-x":       "linear-gradient(135deg, #b33a00 0%, #e65200 60%, #ff6a1a 100%)",
+  "bna":             "linear-gradient(135deg, #002952 0%, #003d7a 60%, #0055ab 100%)",
+  "bna-gold":        "linear-gradient(135deg, #3d2a00 0%, #7a5500 60%, #b8860b 100%)",
+  "supervielle":     "linear-gradient(135deg, #a30028 0%, #cc0033 60%, #e6004d 100%)",
+  "icbc":            "linear-gradient(135deg, #6b0000 0%, #990000 60%, #cc1a00 100%)",
+  "icbc-platinum":   "linear-gradient(135deg, #141414 0%, #2a2a2a 60%, #404040 100%)",
+  "uala":            "linear-gradient(135deg, #3d006b 0%, #6200b3 60%, #8c00e6 100%)",
+  "personal-pay":    "linear-gradient(135deg, #004d26 0%, #007a3d 60%, #00a854 100%)",
+  "credicoop":       "linear-gradient(135deg, #002966 0%, #003d99 60%, #1a55c4 100%)",
+  "patagonia":       "linear-gradient(135deg, #1e4020 0%, #336635 60%, #4d8c50 100%)",
+  "provincia":       "linear-gradient(135deg, #001f40 0%, #003366 60%, #004d99 100%)",
+  "cuenta-dni":      "linear-gradient(135deg, #003366 0%, #004d99 60%, #1a66b8 100%)",
+}
+
 // ─── SVG: chip + contactless ──────────────────────────────────────────────────
-function ChipSVG({ scale = 1 }: { scale?: number }) {
+function ChipSVG() {
   return (
-    <svg viewBox="0 0 24 18" style={{ width: Math.round(24*scale), height: Math.round(18*scale), flexShrink: 0 }}
-      fill="none" stroke="rgba(255,255,255,0.55)" strokeWidth="1">
-      <rect x="1" y="1" width="22" height="16" rx="3" />
-      <line x1="1" y1="6" x2="23" y2="6" /><line x1="1" y1="12" x2="23" y2="12" />
-      <line x1="8" y1="1" x2="8" y2="17" /><line x1="16" y1="1" x2="16" y2="17" />
+    <svg viewBox="0 0 44 34" style={{ width: 44, height: 34, flexShrink: 0 }} fill="none">
+      <rect x="1" y="1" width="42" height="32" rx="4" fill="#d4a843" stroke="#b8902a" strokeWidth="0.5" />
+      <rect x="5" y="5" width="34" height="24" rx="2" fill="#c9942a" />
+      <line x1="1" y1="11" x2="43" y2="11" stroke="#b8902a" strokeWidth="0.5" />
+      <line x1="1" y1="23" x2="43" y2="23" stroke="#b8902a" strokeWidth="0.5" />
+      <line x1="15" y1="1" x2="15" y2="33" stroke="#b8902a" strokeWidth="0.5" />
+      <line x1="29" y1="1" x2="29" y2="33" stroke="#b8902a" strokeWidth="0.5" />
     </svg>
   )
 }
 
-function ContactlessSVG({ scale = 1 }: { scale?: number }) {
-  const s = Math.round(18*scale)
+function ContactlessSVG() {
   return (
-    <svg viewBox="0 0 18 18" style={{ width: s, height: s, flexShrink: 0 }}
-      fill="none" stroke="rgba(255,255,255,0.5)" strokeWidth="1.5" strokeLinecap="round">
-      <circle cx="9" cy="9" r="1.5" fill="rgba(255,255,255,0.5)" stroke="none" />
-      <path d="M12 6a4.24 4.24 0 010 6" />
-      <path d="M14.5 3.5a7.78 7.78 0 010 11" />
+    <svg viewBox="0 0 28 28" style={{ width: 28, height: 28, flexShrink: 0 }}
+      fill="none" strokeLinecap="round" strokeLinejoin="round">
+      <circle cx="9" cy="14" r="1.5" fill="rgba(255,255,255,0.9)" />
+      <path d="M13 10a5.66 5.66 0 010 8" stroke="rgba(255,255,255,0.75)" strokeWidth="2" />
+      <path d="M17 7a10.4 10.4 0 010 14" stroke="rgba(255,255,255,0.5)" strokeWidth="2" />
+      <path d="M21 4a15.1 15.1 0 010 20" stroke="rgba(255,255,255,0.3)" strokeWidth="2" />
     </svg>
   )
 }
 
 // ─── Mini tarjeta física ──────────────────────────────────────────────────────
 function MiniCard({ tarjeta, size = "lg" }: { tarjeta: Tarjeta; size?: "sm" | "lg" }) {
+  const gradient = GRADIENTES_PREMIUM[tarjeta.id] ?? tarjeta.gradiente
+
   if (size === "sm") {
     return (
-      <div style={{ background: tarjeta.gradiente, width: 80, height: 50,
-        borderRadius: 10, position: "relative", overflow: "hidden", flexShrink: 0 }}>
-        <div style={{ position:"absolute", top:6, left:6 }}><ChipSVG scale={0.55} /></div>
-        <div style={{ position:"absolute", top:5, right:5 }}><ContactlessSVG scale={0.65} /></div>
+      <div style={{ background: gradient, width: 80, height: 50,
+        borderRadius: 8, position: "relative", overflow: "hidden", flexShrink: 0,
+        boxShadow: "0 4px 12px rgba(0,0,0,0.2)" }}>
+        <div style={{ position:"absolute", inset:0,
+          background:"linear-gradient(145deg, rgba(255,255,255,0.12) 0%, transparent 60%)", pointerEvents:"none" }} />
         <span style={{ position:"absolute", bottom:5, left:7,
           fontSize:6.5, fontWeight:700, color:"white", opacity:0.9, lineHeight:1.2 }}>
           {tarjeta.banco}
@@ -119,24 +148,37 @@ function MiniCard({ tarjeta, size = "lg" }: { tarjeta: Tarjeta; size?: "sm" | "l
   }
 
   return (
-    <div style={{ background: tarjeta.gradiente, width:"100%", maxWidth:340,
-      aspectRatio:"1.586/1", borderRadius:20, position:"relative", overflow:"hidden",
-      boxShadow:"0 16px 48px rgba(0,0,0,0.2)" }}>
+    <div style={{
+      background: gradient,
+      width: "100%", maxWidth: 320, height: 200,
+      borderRadius: 20, position: "relative", overflow: "hidden",
+      boxShadow: "0 32px 80px rgba(0,0,0,0.35), 0 8px 24px rgba(0,0,0,0.2), inset 0 1px 0 rgba(255,255,255,0.15)",
+    }}>
+      {/* Brillo superior */}
       <div style={{ position:"absolute", inset:0,
-        background:"linear-gradient(145deg, rgba(255,255,255,0.15) 0%, transparent 50%)", pointerEvents:"none" }} />
-      <span style={{ position:"absolute", top:16, left:20, fontSize:13, fontWeight:700,
+        background:"linear-gradient(145deg, rgba(255,255,255,0.18) 0%, transparent 55%)", pointerEvents:"none" }} />
+      {/* Shine sweep */}
+      <div aria-hidden style={{
+        position:"absolute", top:0, left:0, width:"40%", height:"100%",
+        background:"linear-gradient(105deg, transparent 40%, rgba(255,255,255,0.12) 50%, transparent 60%)",
+        animation:"shine 3.5s ease-in-out infinite", pointerEvents:"none",
+      }} />
+
+      <span style={{ position:"absolute", top:18, left:22, fontSize:16, fontWeight:700,
         color:"white", opacity:0.95, letterSpacing:"0.02em" }}>{tarjeta.banco}</span>
-      <div style={{ position:"absolute", top:"34%", left:"8%" }}><ChipSVG scale={1} /></div>
-      <div style={{ position:"absolute", top:"16%", right:"7%" }}><ContactlessSVG scale={1} /></div>
-      <span style={{ position:"absolute", fontSize:13, bottom:"36%", left:"8%",
+
+      <div style={{ position:"absolute", top:"36%", left:"7%" }}><ChipSVG /></div>
+      <div style={{ position:"absolute", top:"18%", right:"7%" }}><ContactlessSVG /></div>
+
+      <span style={{ position:"absolute", fontSize:16, bottom:"34%", left:"7%",
         color:"white", fontFamily:"monospace", letterSpacing:"0.2em", opacity:0.75 }}>
         •••• •••• •••• 4521
       </span>
-      <span style={{ position:"absolute", fontSize:9.5, bottom:"13%", left:"8%",
+      <span style={{ position:"absolute", fontSize:10, bottom:"12%", left:"7%",
         color:"white", fontWeight:600, letterSpacing:"0.06em", opacity:0.85 }}>
         RATEARGY USER&nbsp;&nbsp;&nbsp;12/28
       </span>
-      <span style={{ position:"absolute", bottom:16, right:20, fontSize:12, fontWeight:700,
+      <span style={{ position:"absolute", bottom:18, right:22, fontSize:13, fontWeight:700,
         color:"white", letterSpacing:"0.08em", opacity:0.75 }}>
         {tarjeta.red === "Mastercard" ? "MC" : tarjeta.red.toUpperCase()}
       </span>
@@ -175,7 +217,7 @@ function Breakdown({ tarjeta, gastos }: { tarjeta: Tarjeta & { ahorro: number };
 
               {/* Nombre + días */}
               <div style={{ flex: 1, minWidth: 0 }}>
-                <p style={{ fontSize:14, fontWeight:500, color:"#111827", margin:0, lineHeight:1.3 }}>
+                <p style={{ fontSize:13, fontWeight:600, color:"#111827", margin:0, lineHeight:1.3 }}>
                   {CAT_META[cat].label}
                   {"dias" in b && b.dias ? (
                     <span style={{ fontSize:11, color:"#9ca3af", marginLeft:4 }}>({b.dias as string})</span>
@@ -400,7 +442,7 @@ function ScoreBar({ pct, isTop1 = false }: { pct: number; isTop1?: boolean }) {
           transition={{ duration: 0.7, ease: "easeOut" }}
         />
       </div>
-      <p style={{ fontSize:12, color:"#9ca3af", marginTop:4 }}>
+      <p style={{ fontSize:14, fontWeight:800, color:"#0a7c4e", marginTop:4 }}>
         {pct}% del máximo posible
       </p>
     </div>
@@ -423,13 +465,13 @@ export default function ResultadosTarjetas({ resultados, gastos, tarjetaActual }
 
   return (
     <motion.div
-      initial={{ opacity: 0, y: 24 }}
+      initial={{ opacity: 0, y: 40 }}
       animate={{ opacity: 1, y: 0 }}
-      transition={{ type: "spring", stiffness: 300, damping: 30 }}
+      transition={{ duration: 0.6, ease: [0.22, 1, 0.36, 1] }}
     >
       {/* ── Header ranking — PROBLEMA 2: títulos 32px 800 */}
       <div style={{ display:"flex", flexWrap:"wrap", alignItems:"center", gap:12, marginBottom:24 }}>
-        <h2 style={{ fontSize:32, fontWeight:800, letterSpacing:"-0.02em", color:"#111827", margin:0 }}>
+        <h2 style={{ fontSize:36, fontWeight:900, letterSpacing:"-0.03em", color:"#111827", margin:0 }}>
           Tu ranking personalizado
         </h2>
         <span style={{ background:"rgba(16,185,129,0.1)", color:"#059669",
@@ -455,7 +497,7 @@ export default function ResultadosTarjetas({ resultados, gastos, tarjetaActual }
         initial={{ opacity:0, scale:0.97 }} animate={{ opacity:1, scale:1 }}
         transition={{ type:"spring", stiffness:280, damping:28, delay:0.08 }}
         style={{
-          padding:40,                                     // PROBLEMA 4
+          padding:48,
           borderRadius:24,                                // PROBLEMA 4
           background:"linear-gradient(135deg, #ffffff 0%, #f0fdf4 100%)", // PROBLEMA 4
           boxShadow:"0 20px 60px rgba(0,0,0,0.08), 0 0 0 1px rgba(16,185,129,0.2)", // PROBLEMA 4
@@ -493,7 +535,7 @@ export default function ResultadosTarjetas({ resultados, gastos, tarjetaActual }
 
             {/* Ahorro — PROBLEMA 2: 48px 900 */}
             <div style={{ marginBottom:20 }}>
-              <span style={{ fontSize:48, fontWeight:900, color:"#10b981", lineHeight:1 }}>
+              <span style={{ fontSize:"clamp(48px, 6vw, 64px)", fontWeight:900, color:"#10b981", lineHeight:1, letterSpacing:"-0.04em" }}>
                 <AhorroAnimado value={top1.ahorro} />
               </span>
               <span style={{ fontSize:16, fontWeight:500, color:"#6b7280", marginLeft:4 }}>/mes</span>
@@ -518,11 +560,61 @@ export default function ResultadosTarjetas({ resultados, gastos, tarjetaActual }
           </div>
         </div>
 
-        {/* Breakdown — PROBLEMA 6 */}
+        {/* Breakdown */}
         <Breakdown tarjeta={top1} gastos={gastos} />
       </motion.div>
 
-      {/* ════════════ RANKING #2+ — PROBLEMA 4 ════════════ */}
+      {/* ── Botones compartir / guardar ── */}
+      <div style={{ display:"flex", gap:12, margin:"16px 0" }}>
+        <motion.button
+          whileHover={{ scale: 1.02 }} whileTap={{ scale: 0.97 }}
+          onClick={async () => {
+            const text = `Mi mejor tarjeta en rateargy: ${top1.nombre} — ahorrás ${formatARS(top1.ahorro)}/mes`
+            try {
+              if (navigator.share) {
+                await navigator.share({ title: "rateargy — Mi ranking", text, url: "https://rateargy.ar" })
+              } else {
+                await navigator.clipboard.writeText(text + " · rateargy.ar")
+              }
+            } catch {}
+          }}
+          style={{
+            flex: 1, display:"flex", alignItems:"center", justifyContent:"center", gap:8,
+            padding:"12px 20px", borderRadius:12, border:"none", cursor:"pointer",
+            background:"linear-gradient(135deg, #059669 0%, #10b981 100%)",
+            color:"white", fontSize:14, fontWeight:600,
+            boxShadow:"0 4px 16px rgba(16,185,129,0.3)",
+          }}
+        >
+          <Share2 size={16} />
+          Compartir mi resultado
+        </motion.button>
+
+        <motion.button
+          whileHover={{ scale: 1.02 }} whileTap={{ scale: 0.97 }}
+          onClick={() => {
+            try {
+              localStorage.setItem("rateargy_perfil", JSON.stringify({
+                resultados: resultados.map(r => ({ id: r.id, nombre: r.nombre, ahorro: r.ahorro })),
+                tarjetaActual,
+                savedAt: new Date().toISOString(),
+              }))
+            } catch {}
+          }}
+          style={{
+            flex: 1, display:"flex", alignItems:"center", justifyContent:"center", gap:8,
+            padding:"12px 20px", borderRadius:12, cursor:"pointer",
+            background:"white", border:"1px solid #e5e7eb",
+            color:"#374151", fontSize:14, fontWeight:600,
+            boxShadow:"0 2px 8px rgba(0,0,0,0.06)",
+          }}
+        >
+          <Bookmark size={16} />
+          Guardar mi perfil
+        </motion.button>
+      </div>
+
+      {/* ════════════ RANKING #2+ ════════════ */}
       <div style={{ display:"flex", flexDirection:"column", gap:16, marginBottom:0 }}>
         {resultados.slice(1).map((t, idx) => {
           const score    = getScorePct(t.ahorro, maxAhorro)
@@ -532,19 +624,18 @@ export default function ResultadosTarjetas({ resultados, gastos, tarjetaActual }
           return (
             <motion.div
               key={t.id}
-              initial={{ opacity:0, y:10 }} animate={{ opacity:1, y:0 }}
-              transition={{ type:"spring", stiffness:300, damping:30, delay: Math.min(idx*0.04, 0.6) }}
-              whileHover={{ y:-2, boxShadow:"0 8px 32px rgba(0,0,0,0.08)", borderColor:"#d1fae5" }}
+              initial={{ opacity:0, x:-20 }} animate={{ opacity:1, x:0 }}
+              whileHover={{ scale:1.02, y:-3, boxShadow:"0 12px 40px rgba(0,0,0,0.1)" }}
+              transition={{ delay: idx * 0.06, duration: 0.4, ease: [0.22, 1, 0.36, 1] }}
               style={{
-                padding:"20px 24px",                      // PROBLEMA 4
-                borderRadius:16,                          // PROBLEMA 4
-                border:"1px solid #f3f4f6",               // PROBLEMA 4
-                boxShadow:"0 2px 8px rgba(0,0,0,0.04)",  // PROBLEMA 4
+                padding:"20px 24px",
+                borderRadius:16,
+                border:"1px solid #f3f4f6",
+                boxShadow:"0 2px 8px rgba(0,0,0,0.04)",
                 background:"white",
                 display:"flex", alignItems:"center", gap:16,
                 position:"relative", overflow:"hidden",
                 cursor:"default",
-                transition:"box-shadow 0.2s ease, transform 0.2s ease, border-color 0.2s ease",
               }}
             >
               {/* Número decorativo — PROBLEMA 4: absolute top-right 32px #f3f4f6 */}
@@ -573,7 +664,7 @@ export default function ResultadosTarjetas({ resultados, gastos, tarjetaActual }
 
               {/* Ahorro */}
               <div style={{ textAlign:"right", flexShrink:0, position:"relative", zIndex:1 }}>
-                <p style={{ fontSize:15, fontWeight:700, color:"#10b981", margin:0 }}>
+                <p style={{ fontSize:22, fontWeight:900, color:"#10b981", margin:0, letterSpacing:"-0.02em" }}>
                   {formatARS(t.ahorro)}/mes
                 </p>
                 {showDiff && (
