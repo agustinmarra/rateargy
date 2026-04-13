@@ -254,12 +254,28 @@ const CAT_LUCIDE: Record<CatKey, LucideIcon> = {
   online: CreditCard, viajes: Plane, transporte: Car, servicios: Zap,
 }
 
-// ─── Beneficios de la semana — grid estilo NerdWallet ────────────────────────
+// ─── Gradientes de fondo por categoría para BeneficiosMes ────────────────────
+const CAT_GRAD_BG: Record<CatKey, string> = {
+  super:      "linear-gradient(135deg, #ecfdf5 0%, #d1fae5 100%)",
+  nafta:      "linear-gradient(135deg, #fffbeb 0%, #fef3c7 100%)",
+  farmacia:   "linear-gradient(135deg, #fdf2f8 0%, #fce7f3 100%)",
+  delivery:   "linear-gradient(135deg, #f5f3ff 0%, #ede9fe 100%)",
+  online:     "linear-gradient(135deg, #eff6ff 0%, #dbeafe 100%)",
+  viajes:     "linear-gradient(135deg, #f0f9ff 0%, #e0f2fe 100%)",
+  transporte: "linear-gradient(135deg, #f9fafb 0%, #f3f4f6 100%)",
+  servicios:  "linear-gradient(135deg, #fefce8 0%, #fef9c3 100%)",
+}
+
+// ─── Beneficios que aplican a tu perfil (solo visible post-cálculo) ───────────
 function BeneficiosMes({ resultados, gastos }: {
   resultados: Array<Tarjeta & { ahorro: number }>
   gastos: Gastos
 }) {
-  type Bene = { catKey: CatKey; nombre: string; banco: string; pct: number; tope: number; dias?: string; ahorroReal: number; key: string }
+  type Bene = {
+    catKey: CatKey; nombre: string; banco: string
+    pct: number; tope: number; dias?: string; lugar?: string
+    ahorroReal: number; key: string
+  }
 
   const beneficios: Bene[] = []
   for (const cat of Object.keys(gastos) as CatKey[]) {
@@ -275,7 +291,8 @@ function BeneficiosMes({ resultados, gastos }: {
       beneficios.push({
         catKey: cat, nombre: bestTarjeta.nombre, banco: bestTarjeta.banco,
         pct: b.pct, tope: b.tope,
-        dias: "dias" in b ? (b.dias as string | undefined) : undefined,
+        dias: b.dias,
+        lugar: b.lugar,
         ahorroReal: Math.min(gastos[cat] * (b.pct / 100), b.tope || Infinity),
         key: `best-${cat}`,
       })
@@ -286,51 +303,118 @@ function BeneficiosMes({ resultados, gastos }: {
   if (visibles.length === 0) return null
 
   return (
-    <div style={{ marginTop: 56 }}>
+    <div style={{ marginTop: 64 }}>
+      {/* Clase propia — no pisa .beneficios-grid de page.tsx */}
       <style>{`
-        .beneficios-grid { display:grid; grid-template-columns:repeat(2,1fr); gap:16px; }
-        @media (min-width:768px) { .beneficios-grid { grid-template-columns:repeat(3,1fr); } }
+        .bperfil-grid {
+          display: grid;
+          grid-template-columns: repeat(2, 1fr);
+          gap: 20px;
+        }
+        @media (min-width: 768px) { .bperfil-grid { grid-template-columns: repeat(3, 1fr); } }
+        @media (max-width: 480px)  { .bperfil-grid { grid-template-columns: 1fr; } }
       `}</style>
 
-      <div style={{ display:"flex", alignItems:"center", gap:12, marginBottom:20 }}>
-        <h2 style={{ fontSize:32, fontWeight:800, letterSpacing:"-0.02em", color:"#111827", margin:0 }}>
+      {/* Header de sección */}
+      <div style={{ display:"flex", alignItems:"center", justifyContent:"space-between", flexWrap:"wrap", gap:12, marginBottom:28 }}>
+        <h2 style={{ fontSize:28, fontWeight:900, letterSpacing:"-0.03em", color:"#0a0a0a", margin:0 }}>
           Beneficios que aplican a tu perfil
         </h2>
-        <span style={{ background:"#d1fae5", color:"#059669", fontSize:12, fontWeight:700,
-          padding:"3px 10px", borderRadius:999, letterSpacing:"0.02em", whiteSpace:"nowrap" }}>
+        <span style={{
+          background:"linear-gradient(135deg, #d1fae5 0%, #a7f3d0 100%)",
+          color:"#065f46", fontSize:12, fontWeight:700,
+          padding:"5px 14px", borderRadius:999, letterSpacing:"0.03em", whiteSpace:"nowrap",
+          border:"1px solid #6ee7b7",
+        }}>
           Esta semana
         </span>
       </div>
 
-      <div className="beneficios-grid">
-        {visibles.map((b) => {
+      <div className="bperfil-grid">
+        {visibles.map((b, idx) => {
           const Icon = CAT_LUCIDE[b.catKey]
-          const descParts: string[] = []
-          if (b.dias) descParts.push(`Los ${b.dias}`)
-          descParts.push(`${b.pct}% con ${b.banco}`)
+          const { bg, color } = CAT_COLORS[b.catKey]
+          const gradBg = CAT_GRAD_BG[b.catKey]
 
           return (
-            <motion.div key={b.key}
-              whileHover={{ y: -2, boxShadow: "0 4px 20px rgba(16,185,129,0.12)", borderColor: "#10b981" }}
-              transition={{ duration: 0.18 }}
-              style={{ background:"white", border:"1px solid #e5e7eb", borderRadius:16, padding:24,
-                position:"relative", cursor:"default" }}>
-              <div style={{ display:"flex", alignItems:"flex-start", justifyContent:"space-between" }}>
-                <div style={{ width:44, height:44, borderRadius:"50%", background:"#d1fae5",
-                  display:"flex", alignItems:"center", justifyContent:"center", flexShrink:0 }}>
-                  <Icon size={20} color="#10b981" strokeWidth={1.75} />
+            <motion.div
+              key={b.key}
+              initial={{ opacity: 0, y: 12 }}
+              animate={{ opacity: 1, y: 0 }}
+              transition={{ duration: 0.35, delay: idx * 0.06 }}
+              whileHover={{ y: -5, boxShadow: `0 16px 48px rgba(0,0,0,0.1)` }}
+              style={{
+                background: gradBg,
+                border: "1.5px solid rgba(0,0,0,0.06)",
+                borderRadius: 22,
+                padding: "24px 22px",
+                minHeight: 200,
+                position: "relative", overflow: "hidden",
+                cursor: "default",
+                display: "flex", flexDirection: "column", justifyContent: "space-between",
+              }}
+            >
+              {/* Blob decorativo */}
+              <div aria-hidden style={{
+                position:"absolute", bottom:-28, right:-28, width:100, height:100,
+                borderRadius:"50%", background:color, opacity:0.1, pointerEvents:"none",
+              }} />
+
+              {/* Top row: ícono + badge día */}
+              <div style={{ display:"flex", alignItems:"flex-start", justifyContent:"space-between", marginBottom:16 }}>
+                <div style={{
+                  width:52, height:52, borderRadius:16, background:bg,
+                  display:"flex", alignItems:"center", justifyContent:"center", flexShrink:0,
+                  boxShadow:`0 4px 12px ${color}33`,
+                }}>
+                  <Icon size={24} color={color} strokeWidth={1.75} />
                 </div>
-                <ArrowUpRight size={18} color="#9ca3af" strokeWidth={1.75} />
+                {b.dias && (
+                  <div style={{
+                    background:"rgba(255,255,255,0.85)", backdropFilter:"blur(8px)",
+                    borderRadius:999, padding:"4px 10px",
+                    fontSize:11, fontWeight:700, color, border:`1px solid ${color}33`,
+                  }}>
+                    {b.dias.charAt(0).toUpperCase() + b.dias.slice(1)}
+                  </div>
+                )}
               </div>
-              <p style={{ marginTop:16, fontSize:15, fontWeight:600, color:"#111827", lineHeight:1.3 }}>
-                {b.pct}% en {CAT_META[b.catKey].label}
-              </p>
-              <p style={{ marginTop:6, fontSize:13, color:"#6b7280", lineHeight:1.5 }}>
-                {descParts.join(" · ")}
-              </p>
-              <p style={{ marginTop:12, fontSize:13, fontWeight:600, color:"#10b981" }}>
-                Hasta {formatARS(b.ahorroReal)} de ahorro
-              </p>
+
+              {/* Cuerpo */}
+              <div>
+                {/* Porcentaje grande */}
+                <p style={{ fontSize:32, fontWeight:900, color, margin:"0 0 2px", letterSpacing:"-0.03em", lineHeight:1 }}>
+                  {b.pct}%
+                </p>
+                {/* Categoría */}
+                <p style={{ fontSize:13, fontWeight:700, color:"#374151", margin:"0 0 6px" }}>
+                  {CAT_META[b.catKey].label}
+                </p>
+                {/* Lugar */}
+                {b.lugar && (
+                  <p style={{ fontSize:13, fontWeight:500, color:"#6b7280", margin:"0 0 4px", lineHeight:1.4 }}>
+                    {b.lugar}
+                  </p>
+                )}
+                {/* Banco */}
+                <p style={{ fontSize:12, color:"#9ca3af", margin:"0 0 12px" }}>
+                  con {b.banco}
+                </p>
+
+                {/* Footer: tope + ahorro */}
+                <div style={{ display:"flex", alignItems:"center", justifyContent:"space-between", gap:8 }}>
+                  <span style={{ fontSize:11, color:"#9ca3af" }}>
+                    Tope: {formatARS(b.tope)}/mes
+                  </span>
+                  <span style={{
+                    fontSize:12, fontWeight:700, color,
+                    background:"rgba(255,255,255,0.7)", borderRadius:8, padding:"3px 8px",
+                    border:`1px solid ${color}22`,
+                  }}>
+                    + {formatARS(b.ahorroReal)}
+                  </span>
+                </div>
+              </div>
             </motion.div>
           )
         })}

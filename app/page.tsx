@@ -950,43 +950,37 @@ export default function Home() {
                   key={banco}
                   initial={{ opacity: 0, y: 16 }} whileInView={{ opacity: 1, y: 0 }}
                   viewport={{ once: true }} transition={{ duration: 0.4, delay: i * 0.07 }}
-                  whileHover={{ y: -4, boxShadow: "0 16px 48px rgba(0,0,0,0.1)", borderColor: color + "55" }}
+                  whileHover={{ y: -5, boxShadow: "0 20px 56px rgba(0,0,0,0.11)" }}
                   style={{
-                    minHeight: 180,
-                    padding: "28px 24px 24px",
+                    minHeight: 200,
+                    padding: "24px 22px",
                     background: gradBg,
                     border: "1.5px solid rgba(0,0,0,0.06)",
                     borderRadius: 22,
                     position: "relative", overflow: "hidden",
                     cursor: "default",
+                    display: "flex", flexDirection: "column", justifyContent: "space-between",
                   }}
                 >
-                  {/* Blob decorativo fondo */}
+                  {/* Blob decorativo */}
                   <div aria-hidden style={{
-                    position: "absolute", bottom: -30, right: -30, width: 120, height: 120,
-                    borderRadius: "50%", background: color, opacity: 0.08, pointerEvents: "none",
+                    position: "absolute", bottom: -28, right: -28, width: 110, height: 110,
+                    borderRadius: "50%", background: color, opacity: 0.09, pointerEvents: "none",
                   }} />
 
-                  {/* Header: logo inicial + banco + cat */}
-                  <div style={{ display: "flex", alignItems: "center", justifyContent: "space-between", marginBottom: 20 }}>
-                    <div style={{ display: "flex", alignItems: "center", gap: 10 }}>
-                      <div style={{
-                        width: 40, height: 40, borderRadius: 12, background: color,
-                        display: "flex", alignItems: "center", justifyContent: "center",
-                        fontSize: 14, fontWeight: 800, color: "#fff", flexShrink: 0,
-                        boxShadow: `0 4px 12px ${color}44`,
-                      }}>
-                        {banco.split(" ")[0][0]}{banco.split(" ")[1]?.[0] ?? ""}
-                      </div>
-                      <div>
-                        <p style={{ fontSize: 13, fontWeight: 700, color: "#1f2937", margin: 0, lineHeight: 1.2 }}>{banco}</p>
-                        <p style={{ fontSize: 11, color: "#6b7280", margin: 0 }}>{cat}</p>
-                      </div>
-                    </div>
-                    {/* Día badge */}
+                  {/* Top: iniciales + badge día */}
+                  <div style={{ display: "flex", alignItems: "flex-start", justifyContent: "space-between", marginBottom: 16 }}>
                     <div style={{
-                      background: "rgba(255,255,255,0.8)", backdropFilter: "blur(8px)",
-                      borderRadius: 999, padding: "3px 10px",
+                      width: 48, height: 48, borderRadius: 14, background: color,
+                      display: "flex", alignItems: "center", justifyContent: "center",
+                      fontSize: 15, fontWeight: 800, color: "#fff", flexShrink: 0,
+                      boxShadow: `0 6px 16px ${color}44`,
+                    }}>
+                      {banco.split(" ")[0][0]}{banco.split(" ")[1]?.[0] ?? ""}
+                    </div>
+                    <div style={{
+                      background: "rgba(255,255,255,0.85)", backdropFilter: "blur(8px)",
+                      borderRadius: 999, padding: "4px 11px",
                       fontSize: 11, fontWeight: 700, color: color,
                       border: `1px solid ${color}33`,
                     }}>
@@ -994,18 +988,38 @@ export default function Home() {
                     </div>
                   </div>
 
-                  {/* Porcentaje grande */}
-                  <p style={{ fontSize: 28, fontWeight: 900, color: color, margin: "0 0 4px", letterSpacing: "-0.03em", lineHeight: 1 }}>
-                    {pct}%
-                  </p>
-                  {/* Lugar */}
-                  <p style={{ fontSize: 14, fontWeight: 600, color: "#374151", margin: "0 0 8px", lineHeight: 1.3 }}>
-                    {lugar}
-                  </p>
-                  {/* Tope */}
-                  <p style={{ fontSize: 12, color: "#6b7280", margin: 0 }}>
-                    Hasta {new Intl.NumberFormat("es-AR", { style:"currency", currency:"ARS", maximumFractionDigits:0 }).format(tope)}/mes
-                  </p>
+                  {/* Cuerpo */}
+                  <div>
+                    {/* Porcentaje */}
+                    <p style={{ fontSize: 32, fontWeight: 900, color, margin: "0 0 2px", letterSpacing: "-0.03em", lineHeight: 1 }}>
+                      {pct}%
+                    </p>
+                    {/* Categoría */}
+                    <p style={{ fontSize: 13, fontWeight: 700, color: "#374151", margin: "0 0 5px" }}>
+                      {cat}
+                    </p>
+                    {/* Lugar */}
+                    <p style={{ fontSize: 13, fontWeight: 500, color: "#6b7280", margin: "0 0 4px", lineHeight: 1.4 }}>
+                      {lugar}
+                    </p>
+                    {/* Banco */}
+                    <p style={{ fontSize: 12, color: "#9ca3af", margin: "0 0 14px" }}>
+                      con {banco}
+                    </p>
+                    {/* Tope */}
+                    <div style={{ display: "flex", alignItems: "center", justifyContent: "space-between", gap: 8 }}>
+                      <span style={{ fontSize: 11, color: "#9ca3af" }}>
+                        Tope: {new Intl.NumberFormat("es-AR", { style:"currency", currency:"ARS", maximumFractionDigits:0 }).format(tope)}/mes
+                      </span>
+                      <span style={{
+                        fontSize: 11, fontWeight: 700, color,
+                        background: "rgba(255,255,255,0.7)", borderRadius: 8, padding: "3px 8px",
+                        border: `1px solid ${color}22`,
+                      }}>
+                        Vigente
+                      </span>
+                    </div>
+                  </div>
                 </motion.div>
               ))}
             </div>
