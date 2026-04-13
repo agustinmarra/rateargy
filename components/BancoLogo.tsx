@@ -24,6 +24,10 @@ const LOGOS: Record<string, string> = {
   "patagonia":       "patagonia.png",
   "provincia":       "banco-provincia.png",
   "cuenta-dni":      "banco-provincia.png",
+  "mercado-pago":    "mercado-pago.png",
+  "brubank":         "brubank.png",
+  "ciudad":          "banco-ciudad.png",
+  "hipotecario":     "hipotecario.png",
 }
 
 // CÓMO AGREGAR UN LOGO NUEVO:

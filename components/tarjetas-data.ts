@@ -75,7 +75,7 @@ export const TARJETAS: Tarjeta[] = [
     gradiente: "linear-gradient(135deg, #004481 0%, #0066cc 100%)",
     beneficios: {
       super:      { pct: 20, tope: 15000, dias: "vie/sáb",  lugar: "Walmart / Changomas",        descripcion: "20% los viernes y sábados en Walmart y Changomas, hasta $15.000/mes" },
-      nafta:      { pct: 10, tope: 10000,                   lugar: "YPF / Axion",                descripcion: "10% en YPF y Axion, hasta $10.000/mes" },
+      nafta:      { pct:  0, tope:     0 },
       farmacia:   { pct: 10, tope:  8000,                   lugar: "Farmacity / Farmacias del Ahorro", descripcion: "10% en farmacias adheridas, hasta $8.000/mes" },
       delivery:   { pct: 10, tope:  8000,                   lugar: "PedidosYa / Rappi",          descripcion: "10% en delivery, hasta $8.000/mes" },
       online:     { pct:  5, tope:  5000,                   lugar: "Compras online generales",   descripcion: "5% en compras online, hasta $5.000/mes" },
@@ -93,7 +93,7 @@ export const TARJETAS: Tarjeta[] = [
     gradiente: "linear-gradient(135deg, #00437f 0%, #005cbf 60%, #1a7ae0 100%)",
     beneficios: {
       super:      { pct: 15, tope: 12000, dias: "martes",   lugar: "Walmart / Carrefour",        descripcion: "15% los martes en Walmart y Carrefour, hasta $12.000/mes" },
-      nafta:      { pct: 10, tope:  8000,                   lugar: "YPF / Axion",                descripcion: "10% en YPF y Axion, hasta $8.000/mes" },
+      nafta:      { pct:  0, tope:     0 },
       farmacia:   { pct: 10, tope:  6000,                   lugar: "Farmacity",                  descripcion: "10% en Farmacity, hasta $6.000/mes" },
       delivery:   { pct: 10, tope:  6000,                   lugar: "PedidosYa",                  descripcion: "10% en PedidosYa, hasta $6.000/mes" },
       online:     { pct: 10, tope:  8000,                   lugar: "Compras online generales",   descripcion: "10% en compras online, hasta $8.000/mes" },
@@ -113,7 +113,7 @@ export const TARJETAS: Tarjeta[] = [
     gradiente: "linear-gradient(135deg, #cc0000 0%, #ff4444 100%)",
     beneficios: {
       super:      { pct: 25, tope: 20000, dias: "todos",    lugar: "Coto / DIA",                 descripcion: "25% todos los días en Coto y DIA, hasta $20.000/mes" },
-      nafta:      { pct: 10, tope:  8000,                   lugar: "Shell / Axion",              descripcion: "10% en Shell y Axion, hasta $8.000/mes" },
+      nafta:      { pct: 10, tope:  7500, dias: "jueves",    lugar: "YPF (App YPF)",              descripcion: "10% los jueves en YPF con Visa Platinum/Black desde la App YPF, hasta $7.500/mes" },
       farmacia:   { pct: 10, tope:  8000,                   lugar: "Farmacity / Dr. Ahorro",     descripcion: "10% en farmacias adheridas, hasta $8.000/mes" },
       delivery:   { pct: 10, tope:  8000,                   lugar: "PedidosYa / Rappi",          descripcion: "10% en delivery, hasta $8.000/mes" },
       online:     { pct: 10, tope: 10000,                   lugar: "Compras online generales",   descripcion: "10% en compras online, hasta $10.000/mes" },
@@ -151,7 +151,7 @@ export const TARJETAS: Tarjeta[] = [
     gradiente: "linear-gradient(135deg, #b8860b 0%, #ffd700 100%)",
     beneficios: {
       super:      { pct: 25, tope: 15000, dias: "jueves",   lugar: "Jumbo / Disco",              descripcion: "25% los jueves en Jumbo y Disco, hasta $15.000/mes" },
-      nafta:      { pct: 25, tope: 15000,                   lugar: "YPF / Axion / Shell",        descripcion: "25% en todas las estaciones adheridas, hasta $15.000/mes" },
+      nafta:      { pct: 20, tope: 15000, dias: "miércoles", lugar: "YPF (MODO)",                 descripcion: "20% los miércoles en YPF pagando con MODO, hasta $15.000/mes" },
       farmacia:   { pct: 10, tope:  8000,                   lugar: "Farmacity / Dr. Ahorro",     descripcion: "10% en farmacias adheridas, hasta $8.000/mes" },
       delivery:   { pct: 10, tope:  8000,                   lugar: "PedidosYa / Rappi",          descripcion: "10% en delivery, hasta $8.000/mes" },
       online:     { pct:  5, tope:  5000,                   lugar: "Compras online generales",   descripcion: "5% en compras online, hasta $5.000/mes" },
@@ -159,7 +159,7 @@ export const TARJETAS: Tarjeta[] = [
       transporte: { pct:  0, tope:     0 },
       servicios:  { pct:  0, tope:     0 },
     },
-    pills: ["25% nafta todos los días", "25% super jueves", "Cuotas sin interés"],
+    pills: ["20% nafta miércoles MODO", "25% super jueves", "Cuotas sin interés"],
     costoAnual: 0,
   },
 
@@ -189,7 +189,7 @@ export const TARJETAS: Tarjeta[] = [
     gradiente: "linear-gradient(135deg, #e05a00 0%, #ff8c42 100%)",
     beneficios: {
       super:      { pct: 25, tope: 10000, dias: "todos",    lugar: "DIA / Changomas",            descripcion: "25% todos los días en DIA y Changomas, hasta $10.000/mes" },
-      nafta:      { pct: 10, tope:  6000,                   lugar: "Axion / YPF",                descripcion: "10% en Axion y YPF, hasta $6.000/mes" },
+      nafta:      { pct:  0, tope:     0 },
       farmacia:   { pct: 10, tope:  6000,                   lugar: "Farmacias del Ahorro",       descripcion: "10% en Farmacias del Ahorro, hasta $6.000/mes" },
       delivery:   { pct: 15, tope:  8000, dias: "finde",    lugar: "PedidosYa / Rappi",          descripcion: "15% los fines de semana en PedidosYa y Rappi, hasta $8.000/mes" },
       online:     { pct: 20, tope: 10000,                   lugar: "MercadoLibre / Tiendas online", descripcion: "20% en compras online en MercadoLibre y tiendas adheridas, hasta $10.000/mes" },
@@ -209,7 +209,7 @@ export const TARJETAS: Tarjeta[] = [
     gradiente: "linear-gradient(135deg, #003580 0%, #0055cc 100%)",
     beneficios: {
       super:      { pct: 30, tope: 12000, dias: "miércoles", lugar: "Coto / Carrefour / Walmart", descripcion: "30% los miércoles en Coto, Carrefour y Walmart, hasta $12.000/mes" },
-      nafta:      { pct: 10, tope:  8000,                   lugar: "YPF",                        descripcion: "10% en YPF, hasta $8.000/mes" },
+      nafta:      { pct: 20, tope: 10000, dias: "viernes",   lugar: "YPF / Shell (MODO BNA+)",    descripcion: "20% los viernes en YPF y Shell pagando con MODO BNA+, hasta $10.000/mes" },
       farmacia:   { pct: 10, tope:  8000,                   lugar: "Farmacity / Dr. Ahorro",     descripcion: "10% en farmacias adheridas, hasta $8.000/mes" },
       delivery:   { pct:  0, tope:     0 },
       online:     { pct:  5, tope:  5000,                   lugar: "Compras online generales",   descripcion: "5% en compras online, hasta $5.000/mes" },
@@ -247,7 +247,7 @@ export const TARJETAS: Tarjeta[] = [
     gradiente: "linear-gradient(135deg, #e85d04 0%, #fb923c 100%)",
     beneficios: {
       super:      { pct: 20, tope: 25000, dias: "martes",   lugar: "Coto / La Anónima / Walmart", descripcion: "20% los martes en Coto, La Anónima y Walmart, hasta $25.000/mes" },
-      nafta:      { pct: 10, tope:  6000,                   lugar: "Shell / Axion",              descripcion: "10% en Shell y Axion, hasta $6.000/mes" },
+      nafta:      { pct: 10, tope:  8000, dias: "variable",  lugar: "Todas las estaciones",       descripcion: "10% en estaciones adheridas, hasta $8.000/mes. Verificar condiciones en app" },
       farmacia:   { pct: 50, tope:  5000,                   lugar: "Farmacity",                  descripcion: "50% en Farmacity, hasta $5.000/mes" },
       delivery:   { pct: 10, tope:  6000,                   lugar: "PedidosYa",                  descripcion: "10% en PedidosYa, hasta $6.000/mes" },
       online:     { pct:  5, tope:  4000,                   lugar: "Compras online generales",   descripcion: "5% en compras online, hasta $4.000/mes" },
@@ -267,7 +267,7 @@ export const TARJETAS: Tarjeta[] = [
     gradiente: "linear-gradient(135deg, #c41230 0%, #e63950 100%)",
     beneficios: {
       super:      { pct: 20, tope: 20000, dias: "todos",    lugar: "Walmart / Carrefour / Jumbo", descripcion: "20% todos los días en Walmart, Carrefour y Jumbo, hasta $20.000/mes" },
-      nafta:      { pct: 10, tope:  8000,                   lugar: "YPF / Shell",                descripcion: "10% en YPF y Shell, hasta $8.000/mes" },
+      nafta:      { pct: 15, tope: 15000, dias: "martes",    lugar: "Todas (cuenta sueldo)",      descripcion: "15% los martes para clientes con cuenta sueldo acreditada en ICBC, hasta $15.000/mes" },
       farmacia:   { pct: 10, tope:  6000,                   lugar: "Farmacity",                  descripcion: "10% en Farmacity, hasta $6.000/mes" },
       delivery:   { pct: 10, tope:  6000,                   lugar: "PedidosYa / Rappi",          descripcion: "10% en delivery, hasta $6.000/mes" },
       online:     { pct: 10, tope:  8000,                   lugar: "MercadoLibre / tiendas online", descripcion: "10% en compras online, hasta $8.000/mes" },
@@ -275,7 +275,7 @@ export const TARJETAS: Tarjeta[] = [
       transporte: { pct:  0, tope:     0 },
       servicios:  { pct:  0, tope:     0 },
     },
-    pills: ["20% super todos los días", "10% viajes y online", "Visa Platinum"],
+    pills: ["20% super todos los días", "15% nafta martes", "Visa Platinum"],
     costoAnual: 0,
   },
 
@@ -325,7 +325,7 @@ export const TARJETAS: Tarjeta[] = [
     gradiente: "linear-gradient(135deg, #6d28d9 0%, #8b5cf6 100%)",
     beneficios: {
       super:      { pct: 25, tope: 15000,                   lugar: "Carrefour / DIA / Walmart",  descripcion: "25% en Carrefour, DIA y Walmart adheridos, hasta $15.000/mes" },
-      nafta:      { pct: 10, tope:  6000,                   lugar: "YPF / Axion",                descripcion: "10% en YPF y Axion, hasta $6.000/mes" },
+      nafta:      { pct:  0, tope:     0 },
       farmacia:   { pct: 15, tope:  6000,                   lugar: "Farmacias del Ahorro / Farmacity", descripcion: "15% en farmacias adheridas, hasta $6.000/mes" },
       delivery:   { pct: 10, tope:  6000,                   lugar: "PedidosYa / Rappi",          descripcion: "10% en delivery, hasta $6.000/mes" },
       online:     { pct: 10, tope:  8000,                   lugar: "Tiendas online adheridas",   descripcion: "10% en compras online, hasta $8.000/mes" },
@@ -345,7 +345,7 @@ export const TARJETAS: Tarjeta[] = [
     gradiente: "linear-gradient(135deg, #005a9e 0%, #0077cc 100%)",
     beneficios: {
       super:      { pct: 20, tope: 10500, dias: "jueves",   lugar: "Coto / DIA",                 descripcion: "20% los jueves en Coto y DIA, hasta $10.500/mes" },
-      nafta:      { pct: 15, tope:  8000,                   lugar: "YPF / Shell / Axion",        descripcion: "15% en YPF, Shell y Axion, hasta $8.000/mes" },
+      nafta:      { pct: 15, tope:  4500, dias: "viernes",   lugar: "Todas las estaciones",       descripcion: "15% los viernes en todas las estaciones, tope $4.500 diario (no mensual)" },
       farmacia:   { pct: 10, tope:  5000,                   lugar: "Farmacias del Ahorro",       descripcion: "10% en Farmacias del Ahorro, hasta $5.000/mes" },
       delivery:   { pct: 10, tope:  5000,                   lugar: "PedidosYa",                  descripcion: "10% en PedidosYa, hasta $5.000/mes" },
       online:     { pct:  5, tope:  4000,                   lugar: "Compras online generales",   descripcion: "5% en compras online, hasta $4.000/mes" },
@@ -365,7 +365,7 @@ export const TARJETAS: Tarjeta[] = [
     gradiente: "linear-gradient(135deg, #2d6a4f 0%, #52b788 100%)",
     beneficios: {
       super:      { pct: 35, tope: 15000, dias: "jueves",   lugar: "La Anónima",                 descripcion: "35% los jueves en La Anónima, hasta $15.000/mes" },
-      nafta:      { pct: 10, tope:  8000,                   lugar: "YPF / Shell",                descripcion: "10% en YPF y Shell, hasta $8.000/mes" },
+      nafta:      { pct: 20, tope: 10000, dias: "jueves",    lugar: "Todas las estaciones",       descripcion: "20% los jueves en todas las estaciones, hasta $10.000/mes. 25% para cuenta sueldo" },
       farmacia:   { pct: 10, tope:  5000,                   lugar: "Farmacity",                  descripcion: "10% en Farmacity, hasta $5.000/mes" },
       delivery:   { pct: 10, tope:  5000,                   lugar: "PedidosYa",                  descripcion: "10% en PedidosYa, hasta $5.000/mes" },
       online:     { pct:  5, tope:  4000,                   lugar: "Compras online generales",   descripcion: "5% en compras online, hasta $4.000/mes" },
