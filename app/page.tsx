@@ -260,24 +260,30 @@ function MiniTeaser({ onCTA }: { onCTA: () => void }) {
   const top3 = rankear(PERFIL_TIPICO).slice(0, 3)
 
   return (
-    <section style={{ paddingBottom: 8 }}>
+    <section style={{ paddingBottom: 32 }}>
       {/* Header */}
       <div style={{
         display: "flex", alignItems: "flex-end", justifyContent: "space-between",
-        flexWrap: "wrap", gap: 16, marginBottom: 28,
+        flexWrap: "wrap", gap: 16, marginBottom: 48,
       }}>
         <div>
-          <p style={{
+          <div style={{
+            display: "inline-flex", alignItems: "center", gap: 7,
+            background: "linear-gradient(135deg, #ecfdf5 0%, #d1fae5 100%)",
+            border: "1px solid rgba(16,185,129,0.25)",
+            borderRadius: 999, padding: "6px 14px", marginBottom: 14,
             fontSize: 11, fontWeight: 700, letterSpacing: "0.08em",
-            textTransform: "uppercase", color: "#94a3b8", margin: "0 0 8px",
+            textTransform: "uppercase", color: "#059669",
+            boxShadow: "0 2px 8px rgba(16,185,129,0.12)",
           }}>
-            Perfil gasto típico · actualizado esta semana
-          </p>
+            <span style={{ width: 5, height: 5, borderRadius: "50%", background: "#10b981", display: "inline-block" }} />
+            Actualizado esta semana
+          </div>
           <h2 style={{
-            fontSize: "clamp(22px, 2.5vw, 34px)", fontWeight: 900,
-            letterSpacing: "-0.035em", color: "#0a0a0a", margin: 0, lineHeight: 1.1,
+            fontSize: "clamp(26px, 3vw, 40px)", fontWeight: 900,
+            letterSpacing: "-0.04em", color: "#0a0a0a", margin: 0, lineHeight: 1.05,
           }}>
-            Ejemplo de ahorro real esta semana
+            Ejemplo de ahorro real
           </h2>
         </div>
         <button
@@ -314,8 +320,8 @@ function MiniTeaser({ onCTA }: { onCTA: () => void }) {
                   ? "linear-gradient(145deg, #f0fdf4 0%, #dcfce7 100%)"
                   : "#ffffff",
                 border: `1.5px solid ${i === 0 ? "rgba(16,185,129,0.25)" : "#f3f4f6"}`,
-                borderRadius: 20,
-                padding: "24px",
+                borderRadius: 24,
+                padding: "32px",
                 position: "relative", overflow: "hidden",
                 boxShadow: i === 0
                   ? "0 8px 32px rgba(16,185,129,0.12)"
@@ -331,7 +337,7 @@ function MiniTeaser({ onCTA }: { onCTA: () => void }) {
               }} />
 
               {/* Posición + mini card */}
-              <div style={{ display: "flex", alignItems: "center", gap: 12, marginBottom: 16 }}>
+              <div style={{ display: "flex", alignItems: "center", gap: 12, marginBottom: 24 }}>
                 <span style={{ fontSize: 20, flexShrink: 0 }}>{medals[i]}</span>
                 <div style={{
                   width: 52, height: 32, borderRadius: 8,
@@ -353,8 +359,8 @@ function MiniTeaser({ onCTA }: { onCTA: () => void }) {
               </div>
 
               {/* Ahorro */}
-              <div style={{ marginBottom: 12 }}>
-                <p style={{ fontSize: 11, fontWeight: 600, color: "#9ca3af", textTransform: "uppercase", letterSpacing: "0.06em", margin: "0 0 2px" }}>
+              <div style={{ marginBottom: 20 }}>
+                <p style={{ fontSize: 11, fontWeight: 600, color: "#9ca3af", textTransform: "uppercase", letterSpacing: "0.06em", margin: "0 0 4px" }}>
                   Ahorro mensual estimado
                 </p>
                 <p style={{
@@ -502,7 +508,7 @@ export default function Home() {
         .teaser-grid {
           display: grid;
           grid-template-columns: repeat(3, 1fr);
-          gap: 20px;
+          gap: 28px;
         }
         @media (max-width: 768px) { .teaser-grid { grid-template-columns: 1fr; } }
         @media (max-width: 768px) { .footer-grid { grid-template-columns: 1fr !important; gap: 32px !important; } }
@@ -532,7 +538,7 @@ export default function Home() {
         }}>
 
           {/* ════ SECCIÓN 1: HERO (dos columnas) ════ */}
-          <section style={{ paddingTop: 80, paddingBottom: 80 }}>
+          <section style={{ paddingTop: 96, paddingBottom: 96 }}>
             <div className="hero-grid">
 
               {/* Columna izquierda */}
@@ -647,7 +653,7 @@ export default function Home() {
               background: "linear-gradient(135deg, #f8fafc 0%, #f0fdf4 100%)",
               border: "1px solid rgba(16,185,129,0.12)",
               borderRadius: 20, overflow: "hidden",
-              marginBottom: 64,
+              marginBottom: 96,
               boxShadow: "0 2px 16px rgba(0,0,0,0.04)",
             }}
           >
@@ -671,11 +677,11 @@ export default function Home() {
           {/* ════ MINI TEASER ════ */}
           <MiniTeaser onCTA={scrollToCalculadora} />
 
-          {/* ── Separador hero → marquee ── */}
-          <div aria-hidden style={{ height:1, background:"linear-gradient(90deg, transparent, #e5e7eb 30%, #e5e7eb 70%, transparent)", marginBottom:56, marginTop: 64 }} />
+          {/* ── Separador teaser → marquee ── */}
+          <div aria-hidden style={{ height:1, background:"linear-gradient(90deg, transparent, #e5e7eb 30%, #e5e7eb 70%, transparent)", marginBottom:80, marginTop: 80 }} />
 
           {/* ════ MARQUEE — logos bancos ════ */}
-          <section style={{ marginBottom: 96 }}>
+          <section style={{ marginBottom: 112 }}>
             <p style={{ fontSize: 11, fontWeight: 700, letterSpacing: "0.1em", textTransform: "uppercase",
               color: "#94a3b8", textAlign: "center", marginBottom: 20 }}>
               Comparamos 20 tarjetas líderes de Argentina
@@ -689,7 +695,7 @@ export default function Home() {
         {/* ════ SECCIÓN CALCULADORA ════ */}
         <div style={{
           background: "linear-gradient(180deg, #ffffff 0%, #f0fdf6 35%, #f7fdf9 65%, #ffffff 100%)",
-          padding: "80px 24px 104px",
+          padding: "96px 24px 112px",
         }}>
           <div style={{ maxWidth: 1120, margin: "0 auto" }}>
 
