@@ -303,31 +303,37 @@ function BeneficiosMes({ resultados, gastos }: {
   if (visibles.length === 0) return null
 
   return (
-    <div style={{ marginTop: 64 }}>
+    <div style={{ marginTop: 96 }}>
+      {/* Separador visual */}
+      <div style={{ height:1, background:"linear-gradient(90deg, transparent, #e5e7eb 30%, #e5e7eb 70%, transparent)", marginBottom:80 }} />
+
       {/* Clase propia — no pisa .beneficios-grid de page.tsx */}
       <style>{`
         .bperfil-grid {
           display: grid;
           grid-template-columns: repeat(2, 1fr);
-          gap: 20px;
+          gap: 24px;
         }
         @media (min-width: 768px) { .bperfil-grid { grid-template-columns: repeat(3, 1fr); } }
         @media (max-width: 480px)  { .bperfil-grid { grid-template-columns: 1fr; } }
       `}</style>
 
       {/* Header de sección */}
-      <div style={{ display:"flex", alignItems:"center", justifyContent:"space-between", flexWrap:"wrap", gap:12, marginBottom:28 }}>
-        <h2 style={{ fontSize:28, fontWeight:900, letterSpacing:"-0.03em", color:"#0a0a0a", margin:0 }}>
+      <div style={{ marginBottom: 40 }}>
+        <div style={{
+          display:"inline-flex", alignItems:"center", gap:6,
+          background:"linear-gradient(135deg, #d1fae5 0%, #a7f3d0 100%)",
+          color:"#065f46", fontSize:11, fontWeight:700,
+          padding:"5px 14px", borderRadius:999, letterSpacing:"0.08em",
+          textTransform:"uppercase", border:"1px solid #6ee7b7",
+          marginBottom:16,
+        }}>
+          <span style={{ width:6, height:6, borderRadius:"50%", background:"#10b981", display:"inline-block" }} />
+          Esta semana
+        </div>
+        <h2 style={{ fontSize:"clamp(28px, 3vw, 40px)", fontWeight:900, letterSpacing:"-0.04em", color:"#0a0a0a", margin:0, lineHeight:1.1 }}>
           Beneficios que aplican a tu perfil
         </h2>
-        <span style={{
-          background:"linear-gradient(135deg, #d1fae5 0%, #a7f3d0 100%)",
-          color:"#065f46", fontSize:12, fontWeight:700,
-          padding:"5px 14px", borderRadius:999, letterSpacing:"0.03em", whiteSpace:"nowrap",
-          border:"1px solid #6ee7b7",
-        }}>
-          Esta semana
-        </span>
       </div>
 
       <div className="bperfil-grid">
@@ -339,19 +345,20 @@ function BeneficiosMes({ resultados, gastos }: {
           return (
             <motion.div
               key={b.key}
-              initial={{ opacity: 0, y: 12 }}
+              initial={{ opacity: 0, y: 16 }}
               animate={{ opacity: 1, y: 0 }}
-              transition={{ duration: 0.35, delay: idx * 0.06 }}
-              whileHover={{ y: -5, boxShadow: `0 16px 48px rgba(0,0,0,0.1)` }}
+              transition={{ duration: 0.4, delay: idx * 0.07 }}
+              whileHover={{ y: -6, boxShadow: `0 24px 64px rgba(0,0,0,0.12)` }}
               style={{
                 background: gradBg,
-                border: "1.5px solid rgba(0,0,0,0.06)",
-                borderRadius: 22,
-                padding: "24px 22px",
-                minHeight: 200,
+                border: "1.5px solid rgba(0,0,0,0.05)",
+                borderRadius: 24,
+                padding: "28px 24px",
+                minHeight: 220,
                 position: "relative", overflow: "hidden",
                 cursor: "default",
                 display: "flex", flexDirection: "column", justifyContent: "space-between",
+                boxShadow: "0 4px 20px rgba(0,0,0,0.04)",
               }}
             >
               {/* Blob decorativo */}

@@ -521,8 +521,11 @@ export default function Home() {
             </div>
           </section>
 
+          {/* ── Separador hero → marquee ── */}
+          <div aria-hidden style={{ height:1, background:"linear-gradient(90deg, transparent, #e5e7eb 30%, #e5e7eb 70%, transparent)", marginBottom:56 }} />
+
           {/* ════ MARQUEE — logos bancos ════ */}
-          <section style={{ marginBottom: 80 }}>
+          <section style={{ marginBottom: 96 }}>
             <p style={{ fontSize: 11, fontWeight: 700, letterSpacing: "0.1em", textTransform: "uppercase",
               color: "#94a3b8", textAlign: "center", marginBottom: 20 }}>
               Comparamos 20 tarjetas líderes de Argentina
@@ -535,8 +538,8 @@ export default function Home() {
 
         {/* ════ SECCIÓN CALCULADORA ════ */}
         <div style={{
-          background: "linear-gradient(180deg, #ffffff 0%, #f0fdf4 40%, #ffffff 100%)",
-          padding: "0 24px 96px",
+          background: "linear-gradient(180deg, #ffffff 0%, #f0fdf6 35%, #f7fdf9 65%, #ffffff 100%)",
+          padding: "0 24px 104px",
         }}>
           <div style={{ maxWidth: 1120, margin: "0 auto" }}>
 
@@ -844,6 +847,9 @@ export default function Home() {
           </div>
         </div>
 
+        {/* ── Separador calculadora → resultados ── */}
+        <div aria-hidden style={{ height:1, background:"linear-gradient(90deg, transparent, #e5e7eb 30%, #e5e7eb 70%, transparent)", maxWidth:1120, margin:"0 auto" }} />
+
         {/* ════ RESULTADOS ════ */}
         <div style={{ maxWidth: 1120, margin: "0 auto", padding: "0 24px" }}>
 
@@ -909,100 +915,111 @@ export default function Home() {
           </div>
         </div>
 
+        {/* ── Separador resultados → guías ── */}
+        <div aria-hidden style={{ height:1, background:"linear-gradient(90deg, transparent, #e5e7eb 30%, #e5e7eb 70%, transparent)" }} />
+
         {/* ════ GUÍAS ════ */}
-        <section style={{ padding: "96px 24px 96px", background: "#f9fafb" }}>
+        <section style={{
+          padding: "104px 24px 104px",
+          background: "linear-gradient(180deg, #ffffff 0%, #f8fafc 60%, #f1f5f9 100%)",
+        }}>
           <div style={{ maxWidth: 1120, margin: "0 auto" }}>
 
             {/* Header */}
-            <div style={{ textAlign: "center", marginBottom: 56 }}>
-              <div style={{ display:"inline-flex", alignItems:"center", gap:6,
+            <div style={{ textAlign: "center", marginBottom: 64 }}>
+              <div style={{ display:"inline-flex", alignItems:"center", gap:7,
                 background:"#f0fdf4", border:"1px solid #d1fae5",
-                borderRadius:999, padding:"5px 14px", marginBottom:16,
+                borderRadius:999, padding:"6px 16px", marginBottom:18,
                 fontSize:11, fontWeight:700, letterSpacing:"0.1em", textTransform:"uppercase", color:"#065f46" }}>
                 <BookOpen size={11} color="#059669" />
                 Guías financieras
               </div>
-              <h2 style={{ fontSize: "clamp(28px,3.2vw,44px)", fontWeight: 900,
-                letterSpacing: "-0.045em", color: "#0a0a0a", margin: "0 0 14px" }}>
+              <h2 style={{ fontSize: "clamp(30px,3.5vw,48px)", fontWeight: 900,
+                letterSpacing: "-0.045em", color: "#0a0a0a", margin: "0 0 16px", lineHeight: 1.05 }}>
                 Aprendé a tomar mejores decisiones
               </h2>
-              <p style={{ fontSize: 17, color: "#6b7280", maxWidth: 480, margin: "0 auto", lineHeight: 1.7 }}>
+              <p style={{ fontSize: 18, color: "#6b7280", maxWidth: 500, margin: "0 auto", lineHeight: 1.7 }}>
                 Contenido educativo sobre finanzas personales en Argentina.
               </p>
             </div>
 
             <div className="guias-grid">
               {GUIAS.map(({ Icono, titulo, desc }, i) => {
-                const gradientes = [
-                  { bg: "linear-gradient(135deg, #ecfdf5 0%, #d1fae5 100%)", iconBg: "linear-gradient(135deg, #10b981 0%, #059669 100%)", accent: "#059669" },
-                  { bg: "linear-gradient(135deg, #eff6ff 0%, #dbeafe 100%)", iconBg: "linear-gradient(135deg, #3b82f6 0%, #2563eb 100%)", accent: "#2563eb" },
-                  { bg: "linear-gradient(135deg, #fdf4ff 0%, #f3e8ff 100%)", iconBg: "linear-gradient(135deg, #a855f7 0%, #9333ea 100%)", accent: "#9333ea" },
+                const paletas = [
+                  { bg: "linear-gradient(145deg, #f0fdf8 0%, #dcfce7 100%)", iconBg: "linear-gradient(135deg, #10b981 0%, #059669 100%)", accent: "#059669", border: "#a7f3d0" },
+                  { bg: "linear-gradient(145deg, #f0f7ff 0%, #dbeafe 100%)", iconBg: "linear-gradient(135deg, #3b82f6 0%, #1d4ed8 100%)", accent: "#2563eb", border: "#bfdbfe" },
+                  { bg: "linear-gradient(145deg, #fdf5ff 0%, #ede9fe 100%)", iconBg: "linear-gradient(135deg, #a855f7 0%, #7c3aed 100%)", accent: "#7c3aed", border: "#ddd6fe" },
                 ]
-                const { bg, iconBg, accent } = gradientes[i % 3]
+                const { bg, iconBg, accent, border } = paletas[i % 3]
 
                 return (
                   <motion.div
                     key={titulo}
-                    initial={{ opacity: 0, y: 20 }} whileInView={{ opacity: 1, y: 0 }}
-                    viewport={{ once: true }} transition={{ duration: 0.45, delay: i * 0.1 }}
-                    whileHover={{ y: -6, boxShadow: "0 24px 56px rgba(0,0,0,0.1)" }}
+                    initial={{ opacity: 0, y: 24 }} whileInView={{ opacity: 1, y: 0 }}
+                    viewport={{ once: true }} transition={{ duration: 0.5, delay: i * 0.1 }}
+                    whileHover={{ y: -8, boxShadow: `0 28px 64px rgba(0,0,0,0.12), 0 0 0 1.5px ${border}` }}
                     style={{
                       background: bg,
-                      border: "1.5px solid rgba(0,0,0,0.05)",
-                      borderRadius: 26,
-                      padding: "36px 32px",
-                      boxShadow: "0 4px 20px rgba(0,0,0,0.05)",
+                      border: `1.5px solid ${border}`,
+                      borderRadius: 28,
+                      padding: "40px 36px",
+                      boxShadow: "0 6px 24px rgba(0,0,0,0.05)",
                       display: "flex", flexDirection: "column",
-                      minHeight: 280,
+                      minHeight: 300,
                       position: "relative", overflow: "hidden",
                       cursor: "default",
                     }}
                   >
-                    {/* Orb decorativo de fondo */}
+                    {/* Orb decorativo */}
                     <div aria-hidden style={{
-                      position:"absolute", bottom:-40, right:-40, width:160, height:160,
-                      borderRadius:"50%", background:accent, opacity:0.07, pointerEvents:"none",
+                      position:"absolute", bottom:-50, right:-50, width:180, height:180,
+                      borderRadius:"50%", background:accent, opacity:0.06, pointerEvents:"none",
+                    }} />
+                    <div aria-hidden style={{
+                      position:"absolute", top:-30, left:-30, width:100, height:100,
+                      borderRadius:"50%", background:accent, opacity:0.04, pointerEvents:"none",
                     }} />
 
                     {/* Ícono */}
                     <div style={{
-                      width: 60, height: 60, borderRadius: 18,
+                      width: 68, height: 68, borderRadius: 20,
                       background: iconBg,
                       display: "flex", alignItems: "center", justifyContent: "center",
-                      marginBottom: 24,
-                      boxShadow: `0 8px 24px ${accent}33`,
+                      marginBottom: 28,
+                      boxShadow: `0 10px 28px ${accent}40`,
                       flexShrink: 0,
                     }}>
-                      <Icono size={28} color="#fff" strokeWidth={1.75} />
+                      <Icono size={32} color="#fff" strokeWidth={1.5} />
                     </div>
 
                     {/* Contenido */}
                     <div style={{ flex: 1 }}>
                       <h3 style={{
-                        fontSize: 19, fontWeight: 900, color: "#0a0a0a",
-                        margin: "0 0 12px", lineHeight: 1.25, letterSpacing: "-0.03em",
+                        fontSize: 20, fontWeight: 900, color: "#0a0a0a",
+                        margin: "0 0 12px", lineHeight: 1.2, letterSpacing: "-0.03em",
                       }}>
                         {titulo}
                       </h3>
-                      <p style={{ fontSize: 15, color: "#6b7280", margin: 0, lineHeight: 1.7 }}>
+                      <p style={{ fontSize: 15, color: "#6b7280", margin: 0, lineHeight: 1.75 }}>
                         {desc}
                       </p>
                     </div>
 
                     {/* Footer */}
-                    <div style={{ marginTop: 28, display: "flex", alignItems: "center", justifyContent: "space-between" }}>
+                    <div style={{ marginTop: 32, display: "flex", alignItems: "center", justifyContent: "space-between" }}>
                       <span style={{
                         fontSize: 13, fontWeight: 700, color: accent,
                         display: "inline-flex", alignItems: "center", gap: 6,
-                        background: "rgba(255,255,255,0.7)", padding: "7px 14px",
-                        borderRadius: 10, border: `1px solid ${accent}22`,
+                        background: "rgba(255,255,255,0.75)", padding: "8px 16px",
+                        borderRadius: 12, border: `1.5px solid ${border}`,
+                        backdropFilter: "blur(8px)",
                       }}>
-                        Leer guía <ArrowRight size={13} />
+                        Leer guía <ArrowRight size={14} />
                       </span>
                       <span style={{
                         fontSize: 11, fontWeight: 600, color: "#9ca3af",
-                        background: "rgba(255,255,255,0.6)", padding: "4px 10px",
-                        borderRadius: 999,
+                        background: "rgba(255,255,255,0.6)", padding: "5px 11px",
+                        borderRadius: 999, border: "1px solid rgba(0,0,0,0.06)",
                       }}>
                         Próximamente
                       </span>
@@ -1013,6 +1030,9 @@ export default function Home() {
             </div>
           </div>
         </section>
+
+        {/* ── Separador guías → footer ── */}
+        <div aria-hidden style={{ height:1, background:"linear-gradient(90deg, transparent, #1f2937 30%, #1f2937 70%, transparent)" }} />
 
         {/* ════ FOOTER OSCURO ════ */}
         <footer style={{
