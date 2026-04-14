@@ -88,21 +88,21 @@ export default function NaftaPage() {
                   }}
                 >
                   {/* Fila 1: Nombre del banco + porcentaje grande */}
-                  <div style={{ display: "flex", justifyContent: "space-between", alignItems: "flex-start", gap: 12 }}>
-                    <div style={{ fontSize: 18, fontWeight: 700, color: "#0f172a", lineHeight: 1.25 }}>
+                  <div style={{ display: "flex", justifyContent: "space-between", alignItems: "flex-start", gap: 8 }}>
+                    <div style={{ fontSize: 18, fontWeight: 700, color: "#0f172a", lineHeight: 1.25, maxWidth: "60%" }}>
                       {d.banco}
                     </div>
-                    <div style={{ textAlign: "right", flexShrink: 0 }}>
-                      <div style={{ fontSize: 36, fontWeight: 900, color: "#0a7c4e", letterSpacing: "-0.04em", lineHeight: 1 }}>
-                        {maxPct}%
-                      </div>
-                      {subtextPct && (
-                        <div style={{ fontSize: 11, color: "#9ca3af", marginTop: 4, textAlign: "right" }}>
-                          {subtextPct}
-                        </div>
-                      )}
+                    <div style={{ fontSize: 32, fontWeight: 900, color: "#0a7c4e", letterSpacing: "-0.04em", lineHeight: 1, textAlign: "right", flexShrink: 0 }}>
+                      {maxPct}%
                     </div>
                   </div>
+
+                  {/* Subtext de porcentajes (CASO 2/3: dos tiers) */}
+                  {subtextPct && (
+                    <div style={{ fontSize: 12, color: "#94a3b8", marginTop: 4, marginBottom: 12 }}>
+                      {subtextPct}
+                    </div>
+                  )}
 
                   {/* Fila 2: Badge de segmento (si aplica) */}
                   {d.segmento && (
