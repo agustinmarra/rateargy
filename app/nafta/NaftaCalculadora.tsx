@@ -4,6 +4,20 @@ import { useState } from "react"
 import Link from "next/link"
 import { TARJETAS } from "@/components/tarjetas-data"
 
+// ================================================
+// ACTUALIZAR ESTOS PRECIOS CADA VEZ QUE SUBAN
+// Fuente: ypf.com o buscar "precio nafta hoy argentina"
+// Última actualización: abril 2026
+// ================================================
+const PRECIOS_NAFTA = {
+  YPF:   { super: 1999, premium: 2207, diesel: 2065, dieselPremium: 2271 },
+  Shell: { super: 2049, premium: 2365, diesel: 2019, dieselPremium: 2437 },
+  Axion: { super: 2039, premium: 2280, diesel: 2040, dieselPremium: 2280 },
+  Puma:  { super: 1974, premium: 2100, diesel: 1960, dieselPremium: 2100 },
+}
+
+const LITROS_TANQUE = 45  // litros — tanque promedio argentino
+
 // ── Nombre premium por estación ─────────────────────────────────────────────
 const NOMBRE_PREMIUM: Record<string, string> = {
   ypf:   "Infinia",
@@ -18,34 +32,11 @@ const TIPOS: { key: "super" | "premium" | "diesel"; label: string; desc: string 
   { key: "diesel",  label: "Diesel",  desc: "Gasoil"                     },
 ]
 
-// ACTUALIZAR ACÁ CADA VEZ QUE SUBAN LOS PRECIOS
-// Fuente: verificar en ypf.com, shell.com.ar o infobae.com/economia
-// Última actualización: abril 2026
 const ESTACIONES = [
-  {
-    id: "ypf",   nombre: "YPF",   color: "#0052A5",
-    // Súper: $1.999 | Infinia: $2.207 | Diesel 500: $2.065
-    precios: { super: 1999, premium: 2207, diesel: 2065 },
-    nota: "Red más grande del país",
-  },
-  {
-    id: "shell", nombre: "Shell", color: "#E4181C",
-    // Súper: $2.049 | V-Power: $2.365 | Diesel: $2.019
-    precios: { super: 2049, premium: 2365, diesel: 2019 },
-    nota: "V-Power reconocida mundialmente",
-  },
-  {
-    id: "axion", nombre: "Axion", color: "#C8181A",
-    // Súper: $2.039 | Extreme: est. $2.280 | Eurodiesel: est. $2.040
-    precios: { super: 2039, premium: 2280, diesel: 2040 },
-    nota: "Precio competitivo con Extreme",
-  },
-  {
-    id: "puma",  nombre: "Puma",  color: "#1a6b2a",
-    // Súper: ~$1.974 | Premium: est. $2.100 | Diesel: est. $1.960
-    precios: { super: 1974, premium: 2100, diesel: 1960 },
-    nota: "Precio más bajo del mercado",
-  },
+  { id: "ypf",   nombre: "YPF",   color: "#0052A5", precios: PRECIOS_NAFTA.YPF,   nota: "Red más grande del país" },
+  { id: "shell", nombre: "Shell", color: "#E4181C", precios: PRECIOS_NAFTA.Shell, nota: "V-Power reconocida mundialmente" },
+  { id: "axion", nombre: "Axion", color: "#C8181A", precios: PRECIOS_NAFTA.Axion, nota: "Precio competitivo con Extreme" },
+  { id: "puma",  nombre: "Puma",  color: "#1a6b2a", precios: PRECIOS_NAFTA.Puma,  nota: "Precio más bajo del mercado" },
 ]
 
 const AUTOS = [
@@ -628,9 +619,9 @@ export default function NaftaCalculadora() {
 
           <div className="na-promos" style={{ display: "grid", gridTemplateColumns: "1fr 1fr", gap: 12 }}>
             {promoTarjetas.map(t => {
-              const nafta  = t.beneficios.nafta
-              const base   = resultados[0].pxl * litros
-              const ahorro = Math.min(base * (nafta?.pct ?? 0) / 100, nafta?.tope ?? Infinity)
+              const nafta      = t.beneficios.nafta
+              const costoTanque = PRECIOS_NAFTA.YPF.super * LITROS_TANQUE
+              const ahorro     = Math.min(costoTanque * ((nafta?.pct ?? 0) / 100), nafta?.tope ?? Infinity)
               return (
                 <div
                   key={t.id}
@@ -678,7 +669,7 @@ export default function NaftaCalculadora() {
                       tope {fmt(nafta?.tope ?? 0)}/mes
                     </div>
                     <div style={{ fontSize: 13, fontWeight: 800, color: "#059669", marginTop: 6 }}>
-                      -{fmt(ahorro)} hoy
+                      Ahorrás {fmt(ahorro)}/tanque
                     </div>
                   </div>
                 </div>
