@@ -199,8 +199,8 @@ function Breakdown({ tarjeta, gastos }: { tarjeta: Tarjeta & { ahorro: number };
       <div>
         {rows.map((cat) => {
           const b = tarjeta.beneficios[cat]
-          const tieneDesc = b?.pct > 0
-          const ahorroCat = tieneDesc ? Math.min(gastos[cat] * (b.pct / 100), b.tope || Infinity) : 0
+          const tieneDesc = (b?.pct ?? 0) > 0
+          const ahorroCat = tieneDesc ? Math.min(gastos[cat] * ((b?.pct ?? 0) / 100), b?.tope || Infinity) : 0
           const { bg, color } = CAT_COLORS[cat]
 
           return (
@@ -219,7 +219,7 @@ function Breakdown({ tarjeta, gastos }: { tarjeta: Tarjeta & { ahorro: number };
               <div style={{ flex: 1, minWidth: 0 }}>
                 <p style={{ fontSize:13, fontWeight:600, color:"#111827", margin:0, lineHeight:1.3 }}>
                   {CAT_META[cat].label}
-                  {"dias" in b && b.dias ? (
+                  {b && "dias" in b && b.dias ? (
                     <span style={{ fontSize:11, color:"#9ca3af", marginLeft:4 }}>({b.dias as string})</span>
                   ) : null}
                 </p>
@@ -284,16 +284,16 @@ function BeneficiosMes({ resultados, gastos }: {
     let bestPct = 0
     for (const t of resultados) {
       const b = t.beneficios[cat]
-      if (b?.pct > bestPct) { bestPct = b.pct; bestTarjeta = t }
+      if ((b?.pct ?? 0) > bestPct) { bestPct = b?.pct ?? 0; bestTarjeta = t }
     }
     if (bestTarjeta && bestPct > 0) {
       const b = bestTarjeta.beneficios[cat]
       beneficios.push({
         catKey: cat, nombre: bestTarjeta.nombre, banco: bestTarjeta.banco,
-        pct: b.pct, tope: b.tope,
-        dias: b.dias,
-        lugar: b.lugar,
-        ahorroReal: Math.min(gastos[cat] * (b.pct / 100), b.tope || Infinity),
+        pct: b?.pct ?? 0, tope: b?.tope ?? 0,
+        dias: b?.dias,
+        lugar: b?.lugar,
+        ahorroReal: Math.min(gastos[cat] * ((b?.pct ?? 0) / 100), b?.tope || Infinity),
         key: `best-${cat}`,
       })
     }

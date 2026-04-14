@@ -630,7 +630,7 @@ export default function NaftaCalculadora() {
             {promoTarjetas.map(t => {
               const nafta  = t.beneficios.nafta
               const base   = resultados[0].pxl * litros
-              const ahorro = Math.min(base * nafta.pct / 100, nafta.tope)
+              const ahorro = Math.min(base * (nafta?.pct ?? 0) / 100, nafta?.tope ?? Infinity)
               return (
                 <div
                   key={t.id}
@@ -656,26 +656,26 @@ export default function NaftaCalculadora() {
                       {t.nombre}
                     </div>
                     <div style={{ fontSize: 12, color: "#94a3b8", lineHeight: 1.5 }}>
-                      {nafta.lugar}
+                      {nafta?.lugar}
                     </div>
-                    {nafta.dias && (
+                    {nafta?.dias && (
                       <div style={{
                         display: "inline-flex", marginTop: 8,
                         background: "#ecfdf5", border: "1px solid rgba(16,185,129,0.25)",
                         borderRadius: 999, padding: "2px 9px",
                         fontSize: 10, fontWeight: 700, color: "#059669", letterSpacing: "0.04em",
                       }}>
-                        Solo {nafta.dias}
+                        Solo {nafta?.dias}
                       </div>
                     )}
                   </div>
 
                   <div style={{ textAlign: "right", flexShrink: 0 }}>
                     <div style={{ fontSize: 26, fontWeight: 900, color: "#10b981", letterSpacing: "-0.04em", lineHeight: 1 }}>
-                      {nafta.pct}%
+                      {nafta?.pct ?? 0}%
                     </div>
                     <div style={{ fontSize: 11, color: "#94a3b8", marginTop: 4 }}>
-                      tope {fmt(nafta.tope)}/mes
+                      tope {fmt(nafta?.tope ?? 0)}/mes
                     </div>
                     <div style={{ fontSize: 13, fontWeight: 800, color: "#059669", marginTop: 6 }}>
                       -{fmt(ahorro)} hoy
