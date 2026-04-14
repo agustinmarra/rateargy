@@ -60,7 +60,19 @@ export default function NaftaPage() {
             marginBottom: 56,
           }}>
             {sorted.map((d, i) => {
-              const maxPct = Math.max(d.porcentaje, d.porcentajeExtra ?? 0)
+              const maxPct  = d.porcentajeExtra ?? d.porcentaje
+              const maxTope = d.topeExtra ?? d.tope
+
+              // Texto explicativo bajo el porcentaje grande (CASO 2 y 3)
+              const subtextPct = (() => {
+                if (!d.porcentajeExtra) return null
+                if (d.segmento?.includes("/")) {
+                  const partes = d.segmento.split("/").map(s => s.trim())
+                  return `${d.porcentaje}% para ${partes[0]} · ${d.porcentajeExtra}% para ${partes[1]}`
+                }
+                return `${d.porcentaje}% general · ${d.porcentajeExtra}% con ${d.segmento ?? "cuenta especial"}`
+              })()
+
               return (
                 <div
                   key={i}
@@ -75,35 +87,37 @@ export default function NaftaPage() {
                     boxShadow: "0 2px 8px rgba(0,0,0,0.04)",
                   }}
                 >
-                  {/* Banco + segmento */}
-                  <div style={{ display: "flex", justifyContent: "space-between", alignItems: "flex-start", gap: 8 }}>
-                    <div>
-                      <div style={{ fontSize: 15, fontWeight: 800, color: "#0f172a", marginBottom: 3 }}>{d.banco}</div>
-                      {d.segmento && (
-                        <span style={{
-                          fontSize: 10, fontWeight: 700, color: "#6b7280",
-                          background: "#f3f4f6", borderRadius: 999, padding: "2px 8px",
-                          letterSpacing: "0.04em",
-                        }}>
-                          {d.segmento}
-                        </span>
-                      )}
+                  {/* Fila 1: Nombre del banco + porcentaje grande */}
+                  <div style={{ display: "flex", justifyContent: "space-between", alignItems: "flex-start", gap: 12 }}>
+                    <div style={{ fontSize: 18, fontWeight: 700, color: "#0f172a", lineHeight: 1.25 }}>
+                      {d.banco}
                     </div>
-                    {/* Porcentaje */}
                     <div style={{ textAlign: "right", flexShrink: 0 }}>
-                      {d.porcentajeExtra ? (
-                        <div style={{ display: "flex", alignItems: "baseline", gap: 4 }}>
-                          <span style={{ fontSize: 13, fontWeight: 700, color: "#9ca3af" }}>{d.porcentaje}%</span>
-                          <span style={{ fontSize: 11, color: "#d1d5db" }}>–</span>
-                          <span style={{ fontSize: 26, fontWeight: 900, color: "#f97316", lineHeight: 1, letterSpacing: "-0.04em" }}>{d.porcentajeExtra}%</span>
+                      <div style={{ fontSize: 36, fontWeight: 900, color: "#0a7c4e", letterSpacing: "-0.04em", lineHeight: 1 }}>
+                        {maxPct}%
+                      </div>
+                      {subtextPct && (
+                        <div style={{ fontSize: 11, color: "#9ca3af", marginTop: 4, textAlign: "right" }}>
+                          {subtextPct}
                         </div>
-                      ) : (
-                        <span style={{ fontSize: 28, fontWeight: 900, color: "#f97316", lineHeight: 1, letterSpacing: "-0.04em" }}>{d.porcentaje}%</span>
                       )}
                     </div>
                   </div>
 
-                  {/* Día + tope */}
+                  {/* Fila 2: Badge de segmento (si aplica) */}
+                  {d.segmento && (
+                    <div>
+                      <span style={{
+                        fontSize: 10, fontWeight: 700, color: "#6b7280",
+                        background: "#f3f4f6", borderRadius: 999, padding: "2px 8px",
+                        letterSpacing: "0.04em",
+                      }}>
+                        {d.segmento}
+                      </span>
+                    </div>
+                  )}
+
+                  {/* Fila 3: Badges día + tope + medio */}
                   <div style={{ display: "flex", gap: 8, flexWrap: "wrap" }}>
                     <span style={{
                       fontSize: 11, fontWeight: 700, color: "#0f172a",
@@ -117,7 +131,7 @@ export default function NaftaPage() {
                       background: "#f8fafc", border: "1px solid #e5e7eb",
                       borderRadius: 999, padding: "3px 9px",
                     }}>
-                      Tope {fmt(d.tope)}{d.topeExtra ? ` – ${fmt(d.topeExtra)}` : ""}
+                      Hasta {fmt(maxTope)}/mes
                     </span>
                     {d.medio && (
                       <span style={{
@@ -130,7 +144,7 @@ export default function NaftaPage() {
                     )}
                   </div>
 
-                  {/* Estaciones */}
+                  {/* Fila 4: Estaciones */}
                   <div style={{ display: "flex", gap: 6, flexWrap: "wrap" }}>
                     {d.estaciones.map(est => (
                       <span
@@ -148,9 +162,9 @@ export default function NaftaPage() {
                     ))}
                   </div>
 
-                  {/* Condición */}
+                  {/* Fila 5: Condiciones */}
                   {d.condicion && (
-                    <p style={{ fontSize: 12, color: "#9ca3af", margin: 0, lineHeight: 1.55 }}>
+                    <p style={{ fontSize: 13, color: "#9ca3af", margin: 0, lineHeight: 1.55 }}>
                       {d.condicion}
                     </p>
                   )}
