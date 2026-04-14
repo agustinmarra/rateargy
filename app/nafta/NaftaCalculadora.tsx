@@ -312,8 +312,8 @@ export default function NaftaCalculadora() {
   const diferencia = resultados[resultados.length - 1].total - resultados[0].total
 
   const promoTarjetas = TARJETAS
-    .filter(t => t.beneficios.nafta.pct > 0)
-    .sort((a, b) => b.beneficios.nafta.pct - a.beneficios.nafta.pct)
+    .filter(t => (t.beneficios.nafta?.pct ?? 0) > 0)
+    .sort((a, b) => (b.beneficios.nafta?.pct ?? 0) - (a.beneficios.nafta?.pct ?? 0))
     .slice(0, 8)
 
   return (
