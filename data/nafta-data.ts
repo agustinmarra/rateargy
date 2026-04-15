@@ -1,226 +1,296 @@
 // ============================================================
-// DATOS DE DESCUENTOS EN NAFTA — ACTUALIZAR CADA LUNES
-// Fuente: verificar en sitios oficiales de cada banco
-// Última actualización: abril 2026
+// GENERADO AUTOMÁTICAMENTE DESDE GOOGLE SHEETS
+// NO EDITAR MANUALMENTE — usar el Sheet
+// Última sincronización: 15/4/2026, 08:46:46
 // ============================================================
 
-export const MES_ACTUALIZACION = "Abril 2026"
+export const MES_ACTUALIZACION = "abril de 2026"
 
-export type DescuentoNafta = {
-  bancoId: string
-  banco: string
-  porcentaje: number
-  porcentajeExtra?: number // para segmentos premium
-  segmento?: string // "Éminent", "Platinum", "Selecta", etc.
-  dia: string
-  tope: number
-  topeExtra?: number
-  estaciones: string[] // ["YPF", "Shell", "Axion", "Puma"] o ["Todas"]
-  condicion?: string // texto libre con condiciones especiales
-  acumulable?: boolean
-  medio?: string // "MODO", "App YPF", "Débito", "Crédito"
-}
-
-export const DESCUENTOS_NAFTA: DescuentoNafta[] = [
+export const DESCUENTOS_NAFTA = [
   {
-    bancoId: "galicia-eminent",
-    banco: "Banco Galicia",
-    porcentaje: 15,
-    segmento: "Éminent",
-    dia: "Lunes",
-    tope: 15000,
-    estaciones: ["Todas"],
-    medio: "MODO",
-    condicion: "Pagando con Mastercard escaneando QR de MODO desde app Galicia",
+    "bancoId": "galicia-eminent",
+    "banco": "Banco Galicia",
+    "porcentaje": 15,
+    "porcentajeExtra": 10,
+    "segmento": "Éminent / Resto",
+    "tope": 15000,
+    "topeExtra": 10000,
+    "dia": "Lunes",
+    "estaciones": [
+      "Todas"
+    ],
+    "medio": "MODO",
+    "condicion": "15% Éminent - 10% resto con Mastercard y MODO",
+    "verificado": true
   },
   {
-    bancoId: "galicia-eminent",
-    banco: "Banco Galicia",
-    porcentaje: 10,
-    segmento: "Resto de tarjetas",
-    dia: "Lunes",
-    tope: 10000,
-    estaciones: ["Todas"],
-    medio: "MODO",
-    condicion: "Clientes no Éminent. Pagando con Mastercard y MODO",
+    "bancoId": "macro-visa",
+    "banco": "Banco Macro",
+    "porcentaje": 20,
+    "porcentajeExtra": 30,
+    "segmento": "Platinum / Selecta",
+    "tope": 15000,
+    "topeExtra": 25000,
+    "dia": "Miércoles",
+    "estaciones": [
+      "YPF"
+    ],
+    "medio": "MODO",
+    "condicion": "20% Platinum - 30% Selecta",
+    "verificado": true
   },
   {
-    bancoId: "macro-visa",
-    banco: "Banco Macro",
-    porcentaje: 20,
-    porcentajeExtra: 30,
-    segmento: "Platinum / Selecta",
-    dia: "Miércoles",
-    tope: 15000,
-    topeExtra: 25000,
-    estaciones: ["YPF"],
-    medio: "MODO",
-    condicion: "20% para Platinum (tope $15.000). 30% para Selecta (tope $25.000)",
+    "bancoId": "bna-gold",
+    "banco": "Banco Nación",
+    "porcentaje": 20,
+    "porcentajeExtra": 0,
+    "segmento": "General",
+    "tope": 10000,
+    "topeExtra": 0,
+    "dia": "Viernes",
+    "estaciones": [
+      "YPF",
+      "Shell"
+    ],
+    "medio": "MODO BNA+",
+    "condicion": "Con tarjeta Visa o Mastercard BNA",
+    "verificado": true
   },
   {
-    bancoId: "bna-gold",
-    banco: "Banco Nación",
-    porcentaje: 20,
-    dia: "Viernes",
-    tope: 10000,
-    estaciones: ["YPF", "Shell"],
-    medio: "MODO BNA+",
-    condicion: "Pagando con tarjeta de crédito Visa o Mastercard del BNA a través de MODO",
+    "bancoId": "patagonia",
+    "banco": "Banco Patagonia",
+    "porcentaje": 20,
+    "porcentajeExtra": 25,
+    "segmento": "General / Sueldo",
+    "tope": 10000,
+    "topeExtra": 15000,
+    "dia": "Jueves",
+    "estaciones": [
+      "Todas"
+    ],
+    "medio": "",
+    "condicion": "20% general - 25% cuenta sueldo",
+    "verificado": true
   },
   {
-    bancoId: "patagonia",
-    banco: "Banco Patagonia",
-    porcentaje: 20,
-    porcentajeExtra: 25,
-    segmento: "Cuenta sueldo",
-    dia: "Jueves",
-    tope: 10000,
-    topeExtra: 15000,
-    estaciones: ["Todas"],
-    condicion: "20% general (tope $10.000). 25% para cuenta sueldo (tope $15.000)",
+    "bancoId": "credicoop",
+    "banco": "Banco Credicoop",
+    "porcentaje": 15,
+    "porcentajeExtra": 20,
+    "segmento": "General / Sueldo",
+    "tope": 4500,
+    "topeExtra": 0,
+    "dia": "Viernes",
+    "estaciones": [
+      "Todas"
+    ],
+    "medio": "",
+    "condicion": "Tope diario $4.500 - 20% sueldo tope $6.000 diario",
+    "verificado": true
   },
   {
-    bancoId: "credicoop",
-    banco: "Banco Credicoop",
-    porcentaje: 15,
-    porcentajeExtra: 20,
-    segmento: "Cuenta sueldo",
-    dia: "Viernes",
-    tope: 4500,
-    estaciones: ["Todas"],
-    condicion: "Tope diario de $4.500. Para cuenta sueldo: 20% con tope $6.000 diario",
+    "bancoId": "santander-gold",
+    "banco": "Santander",
+    "porcentaje": 10,
+    "porcentajeExtra": 0,
+    "segmento": "Platinum / Black",
+    "tope": 7500,
+    "topeExtra": 0,
+    "dia": "Jueves",
+    "estaciones": [
+      "YPF"
+    ],
+    "medio": "App YPF",
+    "condicion": "Solo Platinum y Black desde App YPF",
+    "verificado": true
   },
   {
-    bancoId: "santander-gold",
-    banco: "Santander",
-    porcentaje: 10,
-    segmento: "Platinum / Black",
-    dia: "Jueves",
-    tope: 7500,
-    estaciones: ["YPF"],
-    medio: "App YPF",
-    condicion: "Solo con tarjetas Visa Black o Platinum desde la App YPF",
+    "bancoId": "icbc-platinum",
+    "banco": "ICBC",
+    "porcentaje": 15,
+    "porcentajeExtra": 0,
+    "segmento": "Cuenta sueldo",
+    "tope": 15000,
+    "topeExtra": 0,
+    "dia": "Martes",
+    "estaciones": [
+      "Todas"
+    ],
+    "medio": "",
+    "condicion": "Solo clientes con cuenta sueldo en ICBC",
+    "verificado": true
   },
   {
-    bancoId: "icbc-platinum",
-    banco: "ICBC",
-    porcentaje: 15,
-    segmento: "Cuenta sueldo",
-    dia: "Martes",
-    tope: 15000,
-    estaciones: ["Todas"],
-    condicion: "Solo para clientes con cuenta sueldo acreditada en ICBC",
+    "bancoId": "brubank",
+    "banco": "Brubank",
+    "porcentaje": 20,
+    "porcentajeExtra": 30,
+    "segmento": "Plan Plus / Ultra",
+    "tope": 30000,
+    "topeExtra": 0,
+    "dia": "Todos los días",
+    "estaciones": [
+      "Todas"
+    ],
+    "medio": "",
+    "condicion": "20% Plus tope $4000/sem - 30% Ultra tope $6000/compra",
+    "verificado": true
   },
   {
-    bancoId: "supervielle",
-    banco: "Supervielle",
-    porcentaje: 10,
-    dia: "Variable",
-    tope: 8000,
-    estaciones: ["Todas"],
-    condicion: "Verificar condiciones vigentes en app Supervielle",
+    "bancoId": "mercado-pago",
+    "banco": "Mercado Pago",
+    "porcentaje": 10,
+    "porcentajeExtra": 0,
+    "segmento": "General",
+    "tope": 6000,
+    "topeExtra": 0,
+    "dia": "Variable",
+    "estaciones": [
+      "YPF"
+    ],
+    "medio": "",
+    "condicion": "10% con Tarjeta de Crédito Mercado Pago",
+    "verificado": true
   },
   {
-    bancoId: "mercado-pago",
-    banco: "Mercado Pago",
-    porcentaje: 10,
-    dia: "Variable",
-    tope: 6000,
-    estaciones: ["YPF"],
-    medio: "App Mercado Pago",
-    condicion: "10% de reintegro en YPF pagando con Tarjeta de Crédito Mercado Pago. Tope $6.000/mes",
+    "bancoId": "ciudad",
+    "banco": "Banco Ciudad",
+    "porcentaje": 10,
+    "porcentajeExtra": 15,
+    "segmento": "General / Sueldo",
+    "tope": 10000,
+    "topeExtra": 15000,
+    "dia": "Domingos",
+    "estaciones": [
+      "Todas"
+    ],
+    "medio": "MODO",
+    "condicion": "10% general - 15% Plan Sueldo y Jubilados",
+    "verificado": true
   },
   {
-    bancoId: "brubank",
-    banco: "Brubank",
-    porcentaje: 20,
-    porcentajeExtra: 30,
-    segmento: "Plan Plus / Plan Ultra",
-    dia: "Todos los días",
-    tope: 30000,
-    estaciones: ["Todas"],
-    condicion: "20% Plan Plus (tope $4.000/semana). 30% Plan Ultra todos los días (tope $6.000/compra y $30.000/mes)",
+    "bancoId": "hipotecario",
+    "banco": "Banco Hipotecario",
+    "porcentaje": 15,
+    "porcentajeExtra": 0,
+    "segmento": "Búho One",
+    "tope": 8000,
+    "topeExtra": 0,
+    "dia": "Martes",
+    "estaciones": [
+      "Todas"
+    ],
+    "medio": "",
+    "condicion": "Solo clientes Búho One con Visa Signature o Platinum",
+    "verificado": true
   },
   {
-    bancoId: "ciudad",
-    banco: "Banco Ciudad",
-    porcentaje: 10,
-    porcentajeExtra: 15,
-    segmento: "Plan Sueldo / Jubilados",
-    dia: "Domingos",
-    tope: 10000,
-    topeExtra: 15000,
-    estaciones: ["Todas"],
-    medio: "MODO",
-    condicion: "10% general. 15% para Plan Sueldo y Jubilados",
-  },
-  {
-    bancoId: "hipotecario",
-    banco: "Banco Hipotecario",
-    porcentaje: 15,
-    segmento: "Búho One",
-    dia: "Martes",
-    tope: 8000,
-    estaciones: ["Todas"],
-    condicion: "Solo clientes Búho One con Visa Signature o Platinum",
-  },
+    "bancoId": "supervielle",
+    "banco": "Banco Supervielle",
+    "porcentaje": 10,
+    "porcentajeExtra": 0,
+    "segmento": "General",
+    "tope": 8000,
+    "topeExtra": 0,
+    "dia": "Variable",
+    "estaciones": [
+      "Todas"
+    ],
+    "medio": "",
+    "condicion": "Verificar condiciones en app Supervielle",
+    "verificado": false
+  }
 ]
 
-// Beneficios de apps de las petroleras (sin banco)
-export type BeneficioApp = {
-  app: string
-  petrolera: string
-  beneficio: string
-  porcentaje: number
-  dia: string
-  tope: string
-  acumulable: boolean
+export const PRECIOS_NAFTA = {
+  "YPF": {
+    "Super": 1999,
+    "Premium (Infinia)": 2207,
+    "Diesel 500": 2065,
+    "Infinia Diesel": 2271
+  },
+  "Shell": {
+    "Super": 2049,
+    "V-Power (Premium)": 2365,
+    "Diesel": 2019,
+    "V-Power Diesel": 2437
+  },
+  "Axion": {
+    "Super": 2039,
+    "Extreme (Premium)": 2207
+  },
+  "Puma": {
+    "Super": 1974
+  }
 }
 
-export const BENEFICIOS_APPS: BeneficioApp[] = [
+export const LITROS_TANQUE = 45
+
+export const BENEFICIOS_SEMANA = [
   {
-    app: "App YPF + Serviclub",
-    petrolera: "YPF",
-    beneficio: "Carga nocturna (0 a 6hs)",
-    porcentaje: 6,
-    dia: "Todos los días",
-    tope: "Sin tope",
-    acumulable: true,
+    "banco": "Banco Galicia",
+    "bancoId": "galicia",
+    "categoria": "Supermercados",
+    "titulo": "20% en Jumbo y Disco",
+    "dias": "Martes y jueves",
+    "tope": "$25.000",
+    "descripcion": "Pagando con MODO desde app Galicia. Mínimo $100.000",
+    "vigenciaHasta": "30/04/2026",
+    "icono": "ShoppingCart"
   },
   {
-    app: "App YPF + Serviclub",
-    petrolera: "YPF",
-    beneficio: "Autodespacho",
-    porcentaje: 3,
-    dia: "Todos los días",
-    tope: "Sin tope",
-    acumulable: true,
+    "banco": "Banco Supervielle",
+    "bancoId": "supervielle",
+    "categoria": "Farmacia",
+    "titulo": "50% en farmacias adheridas",
+    "dias": "Todos los días",
+    "tope": "$5.000",
+    "descripcion": "50% de reintegro en farmacias adheridas a la red",
+    "vigenciaHasta": "30/04/2026",
+    "icono": "Heart"
   },
   {
-    app: "App YPF",
-    petrolera: "YPF",
-    beneficio: "Socios ACA",
-    porcentaje: 5,
-    dia: "Todos los días",
-    tope: "$14.500/mes",
-    acumulable: true,
+    "banco": "Banco Macro",
+    "bancoId": "macro",
+    "categoria": "Nafta",
+    "titulo": "30% en YPF",
+    "dias": "Miércoles",
+    "tope": "$25.000",
+    "descripcion": "30% para clientes Selecta - 20% para Platinum",
+    "vigenciaHasta": "30/04/2026",
+    "icono": "Fuel"
   },
   {
-    app: "Shell Box",
-    petrolera: "Shell",
-    beneficio: "Combustibles V-Power premium",
-    porcentaje: 10,
-    dia: "Miércoles",
-    tope: "$4.000/semana",
-    acumulable: false,
+    "banco": "Naranja X",
+    "bancoId": "naranja-x",
+    "categoria": "Online",
+    "titulo": "VERIFICAR",
+    "dias": "VERIFICAR",
+    "tope": "VERIFICAR",
+    "descripcion": "Verificar en naranjax.com/beneficios",
+    "vigenciaHasta": "30/04/2026",
+    "icono": "ShoppingBag"
   },
   {
-    app: "Axion ON",
-    petrolera: "Axion",
-    beneficio: "Combustibles Quantium",
-    porcentaje: 10,
-    dia: "Lunes y Viernes",
-    tope: "$6.500 a $12.000/mes según nivel",
-    acumulable: false,
+    "banco": "Banco Nación",
+    "bancoId": "bna",
+    "categoria": "Supermercados",
+    "titulo": "30% en supermercados",
+    "dias": "Miércoles",
+    "tope": "$12.000",
+    "descripcion": "30% con tarjeta BNA en supermercados adheridos",
+    "vigenciaHasta": "30/04/2026",
+    "icono": "Store"
   },
+  {
+    "banco": "Banco Patagonia",
+    "bancoId": "patagonia",
+    "categoria": "Supermercados",
+    "titulo": "35% en La Anónima",
+    "dias": "Jueves",
+    "tope": "$15.000",
+    "descripcion": "35% de reintegro los jueves en La Anónima",
+    "vigenciaHasta": "30/04/2026",
+    "icono": "Tag"
+  }
 ]

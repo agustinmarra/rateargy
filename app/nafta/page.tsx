@@ -1,6 +1,7 @@
 import type { Metadata } from "next"
 import NaftaCalculadora from "./NaftaCalculadora"
-import { DESCUENTOS_NAFTA, BENEFICIOS_APPS, MES_ACTUALIZACION } from "@/data/nafta-data"
+import { DESCUENTOS_NAFTA, MES_ACTUALIZACION } from "@/data/nafta-data"
+import { BENEFICIOS_APPS } from "@/data/beneficios-apps"
 
 export const metadata: Metadata = {
   title: "Calculadora de Nafta — Ahorrá en combustible con tu tarjeta",

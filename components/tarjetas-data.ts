@@ -1,364 +1,1481 @@
-// tarjetas-data.ts — ACTUALIZADO ABRIL 2026
-export type CatKey = "super" | "nafta" | "farmacia" | "delivery" | "online" | "viajes" | "transporte" | "servicios";
+// ============================================================
+// GENERADO AUTOMÁTICAMENTE DESDE GOOGLE SHEETS
+// NO EDITAR MANUALMENTE — usar el Sheet
+// Sheet: https://docs.google.com/spreadsheets/d/1bv7iUYwgrLcKLTA715Z8p1F3RqgMwaQtXKkYLgZXCoY
+// Última sincronización: 15/4/2026, 08:46:46
+// ============================================================
 
-export type Gastos = Record<CatKey, number>;
+export type CatKey = "super"|"nafta"|"farmacia"|"delivery"|"online"|"viajes"|"transporte"|"servicios"
+export type Gastos = Record<CatKey, number>
 
 export type Beneficio = {
-  pct: number;   // decimal: 0.25 = 25%
-  tope: number;  // tope en pesos por período
-  dias?: string;
-  lugar?: string;
-  descripcion: string;
-};
-
-export type Tarjeta = {
-  id: string;
-  bancoId: string;
-  nombre: string;
-  banco: string;
-  red: "Visa" | "Mastercard";
-  gradiente: string;
-  beneficios: Partial<Record<CatKey, Beneficio>>;
-  pills: string[];
-  costoAnual: number;
-};
-
-export const TARJETAS: Tarjeta[] = [
-  // ── Galicia ──────────────────────────────────────────────────────────────────
-  {
-    id: "galicia-eminent",
-    bancoId: "galicia",
-    nombre: "Galicia Éminent Visa Signature",
-    banco: "Banco Galicia",
-    red: "Visa",
-    gradiente: "linear-gradient(135deg, #134e32 0%, #1a7f4f 60%, #22c55e 100%)",
-    beneficios: {
-      super:    { pct: 25, tope: 25000, dias: "martes y jueves", lugar: "Jumbo / Coto / La Anónima", descripcion: "25% reintegro martes y jueves con MODO" },
-      nafta:    { pct: 20, tope: 15000, dias: "lunes", lugar: "YPF / Axion", descripcion: "20% nafta lunes con MODO" },
-      farmacia: { pct: 15, tope: 8000,  dias: "todos los días", lugar: "Farmacity adheridas", descripcion: "15% farmacias" },
-      delivery: { pct: 10, tope: 6000,  dias: "miércoles", lugar: "PedidosYa / Rappi", descripcion: "10% delivery miércoles" },
-    },
-    pills: ["25% Jumbo martes", "20% nafta lunes", "15% farmacias"],
-    costoAnual: 0,
-  },
-  {
-    id: "galicia-gold",
-    bancoId: "galicia",
-    nombre: "Galicia Visa Gold",
-    banco: "Banco Galicia",
-    red: "Visa",
-    gradiente: "linear-gradient(135deg, #166534 0%, #4ade80 100%)",
-    beneficios: {
-      super: { pct: 20, tope: 20000, dias: "martes y jueves", lugar: "Jumbo / Coto", descripcion: "20% reintegro martes y jueves" },
-      nafta: { pct: 15, tope: 12000, dias: "lunes", lugar: "YPF", descripcion: "15% nafta lunes YPF" },
-    },
-    pills: ["20% Jumbo martes", "15% nafta lunes"],
-    costoAnual: 0,
-  },
-
-  // ── BBVA ─────────────────────────────────────────────────────────────────────
-  {
-    id: "bbva-platinum",
-    bancoId: "bbva",
-    nombre: "BBVA Visa Platinum",
-    banco: "BBVA Argentina",
-    red: "Visa",
-    gradiente: "linear-gradient(135deg, #0a2540 0%, #004481 60%, #0ea5e9 100%)",
-    beneficios: {
-      super:    { pct: 30, tope: 22000, dias: "jueves", lugar: "Coto / Carrefour", descripcion: "30% supermercados jueves" },
-      farmacia: { pct: 15, tope: 8000,  dias: "todos los días", lugar: "Farmacity", descripcion: "15% farmacias" },
-      online:   { pct: 10, tope: 10000, dias: "todos los días", descripcion: "10% compras online" },
-    },
-    pills: ["30% Coto jueves", "15% farmacias", "10% online"],
-    costoAnual: 0,
-  },
-  {
-    id: "bbva",
-    bancoId: "bbva",
-    nombre: "BBVA Visa Clásica",
-    banco: "BBVA Argentina",
-    red: "Visa",
-    gradiente: "linear-gradient(135deg, #1a3a5c 0%, #1a5fa8 60%, #3b82f6 100%)",
-    beneficios: {
-      super:    { pct: 20, tope: 15000, dias: "jueves", lugar: "Coto / Carrefour", descripcion: "20% supermercados jueves" },
-      farmacia: { pct: 10, tope: 5000,  dias: "todos los días", lugar: "Farmacity", descripcion: "10% farmacias" },
-    },
-    pills: ["20% Coto jueves", "10% farmacias"],
-    costoAnual: 0,
-  },
-
-  // ── Santander ─────────────────────────────────────────────────────────────────
-  {
-    id: "santander-gold",
-    bancoId: "santander",
-    nombre: "Santander Visa Gold",
-    banco: "Santander",
-    red: "Visa",
-    gradiente: "linear-gradient(135deg, #5c3d00 0%, #96680a 60%, #c9940f 100%)",
-    beneficios: {
-      super:    { pct: 25, tope: 18000, dias: "viernes", lugar: "Carrefour / Día", descripcion: "25% supermercados viernes" },
-      nafta:    { pct: 10, tope: 7500,  dias: "jueves", lugar: "YPF", descripcion: "10% nafta jueves app YPF" },
-      delivery: { pct: 10, tope: 5000,  dias: "martes", lugar: "PedidosYa", descripcion: "10% delivery martes" },
-    },
-    pills: ["25% Carrefour viernes", "10% nafta jueves"],
-    costoAnual: 0,
-  },
-  {
-    id: "santander",
-    bancoId: "santander",
-    nombre: "Santander Visa Clásica",
-    banco: "Santander",
-    red: "Visa",
-    gradiente: "linear-gradient(135deg, #7a0000 0%, #b80000 60%, #e60000 100%)",
-    beneficios: {
-      super: { pct: 15, tope: 12000, dias: "viernes", lugar: "Carrefour / Día", descripcion: "15% supermercados viernes" },
-    },
-    pills: ["15% Carrefour viernes"],
-    costoAnual: 0,
-  },
-
-  // ── Macro ─────────────────────────────────────────────────────────────────────
-  {
-    id: "macro-visa",
-    bancoId: "macro",
-    nombre: "Macro Visa Selecta",
-    banco: "Banco Macro",
-    red: "Visa",
-    gradiente: "linear-gradient(135deg, #0a3370 0%, #1254a8 60%, #1a6fd4 100%)",
-    beneficios: {
-      super: { pct: 25, tope: 20000, dias: "lunes", lugar: "Vea / Walmart", descripcion: "25% supermercados lunes con MODO" },
-      nafta: { pct: 20, tope: 15000, dias: "miércoles", lugar: "YPF", descripcion: "20% nafta miércoles MODO (Selecta)" },
-    },
-    pills: ["25% Vea lunes", "20% nafta miércoles"],
-    costoAnual: 0,
-  },
-  {
-    id: "macro",
-    bancoId: "macro",
-    nombre: "Macro Visa Platinum",
-    banco: "Banco Macro",
-    red: "Visa",
-    gradiente: "linear-gradient(135deg, #0f2a5e 0%, #1a47a0 60%, #2563eb 100%)",
-    beneficios: {
-      super: { pct: 20, tope: 15000, dias: "lunes", lugar: "Vea / Walmart", descripcion: "20% supermercados lunes" },
-      nafta: { pct: 15, tope: 10000, dias: "miércoles", lugar: "YPF", descripcion: "15% nafta miércoles MODO" },
-    },
-    pills: ["20% Vea lunes", "15% nafta miércoles"],
-    costoAnual: 0,
-  },
-
-  // ── Naranja X ─────────────────────────────────────────────────────────────────
-  {
-    id: "naranja-x",
-    bancoId: "naranja-x",
-    nombre: "Naranja X Visa",
-    banco: "Naranja X",
-    red: "Visa",
-    gradiente: "linear-gradient(135deg, #b33a00 0%, #e65200 60%, #ff6a1a 100%)",
-    beneficios: {
-      delivery: { pct: 15, tope: 8000,  dias: "todos los días", lugar: "PedidosYa / Rappi", descripcion: "15% delivery" },
-      online:   { pct: 15, tope: 10000, dias: "todos los días", descripcion: "15% compras online" },
-    },
-    pills: ["15% delivery", "15% online"],
-    costoAnual: 0,
-  },
-
-  // ── Banco Nación ─────────────────────────────────────────────────────────────
-  {
-    id: "bna-gold",
-    bancoId: "bna",
-    nombre: "BNA Visa Gold",
-    banco: "Banco Nación",
-    red: "Visa",
-    gradiente: "linear-gradient(135deg, #003a6b 0%, #005aaa 60%, #0073cc 100%)",
-    beneficios: {
-      super: { pct: 25, tope: 18000, dias: "martes", lugar: "Coto / Carrefour", descripcion: "25% supermercados martes" },
-      nafta: { pct: 20, tope: 10000, dias: "viernes", lugar: "YPF / Shell", descripcion: "20% nafta viernes MODO BNA+" },
-    },
-    pills: ["25% Coto martes", "20% nafta viernes"],
-    costoAnual: 0,
-  },
-  {
-    id: "bna",
-    bancoId: "bna",
-    nombre: "BNA Visa Clásica",
-    banco: "Banco Nación",
-    red: "Visa",
-    gradiente: "linear-gradient(135deg, #002952 0%, #003d7a 60%, #0055ab 100%)",
-    beneficios: {
-      super: { pct: 15, tope: 12000, dias: "martes", lugar: "Coto", descripcion: "15% supermercados martes" },
-      nafta: { pct: 15, tope: 8000,  dias: "viernes", lugar: "YPF", descripcion: "15% nafta viernes" },
-    },
-    pills: ["15% Coto martes", "15% nafta viernes"],
-    costoAnual: 0,
-  },
-
-  // ── Supervielle ──────────────────────────────────────────────────────────────
-  {
-    id: "supervielle",
-    bancoId: "supervielle",
-    nombre: "Supervielle Visa",
-    banco: "Supervielle",
-    red: "Visa",
-    gradiente: "linear-gradient(135deg, #6d1a7e 0%, #9d28b0 60%, #c040d4 100%)",
-    beneficios: {
-      super: { pct: 20, tope: 15000, dias: "miércoles", descripcion: "20% supermercados miércoles" },
-      nafta: { pct: 10, tope: 8000,  dias: "variable", descripcion: "10% nafta (verificar app)" },
-    },
-    pills: ["20% super miércoles", "10% nafta"],
-    costoAnual: 0,
-  },
-
-  // ── ICBC ─────────────────────────────────────────────────────────────────────
-  {
-    id: "icbc-platinum",
-    bancoId: "icbc",
-    nombre: "ICBC Visa Platinum",
-    banco: "ICBC",
-    red: "Visa",
-    gradiente: "linear-gradient(135deg, #7c0000 0%, #b30000 60%, #e00000 100%)",
-    beneficios: {
-      super:    { pct: 25, tope: 20000, dias: "lunes", descripcion: "25% supermercados lunes" },
-      nafta:    { pct: 15, tope: 15000, dias: "martes", descripcion: "15% nafta martes (cuenta sueldo)" },
-      farmacia: { pct: 10, tope: 6000,  dias: "todos los días", descripcion: "10% farmacias" },
-    },
-    pills: ["25% super lunes", "15% nafta martes", "10% farmacias"],
-    costoAnual: 0,
-  },
-  {
-    id: "icbc",
-    bancoId: "icbc",
-    nombre: "ICBC Visa Clásica",
-    banco: "ICBC",
-    red: "Visa",
-    gradiente: "linear-gradient(135deg, #9b1212 0%, #cc2222 60%, #e84040 100%)",
-    beneficios: {
-      super: { pct: 15, tope: 12000, dias: "lunes", descripcion: "15% supermercados lunes" },
-      nafta: { pct: 10, tope: 8000,  dias: "martes", descripcion: "10% nafta martes" },
-    },
-    pills: ["15% super lunes", "10% nafta martes"],
-    costoAnual: 0,
-  },
-
-  // ── Ualá ─────────────────────────────────────────────────────────────────────
-  {
-    id: "uala",
-    bancoId: "uala",
-    nombre: "Ualá Mastercard",
-    banco: "Ualá",
-    red: "Mastercard",
-    gradiente: "linear-gradient(135deg, #3d006b 0%, #6200b3 60%, #8c00e6 100%)",
-    beneficios: {
-      delivery: { pct: 20, tope: 10000, dias: "todos los días", lugar: "PedidosYa / Rappi", descripcion: "20% delivery" },
-      online:   { pct: 15, tope: 10000, dias: "todos los días", descripcion: "15% compras online" },
-    },
-    pills: ["20% delivery", "15% online"],
-    costoAnual: 0,
-  },
-
-  // ── Personal Pay ─────────────────────────────────────────────────────────────
-  {
-    id: "personal-pay",
-    bancoId: "personal-pay",
-    nombre: "Personal Pay Mastercard",
-    banco: "Personal Pay",
-    red: "Mastercard",
-    gradiente: "linear-gradient(135deg, #003d6b 0%, #006bb3 60%, #0090e6 100%)",
-    beneficios: {
-      delivery:   { pct: 15, tope: 8000, dias: "todos los días", descripcion: "15% delivery" },
-      online:     { pct: 10, tope: 8000, dias: "todos los días", descripcion: "10% compras online" },
-      transporte: { pct: 30, tope: 5000, dias: "todos los días", descripcion: "30% en recargas SUBE" },
-    },
-    pills: ["15% delivery", "30% SUBE", "10% online"],
-    costoAnual: 0,
-  },
-
-  // ── Credicoop ─────────────────────────────────────────────────────────────────
-  {
-    id: "credicoop",
-    bancoId: "credicoop",
-    nombre: "Credicoop Mastercard",
-    banco: "Banco Credicoop",
-    red: "Mastercard",
-    gradiente: "linear-gradient(135deg, #003366 0%, #004fa3 60%, #0066cc 100%)",
-    beneficios: {
-      super: { pct: 15, tope: 10000, dias: "lunes", descripcion: "15% supermercados lunes" },
-      nafta: { pct: 15, tope: 4500,  dias: "viernes", descripcion: "15% nafta viernes (tope $4.500/día)" },
-    },
-    pills: ["15% super lunes", "15% nafta viernes"],
-    costoAnual: 0,
-  },
-
-  // ── Patagonia ─────────────────────────────────────────────────────────────────
-  {
-    id: "patagonia",
-    bancoId: "patagonia",
-    nombre: "Patagonia Visa",
-    banco: "Banco Patagonia",
-    red: "Visa",
-    gradiente: "linear-gradient(135deg, #003d3d 0%, #006666 60%, #008080 100%)",
-    beneficios: {
-      super: { pct: 20, tope: 15000, dias: "miércoles", descripcion: "20% supermercados miércoles" },
-      nafta: { pct: 20, tope: 10000, dias: "jueves", descripcion: "20% nafta jueves" },
-    },
-    pills: ["20% super miércoles", "20% nafta jueves"],
-    costoAnual: 0,
-  },
-
-  // ── Cuenta DNI / Provincia ────────────────────────────────────────────────────
-  {
-    id: "cuenta-dni",
-    bancoId: "provincia",
-    nombre: "Cuenta DNI Mastercard",
-    banco: "Banco Provincia",
-    red: "Mastercard",
-    gradiente: "linear-gradient(135deg, #0d4a0d 0%, #1a7a1a 60%, #24a824 100%)",
-    beneficios: {
-      super:    { pct: 15, tope: 10000, dias: "viernes", descripcion: "15% supermercados viernes" },
-      farmacia: { pct: 10, tope: 5000,  dias: "todos los días", descripcion: "10% farmacias" },
-    },
-    pills: ["15% super viernes", "10% farmacias"],
-    costoAnual: 0,
-  },
-
-  // ── Mercado Pago ─────────────────────────────────────────────────────────────
-  {
-    id: "mercado-pago",
-    bancoId: "mercado-pago",
-    nombre: "Tarjeta Mercado Pago",
-    banco: "Mercado Pago",
-    red: "Mastercard",
-    gradiente: "linear-gradient(135deg, #003087 0%, #009ee3 60%, #00b1ea 100%)",
-    beneficios: {
-      delivery: { pct: 30, tope: 12000, dias: "todos los días", lugar: "Mercado Delivery", descripcion: "30% Mercado Delivery" },
-      online:   { pct: 20, tope: 15000, dias: "todos los días", descripcion: "20% compras en Mercado Libre" },
-      nafta:    { pct: 10, tope: 6000,  dias: "variable", lugar: "YPF", descripcion: "10% nafta YPF app Mercado Pago" },
-    },
-    pills: ["30% Mercado Delivery", "20% Mercado Libre", "10% nafta YPF"],
-    costoAnual: 0,
-  },
-];
-
-// ─── calcularAhorro ───────────────────────────────────────────────────────────
-// Suma el ahorro máximo aplicable de cada categoría para una tarjeta y perfil de gastos.
-// Diseño defensivo: cualquier campo undefined/NaN es ignorado, nunca devuelve NaN.
-export function calcularAhorro(tarjeta: Tarjeta, gastos: Gastos): number {
-  let total = 0;
-  for (const cat of Object.keys(gastos) as CatKey[]) {
-    const b = tarjeta.beneficios[cat];
-    const gasto = gastos[cat] ?? 0;
-    if (!b || !gasto || !b.pct || !b.tope) continue;
-    const ahorro = Math.min(gasto * (b.pct / 100), b.tope);
-    if (isNaN(ahorro)) continue;
-    total += ahorro;
-  }
-  return Math.round(total);
+  pct: number
+  tope: number
+  dias: string
+  lugar: string
+  descripcion: string
 }
 
-// ─── rankear ─────────────────────────────────────────────────────────────────
-// Devuelve los tarjetas ordenadas por ahorro descendente, con el campo `ahorro` incluido.
-export function rankear(gastos: Gastos): (Tarjeta & { ahorro: number })[] {
+export type Tarjeta = {
+  id: string
+  nombre: string
+  banco: string
+  bancoId: string
+  red: string
+  costoAnual: number
+  urlSolicitud: string
+  gradiente: string
+  beneficios: Record<CatKey, Beneficio>
+  pills: string[]
+}
+
+export const TARJETAS: Tarjeta[] = [
+  {
+    "id": "galicia-eminent",
+    "nombre": "Galicia Éminent Visa Signature",
+    "banco": "Banco Galicia",
+    "bancoId": "galicia",
+    "red": "Visa",
+    "costoAnual": 0,
+    "urlSolicitud": "https://www.galicia.com.ar/personas/tarjetas/credito",
+    "gradiente": "linear-gradient(135deg, #134e32 0%, #1a7f4f 60%, #22c55e 100%)",
+    "beneficios": {
+      "super": {
+        "pct": 20,
+        "tope": 25000,
+        "dias": "lunes / martes / martes y jueves / jueves / viernes y sabado / viernes sabado y domingo",
+        "lugar": "Changomas / Coto / Jumbo / Makro / DIA / La Anónima / Disco y Vea",
+        "descripcion": "20% con MODO desde app Galicia. Mínimo $75.000"
+      },
+      "nafta": {
+        "pct": 15,
+        "tope": 15000,
+        "dias": "lunes",
+        "lugar": "Todas las estaciones",
+        "descripcion": "15% Éminent con Mastercard y MODO"
+      },
+      "farmacia": {
+        "pct": 0,
+        "tope": 0,
+        "dias": "",
+        "lugar": "",
+        "descripcion": "Sin beneficio verificado"
+      },
+      "delivery": {
+        "pct": 0,
+        "tope": 0,
+        "dias": "",
+        "lugar": "",
+        "descripcion": "Sin beneficio verificado"
+      },
+      "online": {
+        "pct": 0,
+        "tope": 0,
+        "dias": "",
+        "lugar": "",
+        "descripcion": "Sin beneficio verificado"
+      },
+      "viajes": {
+        "pct": 0,
+        "tope": 0,
+        "dias": "",
+        "lugar": "",
+        "descripcion": "Sin beneficio verificado"
+      },
+      "transporte": {
+        "pct": 0,
+        "tope": 0,
+        "dias": "",
+        "lugar": "",
+        "descripcion": ""
+      },
+      "servicios": {
+        "pct": 0,
+        "tope": 0,
+        "dias": "",
+        "lugar": "",
+        "descripcion": ""
+      }
+    },
+    "pills": [
+      "20% en Changomas lunes / martes / martes y jueves / jueves / viernes y sabado / viernes sabado y domingo",
+      "15% nafta lunes"
+    ]
+  },
+  {
+    "id": "galicia-gold",
+    "nombre": "Galicia Visa Gold",
+    "banco": "Banco Galicia",
+    "bancoId": "galicia",
+    "red": "Visa",
+    "costoAnual": 0,
+    "urlSolicitud": "https://www.galicia.com.ar/personas/tarjetas/credito",
+    "gradiente": "linear-gradient(135deg, #134e32 0%, #1a7f4f 60%, #22c55e 100%)",
+    "beneficios": {
+      "super": {
+        "pct": 20,
+        "tope": 25000,
+        "dias": "lunes / martes / martes y jueves",
+        "lugar": "Changomas / Coto / Jumbo",
+        "descripcion": "20% con MODO desde app Galicia"
+      },
+      "nafta": {
+        "pct": 10,
+        "tope": 10000,
+        "dias": "lunes",
+        "lugar": "Todas las estaciones",
+        "descripcion": "10% con Mastercard y MODO"
+      },
+      "farmacia": {
+        "pct": 0,
+        "tope": 0,
+        "dias": "",
+        "lugar": "",
+        "descripcion": ""
+      },
+      "delivery": {
+        "pct": 0,
+        "tope": 0,
+        "dias": "",
+        "lugar": "",
+        "descripcion": ""
+      },
+      "online": {
+        "pct": 0,
+        "tope": 0,
+        "dias": "",
+        "lugar": "",
+        "descripcion": ""
+      },
+      "viajes": {
+        "pct": 0,
+        "tope": 0,
+        "dias": "",
+        "lugar": "",
+        "descripcion": ""
+      },
+      "transporte": {
+        "pct": 0,
+        "tope": 0,
+        "dias": "",
+        "lugar": "",
+        "descripcion": ""
+      },
+      "servicios": {
+        "pct": 0,
+        "tope": 0,
+        "dias": "",
+        "lugar": "",
+        "descripcion": ""
+      }
+    },
+    "pills": [
+      "20% en Changomas lunes / martes / martes y jueves",
+      "10% nafta lunes"
+    ]
+  },
+  {
+    "id": "bbva-platinum",
+    "nombre": "BBVA Visa Platinum",
+    "banco": "BBVA",
+    "bancoId": "bbva",
+    "red": "Visa",
+    "costoAnual": 0,
+    "urlSolicitud": "https://www.bbva.com.ar/personas/tarjetas-de-credito.html",
+    "gradiente": "linear-gradient(135deg, #0a2540 0%, #004481 60%, #0ea5e9 100%)",
+    "beneficios": {
+      "super": {
+        "pct": 0,
+        "tope": 0,
+        "dias": "",
+        "lugar": "",
+        "descripcion": "VERIFICAR en bbva.com.ar"
+      },
+      "nafta": {
+        "pct": 0,
+        "tope": 0,
+        "dias": "",
+        "lugar": "",
+        "descripcion": "VERIFICAR en bbva.com.ar"
+      },
+      "farmacia": {
+        "pct": 0,
+        "tope": 0,
+        "dias": "",
+        "lugar": "",
+        "descripcion": "VERIFICAR en bbva.com.ar"
+      },
+      "delivery": {
+        "pct": 0,
+        "tope": 0,
+        "dias": "",
+        "lugar": "",
+        "descripcion": ""
+      },
+      "online": {
+        "pct": 0,
+        "tope": 0,
+        "dias": "",
+        "lugar": "",
+        "descripcion": ""
+      },
+      "viajes": {
+        "pct": 0,
+        "tope": 0,
+        "dias": "",
+        "lugar": "",
+        "descripcion": ""
+      },
+      "transporte": {
+        "pct": 0,
+        "tope": 0,
+        "dias": "",
+        "lugar": "",
+        "descripcion": ""
+      },
+      "servicios": {
+        "pct": 0,
+        "tope": 0,
+        "dias": "",
+        "lugar": "",
+        "descripcion": ""
+      }
+    },
+    "pills": []
+  },
+  {
+    "id": "bbva-gold",
+    "nombre": "BBVA Visa Gold",
+    "banco": "BBVA",
+    "bancoId": "bbva",
+    "red": "Visa",
+    "costoAnual": 0,
+    "urlSolicitud": "https://www.bbva.com.ar/personas/tarjetas-de-credito.html",
+    "gradiente": "linear-gradient(135deg, #0a2540 0%, #004481 60%, #0ea5e9 100%)",
+    "beneficios": {
+      "super": {
+        "pct": 0,
+        "tope": 0,
+        "dias": "",
+        "lugar": "",
+        "descripcion": "VERIFICAR en bbva.com.ar"
+      },
+      "nafta": {
+        "pct": 0,
+        "tope": 0,
+        "dias": "",
+        "lugar": "",
+        "descripcion": ""
+      },
+      "farmacia": {
+        "pct": 0,
+        "tope": 0,
+        "dias": "",
+        "lugar": "",
+        "descripcion": ""
+      },
+      "delivery": {
+        "pct": 0,
+        "tope": 0,
+        "dias": "",
+        "lugar": "",
+        "descripcion": ""
+      },
+      "online": {
+        "pct": 0,
+        "tope": 0,
+        "dias": "",
+        "lugar": "",
+        "descripcion": ""
+      },
+      "viajes": {
+        "pct": 0,
+        "tope": 0,
+        "dias": "",
+        "lugar": "",
+        "descripcion": ""
+      },
+      "transporte": {
+        "pct": 0,
+        "tope": 0,
+        "dias": "",
+        "lugar": "",
+        "descripcion": ""
+      },
+      "servicios": {
+        "pct": 0,
+        "tope": 0,
+        "dias": "",
+        "lugar": "",
+        "descripcion": ""
+      }
+    },
+    "pills": []
+  },
+  {
+    "id": "santander-gold",
+    "nombre": "Santander Visa Gold",
+    "banco": "Santander",
+    "bancoId": "santander",
+    "red": "Visa",
+    "costoAnual": 0,
+    "urlSolicitud": "https://www.santander.com.ar/banco/online/personas/tarjetas",
+    "gradiente": "linear-gradient(135deg, #7f1d1d 0%, #b91c1c 60%, #f87171 100%)",
+    "beneficios": {
+      "super": {
+        "pct": 0,
+        "tope": 0,
+        "dias": "",
+        "lugar": "",
+        "descripcion": "VERIFICAR en santander.com.ar"
+      },
+      "nafta": {
+        "pct": 10,
+        "tope": 7500,
+        "dias": "jueves",
+        "lugar": "YPF",
+        "descripcion": "10% Platinum/Black desde App YPF"
+      },
+      "farmacia": {
+        "pct": 0,
+        "tope": 0,
+        "dias": "",
+        "lugar": "",
+        "descripcion": ""
+      },
+      "delivery": {
+        "pct": 0,
+        "tope": 0,
+        "dias": "",
+        "lugar": "",
+        "descripcion": ""
+      },
+      "online": {
+        "pct": 0,
+        "tope": 0,
+        "dias": "",
+        "lugar": "",
+        "descripcion": ""
+      },
+      "viajes": {
+        "pct": 0,
+        "tope": 0,
+        "dias": "",
+        "lugar": "",
+        "descripcion": ""
+      },
+      "transporte": {
+        "pct": 0,
+        "tope": 0,
+        "dias": "",
+        "lugar": "",
+        "descripcion": ""
+      },
+      "servicios": {
+        "pct": 0,
+        "tope": 0,
+        "dias": "",
+        "lugar": "",
+        "descripcion": ""
+      }
+    },
+    "pills": [
+      "10% nafta jueves"
+    ]
+  },
+  {
+    "id": "santander-platinum",
+    "nombre": "Santander Visa Platinum",
+    "banco": "Santander",
+    "bancoId": "santander",
+    "red": "Visa",
+    "costoAnual": 0,
+    "urlSolicitud": "https://www.santander.com.ar/banco/online/personas/tarjetas",
+    "gradiente": "linear-gradient(135deg, #7f1d1d 0%, #b91c1c 60%, #f87171 100%)",
+    "beneficios": {
+      "super": {
+        "pct": 0,
+        "tope": 0,
+        "dias": "",
+        "lugar": "",
+        "descripcion": "VERIFICAR en santander.com.ar"
+      },
+      "nafta": {
+        "pct": 0,
+        "tope": 0,
+        "dias": "",
+        "lugar": "",
+        "descripcion": ""
+      },
+      "farmacia": {
+        "pct": 0,
+        "tope": 0,
+        "dias": "",
+        "lugar": "",
+        "descripcion": ""
+      },
+      "delivery": {
+        "pct": 0,
+        "tope": 0,
+        "dias": "",
+        "lugar": "",
+        "descripcion": ""
+      },
+      "online": {
+        "pct": 0,
+        "tope": 0,
+        "dias": "",
+        "lugar": "",
+        "descripcion": ""
+      },
+      "viajes": {
+        "pct": 0,
+        "tope": 0,
+        "dias": "",
+        "lugar": "",
+        "descripcion": ""
+      },
+      "transporte": {
+        "pct": 0,
+        "tope": 0,
+        "dias": "",
+        "lugar": "",
+        "descripcion": ""
+      },
+      "servicios": {
+        "pct": 0,
+        "tope": 0,
+        "dias": "",
+        "lugar": "",
+        "descripcion": ""
+      }
+    },
+    "pills": []
+  },
+  {
+    "id": "macro-visa",
+    "nombre": "Macro Visa Gold",
+    "banco": "Banco Macro",
+    "bancoId": "macro",
+    "red": "Visa",
+    "costoAnual": 0,
+    "urlSolicitud": "https://www.macro.com.ar/personas/tarjetas",
+    "gradiente": "linear-gradient(135deg, #78350f 0%, #b45309 60%, #fbbf24 100%)",
+    "beneficios": {
+      "super": {
+        "pct": 20,
+        "tope": 15000,
+        "dias": "miercoles",
+        "lugar": "Todas",
+        "descripcion": "20% Platinum con MODO"
+      },
+      "nafta": {
+        "pct": 20,
+        "tope": 15000,
+        "dias": "miercoles",
+        "lugar": "YPF",
+        "descripcion": "20% Platinum con MODO - 30% Selecta tope $25.000"
+      },
+      "farmacia": {
+        "pct": 0,
+        "tope": 0,
+        "dias": "",
+        "lugar": "",
+        "descripcion": ""
+      },
+      "delivery": {
+        "pct": 0,
+        "tope": 0,
+        "dias": "",
+        "lugar": "",
+        "descripcion": ""
+      },
+      "online": {
+        "pct": 0,
+        "tope": 0,
+        "dias": "",
+        "lugar": "",
+        "descripcion": ""
+      },
+      "viajes": {
+        "pct": 0,
+        "tope": 0,
+        "dias": "",
+        "lugar": "",
+        "descripcion": ""
+      },
+      "transporte": {
+        "pct": 0,
+        "tope": 0,
+        "dias": "",
+        "lugar": "",
+        "descripcion": ""
+      },
+      "servicios": {
+        "pct": 0,
+        "tope": 0,
+        "dias": "",
+        "lugar": "",
+        "descripcion": ""
+      }
+    },
+    "pills": [
+      "20% en Todas miercoles",
+      "20% nafta miercoles"
+    ]
+  },
+  {
+    "id": "macro-platinum",
+    "nombre": "Macro Visa Platinum",
+    "banco": "Banco Macro",
+    "bancoId": "macro",
+    "red": "Visa",
+    "costoAnual": 0,
+    "urlSolicitud": "https://www.macro.com.ar/personas/tarjetas",
+    "gradiente": "linear-gradient(135deg, #78350f 0%, #b45309 60%, #fbbf24 100%)",
+    "beneficios": {
+      "super": {
+        "pct": 0,
+        "tope": 0,
+        "dias": "",
+        "lugar": "",
+        "descripcion": ""
+      },
+      "nafta": {
+        "pct": 30,
+        "tope": 25000,
+        "dias": "miercoles",
+        "lugar": "YPF",
+        "descripcion": "30% Selecta con MODO"
+      },
+      "farmacia": {
+        "pct": 0,
+        "tope": 0,
+        "dias": "",
+        "lugar": "",
+        "descripcion": ""
+      },
+      "delivery": {
+        "pct": 0,
+        "tope": 0,
+        "dias": "",
+        "lugar": "",
+        "descripcion": ""
+      },
+      "online": {
+        "pct": 0,
+        "tope": 0,
+        "dias": "",
+        "lugar": "",
+        "descripcion": ""
+      },
+      "viajes": {
+        "pct": 0,
+        "tope": 0,
+        "dias": "",
+        "lugar": "",
+        "descripcion": ""
+      },
+      "transporte": {
+        "pct": 0,
+        "tope": 0,
+        "dias": "",
+        "lugar": "",
+        "descripcion": ""
+      },
+      "servicios": {
+        "pct": 0,
+        "tope": 0,
+        "dias": "",
+        "lugar": "",
+        "descripcion": ""
+      }
+    },
+    "pills": [
+      "30% nafta miercoles"
+    ]
+  },
+  {
+    "id": "naranja-x",
+    "nombre": "Naranja X Mastercard",
+    "banco": "Naranja X",
+    "bancoId": "naranja-x",
+    "red": "Mastercard",
+    "costoAnual": 0,
+    "urlSolicitud": "https://www.naranjax.com/quiero-mi-tarjeta",
+    "gradiente": "linear-gradient(135deg, #7c2d12 0%, #c2410c 60%, #fb923c 100%)",
+    "beneficios": {
+      "super": {
+        "pct": 0,
+        "tope": 0,
+        "dias": "",
+        "lugar": "",
+        "descripcion": "VERIFICAR en naranjax.com"
+      },
+      "nafta": {
+        "pct": 0,
+        "tope": 0,
+        "dias": "",
+        "lugar": "",
+        "descripcion": ""
+      },
+      "farmacia": {
+        "pct": 0,
+        "tope": 0,
+        "dias": "",
+        "lugar": "",
+        "descripcion": ""
+      },
+      "delivery": {
+        "pct": 0,
+        "tope": 0,
+        "dias": "",
+        "lugar": "",
+        "descripcion": "VERIFICAR en naranjax.com"
+      },
+      "online": {
+        "pct": 0,
+        "tope": 0,
+        "dias": "",
+        "lugar": "",
+        "descripcion": "VERIFICAR en naranjax.com"
+      },
+      "viajes": {
+        "pct": 0,
+        "tope": 0,
+        "dias": "",
+        "lugar": "",
+        "descripcion": ""
+      },
+      "transporte": {
+        "pct": 0,
+        "tope": 0,
+        "dias": "",
+        "lugar": "",
+        "descripcion": ""
+      },
+      "servicios": {
+        "pct": 0,
+        "tope": 0,
+        "dias": "",
+        "lugar": "",
+        "descripcion": ""
+      }
+    },
+    "pills": []
+  },
+  {
+    "id": "bna-gold",
+    "nombre": "BNA Visa Gold",
+    "banco": "Banco Nación",
+    "bancoId": "bna",
+    "red": "Visa",
+    "costoAnual": 0,
+    "urlSolicitud": "https://www.bna.com.ar/Personas/TarjetasDeCredito",
+    "gradiente": "linear-gradient(135deg, #0c1445 0%, #1e3a8a 60%, #3b82f6 100%)",
+    "beneficios": {
+      "super": {
+        "pct": 30,
+        "tope": 12000,
+        "dias": "miercoles",
+        "lugar": "Todas",
+        "descripcion": "30% con tarjeta BNA"
+      },
+      "nafta": {
+        "pct": 20,
+        "tope": 10000,
+        "dias": "viernes",
+        "lugar": "YPF y Shell",
+        "descripcion": "20% con MODO BNA+"
+      },
+      "farmacia": {
+        "pct": 0,
+        "tope": 0,
+        "dias": "",
+        "lugar": "",
+        "descripcion": ""
+      },
+      "delivery": {
+        "pct": 0,
+        "tope": 0,
+        "dias": "",
+        "lugar": "",
+        "descripcion": ""
+      },
+      "online": {
+        "pct": 0,
+        "tope": 0,
+        "dias": "",
+        "lugar": "",
+        "descripcion": ""
+      },
+      "viajes": {
+        "pct": 0,
+        "tope": 0,
+        "dias": "",
+        "lugar": "",
+        "descripcion": ""
+      },
+      "transporte": {
+        "pct": 0,
+        "tope": 0,
+        "dias": "",
+        "lugar": "",
+        "descripcion": ""
+      },
+      "servicios": {
+        "pct": 0,
+        "tope": 0,
+        "dias": "",
+        "lugar": "",
+        "descripcion": ""
+      }
+    },
+    "pills": [
+      "30% en Todas miercoles",
+      "20% nafta viernes"
+    ]
+  },
+  {
+    "id": "supervielle",
+    "nombre": "Supervielle Visa",
+    "banco": "Supervielle",
+    "bancoId": "supervielle",
+    "red": "Visa",
+    "costoAnual": 0,
+    "urlSolicitud": "https://www.supervielle.com.ar/tarjetas",
+    "gradiente": "linear-gradient(135deg, #431407 0%, #9a3412 60%, #f97316 100%)",
+    "beneficios": {
+      "super": {
+        "pct": 20,
+        "tope": 25000,
+        "dias": "martes",
+        "lugar": "Jumbo y Disco",
+        "descripcion": "20% los martes"
+      },
+      "nafta": {
+        "pct": 0,
+        "tope": 0,
+        "dias": "",
+        "lugar": "",
+        "descripcion": ""
+      },
+      "farmacia": {
+        "pct": 50,
+        "tope": 5000,
+        "dias": "",
+        "lugar": "Farmacias adheridas",
+        "descripcion": "50% en farmacias adheridas"
+      },
+      "delivery": {
+        "pct": 0,
+        "tope": 0,
+        "dias": "",
+        "lugar": "",
+        "descripcion": ""
+      },
+      "online": {
+        "pct": 0,
+        "tope": 0,
+        "dias": "",
+        "lugar": "",
+        "descripcion": ""
+      },
+      "viajes": {
+        "pct": 0,
+        "tope": 0,
+        "dias": "",
+        "lugar": "",
+        "descripcion": ""
+      },
+      "transporte": {
+        "pct": 0,
+        "tope": 0,
+        "dias": "",
+        "lugar": "",
+        "descripcion": ""
+      },
+      "servicios": {
+        "pct": 0,
+        "tope": 0,
+        "dias": "",
+        "lugar": "",
+        "descripcion": ""
+      }
+    },
+    "pills": [
+      "20% en Jumbo y Disco martes",
+      "50% farmacias"
+    ]
+  },
+  {
+    "id": "icbc-platinum",
+    "nombre": "ICBC Visa Platinum",
+    "banco": "ICBC",
+    "bancoId": "icbc",
+    "red": "Visa",
+    "costoAnual": 0,
+    "urlSolicitud": "https://www.icbc.com.ar/ICBC/Personas/Tarjetas",
+    "gradiente": "linear-gradient(135deg, #4c0519 0%, #9f1239 60%, #fb7185 100%)",
+    "beneficios": {
+      "super": {
+        "pct": 20,
+        "tope": 20000,
+        "dias": "",
+        "lugar": "Todas",
+        "descripcion": "20% todos los días"
+      },
+      "nafta": {
+        "pct": 15,
+        "tope": 15000,
+        "dias": "martes",
+        "lugar": "Todas",
+        "descripcion": "15% con cuenta sueldo"
+      },
+      "farmacia": {
+        "pct": 0,
+        "tope": 0,
+        "dias": "",
+        "lugar": "",
+        "descripcion": ""
+      },
+      "delivery": {
+        "pct": 0,
+        "tope": 0,
+        "dias": "",
+        "lugar": "",
+        "descripcion": ""
+      },
+      "online": {
+        "pct": 0,
+        "tope": 0,
+        "dias": "",
+        "lugar": "",
+        "descripcion": ""
+      },
+      "viajes": {
+        "pct": 0,
+        "tope": 0,
+        "dias": "",
+        "lugar": "",
+        "descripcion": ""
+      },
+      "transporte": {
+        "pct": 0,
+        "tope": 0,
+        "dias": "",
+        "lugar": "",
+        "descripcion": ""
+      },
+      "servicios": {
+        "pct": 0,
+        "tope": 0,
+        "dias": "",
+        "lugar": "",
+        "descripcion": ""
+      }
+    },
+    "pills": [
+      "20% en Todas",
+      "15% nafta martes"
+    ]
+  },
+  {
+    "id": "uala",
+    "nombre": "Ualá Mastercard",
+    "banco": "Ualá",
+    "bancoId": "uala",
+    "red": "Mastercard",
+    "costoAnual": 0,
+    "urlSolicitud": "https://www.uala.com.ar",
+    "gradiente": "linear-gradient(135deg, #2e1065 0%, #5b21b6 60%, #a78bfa 100%)",
+    "beneficios": {
+      "super": {
+        "pct": 0,
+        "tope": 0,
+        "dias": "",
+        "lugar": "",
+        "descripcion": "VERIFICAR en uala.com.ar"
+      },
+      "nafta": {
+        "pct": 0,
+        "tope": 0,
+        "dias": "",
+        "lugar": "",
+        "descripcion": ""
+      },
+      "farmacia": {
+        "pct": 0,
+        "tope": 0,
+        "dias": "",
+        "lugar": "",
+        "descripcion": ""
+      },
+      "delivery": {
+        "pct": 0,
+        "tope": 0,
+        "dias": "",
+        "lugar": "",
+        "descripcion": ""
+      },
+      "online": {
+        "pct": 5,
+        "tope": 5000,
+        "dias": "",
+        "lugar": "Todas",
+        "descripcion": "5% cashback general"
+      },
+      "viajes": {
+        "pct": 0,
+        "tope": 0,
+        "dias": "",
+        "lugar": "",
+        "descripcion": ""
+      },
+      "transporte": {
+        "pct": 0,
+        "tope": 0,
+        "dias": "",
+        "lugar": "",
+        "descripcion": ""
+      },
+      "servicios": {
+        "pct": 0,
+        "tope": 0,
+        "dias": "",
+        "lugar": "",
+        "descripcion": ""
+      }
+    },
+    "pills": [
+      "5% online"
+    ]
+  },
+  {
+    "id": "mercado-pago",
+    "nombre": "Tarjeta Mercado Pago",
+    "banco": "Mercado Pago",
+    "bancoId": "mercado-pago",
+    "red": "Mastercard",
+    "costoAnual": 0,
+    "urlSolicitud": "https://www.mercadopago.com.ar/tarjeta-de-credito",
+    "gradiente": "linear-gradient(135deg, #003087 0%, #009ee3 60%, #00b1ea 100%)",
+    "beneficios": {
+      "super": {
+        "pct": 0,
+        "tope": 0,
+        "dias": "",
+        "lugar": "",
+        "descripcion": "VERIFICAR en mercadopago.com.ar"
+      },
+      "nafta": {
+        "pct": 10,
+        "tope": 6000,
+        "dias": "",
+        "lugar": "YPF",
+        "descripcion": "10% con Tarjeta Crédito MP"
+      },
+      "farmacia": {
+        "pct": 0,
+        "tope": 0,
+        "dias": "",
+        "lugar": "",
+        "descripcion": ""
+      },
+      "delivery": {
+        "pct": 0,
+        "tope": 0,
+        "dias": "",
+        "lugar": "",
+        "descripcion": ""
+      },
+      "online": {
+        "pct": 0,
+        "tope": 0,
+        "dias": "",
+        "lugar": "",
+        "descripcion": ""
+      },
+      "viajes": {
+        "pct": 0,
+        "tope": 0,
+        "dias": "",
+        "lugar": "",
+        "descripcion": ""
+      },
+      "transporte": {
+        "pct": 0,
+        "tope": 0,
+        "dias": "",
+        "lugar": "",
+        "descripcion": ""
+      },
+      "servicios": {
+        "pct": 0,
+        "tope": 0,
+        "dias": "",
+        "lugar": "",
+        "descripcion": ""
+      }
+    },
+    "pills": [
+      "10% nafta"
+    ]
+  },
+  {
+    "id": "personal-pay",
+    "nombre": "Personal Pay Visa",
+    "banco": "Personal Pay",
+    "bancoId": "personal-pay",
+    "red": "Visa",
+    "costoAnual": 0,
+    "urlSolicitud": "https://www.personal.com.ar/beneficios/personal-pay",
+    "gradiente": "linear-gradient(135deg, #1e1b4b 0%, #3730a3 60%, #818cf8 100%)",
+    "beneficios": {
+      "super": {
+        "pct": 25,
+        "tope": 15000,
+        "dias": "",
+        "lugar": "Adheridos",
+        "descripcion": "25% en supermercados adheridos"
+      },
+      "nafta": {
+        "pct": 0,
+        "tope": 0,
+        "dias": "",
+        "lugar": "",
+        "descripcion": ""
+      },
+      "farmacia": {
+        "pct": 15,
+        "tope": 6000,
+        "dias": "",
+        "lugar": "Adheridas",
+        "descripcion": "15% en farmacias adheridas"
+      },
+      "delivery": {
+        "pct": 0,
+        "tope": 0,
+        "dias": "",
+        "lugar": "",
+        "descripcion": ""
+      },
+      "online": {
+        "pct": 0,
+        "tope": 0,
+        "dias": "",
+        "lugar": "",
+        "descripcion": ""
+      },
+      "viajes": {
+        "pct": 0,
+        "tope": 0,
+        "dias": "",
+        "lugar": "",
+        "descripcion": ""
+      },
+      "transporte": {
+        "pct": 0,
+        "tope": 0,
+        "dias": "",
+        "lugar": "",
+        "descripcion": ""
+      },
+      "servicios": {
+        "pct": 0,
+        "tope": 0,
+        "dias": "",
+        "lugar": "",
+        "descripcion": ""
+      }
+    },
+    "pills": [
+      "25% en Adheridos",
+      "15% farmacias"
+    ]
+  },
+  {
+    "id": "credicoop",
+    "nombre": "Credicoop Cabal",
+    "banco": "Banco Credicoop",
+    "bancoId": "credicoop",
+    "red": "Cabal",
+    "costoAnual": 0,
+    "urlSolicitud": "https://www.bancocredicoop.coop/personas/tarjetas",
+    "gradiente": "linear-gradient(135deg, #0c2340 0%, #1e40af 60%, #60a5fa 100%)",
+    "beneficios": {
+      "super": {
+        "pct": 20,
+        "tope": 10500,
+        "dias": "jueves",
+        "lugar": "Todas",
+        "descripcion": "20% los jueves"
+      },
+      "nafta": {
+        "pct": 15,
+        "tope": 4500,
+        "dias": "viernes",
+        "lugar": "Todas",
+        "descripcion": "15% viernes - tope diario"
+      },
+      "farmacia": {
+        "pct": 0,
+        "tope": 0,
+        "dias": "",
+        "lugar": "",
+        "descripcion": ""
+      },
+      "delivery": {
+        "pct": 0,
+        "tope": 0,
+        "dias": "",
+        "lugar": "",
+        "descripcion": ""
+      },
+      "online": {
+        "pct": 0,
+        "tope": 0,
+        "dias": "",
+        "lugar": "",
+        "descripcion": ""
+      },
+      "viajes": {
+        "pct": 0,
+        "tope": 0,
+        "dias": "",
+        "lugar": "",
+        "descripcion": ""
+      },
+      "transporte": {
+        "pct": 0,
+        "tope": 0,
+        "dias": "",
+        "lugar": "",
+        "descripcion": ""
+      },
+      "servicios": {
+        "pct": 0,
+        "tope": 0,
+        "dias": "",
+        "lugar": "",
+        "descripcion": ""
+      }
+    },
+    "pills": [
+      "20% en Todas jueves",
+      "15% nafta viernes"
+    ]
+  },
+  {
+    "id": "patagonia",
+    "nombre": "Patagonia Visa",
+    "banco": "Banco Patagonia",
+    "bancoId": "patagonia",
+    "red": "Visa",
+    "costoAnual": 0,
+    "urlSolicitud": "https://www.bancopatagonia.com.ar/index.php/personas/tarjetas",
+    "gradiente": "linear-gradient(135deg, #052e16 0%, #166534 60%, #4ade80 100%)",
+    "beneficios": {
+      "super": {
+        "pct": 35,
+        "tope": 15000,
+        "dias": "jueves",
+        "lugar": "La Anónima",
+        "descripcion": "35% los jueves en La Anónima"
+      },
+      "nafta": {
+        "pct": 20,
+        "tope": 10000,
+        "dias": "jueves",
+        "lugar": "Todas",
+        "descripcion": "20% jueves - 25% cuenta sueldo"
+      },
+      "farmacia": {
+        "pct": 0,
+        "tope": 0,
+        "dias": "",
+        "lugar": "",
+        "descripcion": ""
+      },
+      "delivery": {
+        "pct": 0,
+        "tope": 0,
+        "dias": "",
+        "lugar": "",
+        "descripcion": ""
+      },
+      "online": {
+        "pct": 0,
+        "tope": 0,
+        "dias": "",
+        "lugar": "",
+        "descripcion": ""
+      },
+      "viajes": {
+        "pct": 0,
+        "tope": 0,
+        "dias": "",
+        "lugar": "",
+        "descripcion": ""
+      },
+      "transporte": {
+        "pct": 0,
+        "tope": 0,
+        "dias": "",
+        "lugar": "",
+        "descripcion": ""
+      },
+      "servicios": {
+        "pct": 0,
+        "tope": 0,
+        "dias": "",
+        "lugar": "",
+        "descripcion": ""
+      }
+    },
+    "pills": [
+      "35% en La Anónima jueves",
+      "20% nafta jueves"
+    ]
+  },
+  {
+    "id": "cuenta-dni",
+    "nombre": "Cuenta DNI Visa",
+    "banco": "Banco Provincia",
+    "bancoId": "provincia",
+    "red": "Visa",
+    "costoAnual": 0,
+    "urlSolicitud": "https://www.bancoProvincia.com.ar/cuentadni",
+    "gradiente": "linear-gradient(135deg, #0d3d3d 0%, #0f766e 60%, #2dd4bf 100%)",
+    "beneficios": {
+      "super": {
+        "pct": 20,
+        "tope": 8000,
+        "dias": "lunes",
+        "lugar": "DIA",
+        "descripcion": "20% los lunes en DIA"
+      },
+      "nafta": {
+        "pct": 0,
+        "tope": 0,
+        "dias": "",
+        "lugar": "",
+        "descripcion": ""
+      },
+      "farmacia": {
+        "pct": 0,
+        "tope": 0,
+        "dias": "",
+        "lugar": "",
+        "descripcion": ""
+      },
+      "delivery": {
+        "pct": 30,
+        "tope": 5000,
+        "dias": "finde",
+        "lugar": "Todas",
+        "descripcion": "30% delivery los fines de semana"
+      },
+      "online": {
+        "pct": 0,
+        "tope": 0,
+        "dias": "",
+        "lugar": "",
+        "descripcion": ""
+      },
+      "viajes": {
+        "pct": 0,
+        "tope": 0,
+        "dias": "",
+        "lugar": "",
+        "descripcion": ""
+      },
+      "transporte": {
+        "pct": 0,
+        "tope": 0,
+        "dias": "",
+        "lugar": "",
+        "descripcion": ""
+      },
+      "servicios": {
+        "pct": 0,
+        "tope": 0,
+        "dias": "",
+        "lugar": "",
+        "descripcion": ""
+      }
+    },
+    "pills": [
+      "20% en DIA lunes"
+    ]
+  },
+  {
+    "id": "brubank",
+    "nombre": "Brubank Mastercard",
+    "banco": "Brubank",
+    "bancoId": "brubank",
+    "red": "Mastercard",
+    "costoAnual": 0,
+    "urlSolicitud": "https://www.brubank.com.ar",
+    "gradiente": "linear-gradient(135deg, #1e1b4b 0%, #4c1d95 60%, #7c3aed 100%)",
+    "beneficios": {
+      "super": {
+        "pct": 0,
+        "tope": 0,
+        "dias": "",
+        "lugar": "",
+        "descripcion": ""
+      },
+      "nafta": {
+        "pct": 20,
+        "tope": 30000,
+        "dias": "",
+        "lugar": "Todas",
+        "descripcion": "20% Plan Plus - 30% Plan Ultra"
+      },
+      "farmacia": {
+        "pct": 0,
+        "tope": 0,
+        "dias": "",
+        "lugar": "",
+        "descripcion": ""
+      },
+      "delivery": {
+        "pct": 0,
+        "tope": 0,
+        "dias": "",
+        "lugar": "",
+        "descripcion": ""
+      },
+      "online": {
+        "pct": 0,
+        "tope": 0,
+        "dias": "",
+        "lugar": "",
+        "descripcion": ""
+      },
+      "viajes": {
+        "pct": 0,
+        "tope": 0,
+        "dias": "",
+        "lugar": "",
+        "descripcion": ""
+      },
+      "transporte": {
+        "pct": 0,
+        "tope": 0,
+        "dias": "",
+        "lugar": "",
+        "descripcion": ""
+      },
+      "servicios": {
+        "pct": 0,
+        "tope": 0,
+        "dias": "",
+        "lugar": "",
+        "descripcion": ""
+      }
+    },
+    "pills": [
+      "20% nafta"
+    ]
+  },
+  {
+    "id": "hipotecario",
+    "nombre": "Hipotecario Visa",
+    "banco": "Banco Hipotecario",
+    "bancoId": "hipotecario",
+    "red": "Visa",
+    "costoAnual": 0,
+    "urlSolicitud": "https://www.hipotecario.com.ar/personas/tarjetas",
+    "gradiente": "linear-gradient(135deg, #0c1445 0%, #1e3a8a 60%, #60a5fa 100%)",
+    "beneficios": {
+      "super": {
+        "pct": 0,
+        "tope": 0,
+        "dias": "",
+        "lugar": "",
+        "descripcion": ""
+      },
+      "nafta": {
+        "pct": 15,
+        "tope": 8000,
+        "dias": "martes",
+        "lugar": "Todas",
+        "descripcion": "15% clientes Búho One"
+      },
+      "farmacia": {
+        "pct": 0,
+        "tope": 0,
+        "dias": "",
+        "lugar": "",
+        "descripcion": ""
+      },
+      "delivery": {
+        "pct": 0,
+        "tope": 0,
+        "dias": "",
+        "lugar": "",
+        "descripcion": ""
+      },
+      "online": {
+        "pct": 0,
+        "tope": 0,
+        "dias": "",
+        "lugar": "",
+        "descripcion": ""
+      },
+      "viajes": {
+        "pct": 0,
+        "tope": 0,
+        "dias": "",
+        "lugar": "",
+        "descripcion": ""
+      },
+      "transporte": {
+        "pct": 0,
+        "tope": 0,
+        "dias": "",
+        "lugar": "",
+        "descripcion": ""
+      },
+      "servicios": {
+        "pct": 0,
+        "tope": 0,
+        "dias": "",
+        "lugar": "",
+        "descripcion": ""
+      }
+    },
+    "pills": [
+      "15% nafta martes"
+    ]
+  }
+]
+
+export const CATS: { key: CatKey; label: string }[] = [
+  { key: "super",      label: "Supermercados" },
+  { key: "nafta",      label: "Nafta / combustible" },
+  { key: "farmacia",   label: "Farmacia / salud" },
+  { key: "delivery",   label: "Restaurantes / delivery" },
+  { key: "online",     label: "Compras online" },
+  { key: "viajes",     label: "Viajes / turismo" },
+  { key: "transporte", label: "Transporte (SUBE/peajes)" },
+  { key: "servicios",  label: "Servicios (luz, gas, tel.)" },
+]
+
+export function calcularAhorro(tarjeta: Tarjeta, gastos: Gastos): number {
+  return Math.round(
+    (Object.keys(gastos) as CatKey[]).reduce((acc, cat) => {
+      const b = tarjeta.beneficios[cat]
+      if (!b?.pct || !gastos[cat]) return acc
+      return acc + Math.min(gastos[cat] * (b.pct / 100), b.tope || Infinity)
+    }, 0)
+  )
+}
+
+export function rankear(gastos: Gastos) {
   return [...TARJETAS]
     .map(t => ({ ...t, ahorro: calcularAhorro(t, gastos) }))
-    .sort((a, b) => b.ahorro - a.ahorro);
+    .sort((a, b) => b.ahorro - a.ahorro)
 }
