@@ -3,7 +3,7 @@
 import { useState, useEffect, useCallback, useRef } from "react"
 import { motion, AnimatePresence } from "framer-motion"
 import dynamic from "next/dynamic"
-import { Calculator, BarChart2, Trophy, ArrowRight, BookOpen, CreditCard, Banknote, PiggyBank, ChevronDown, X, Check } from "lucide-react"
+import { Calculator, BarChart2, Trophy, ArrowRight, BookOpen, CreditCard, Banknote, PiggyBank, ChevronDown, X, Check, Bell, CheckCircle } from "lucide-react"
 import { TARJETAS, rankear, type Gastos, type CatKey } from "@/components/tarjetas-data"
 import { formatARS, CatIcon } from "@/components/ResultadosTarjetas"
 import { BancoLogo } from "@/components/BancoLogo"
@@ -409,6 +409,9 @@ export default function Home() {
   const [tarjetaActual, setTarjetaActual] = useState("")
   const [toastMsg, setToastMsg]     = useState<string | null>(null)
   const [selectorAbierto, setSelectorAbierto] = useState(false)
+  const [emailInput, setEmailInput] = useState("")
+  const [emailEnviado, setEmailEnviado] = useState(false)
+  const [emailError, setEmailError] = useState(false)
 
   const resultadosRef  = useRef<HTMLDivElement>(null)
   const calculadoraRef = useRef<HTMLDivElement>(null)
@@ -1089,6 +1092,119 @@ export default function Home() {
                 />
               )}
             </AnimatePresence>
+
+            {/* ── Email capture — solo post-cálculo ── */}
+            {resultados !== null && (
+              <motion.div
+                initial={{ opacity: 0, y: 20 }}
+                animate={{ opacity: 1, y: 0 }}
+                transition={{ delay: 0.3, duration: 0.5 }}
+                style={{
+                  background: "linear-gradient(135deg, #f0fdf7 0%, #ffffff 100%)",
+                  border: "1.5px solid #bbf7d0",
+                  borderRadius: 16,
+                  padding: 32,
+                  marginTop: 32,
+                  textAlign: "center",
+                  maxWidth: 560,
+                  marginLeft: "auto",
+                  marginRight: "auto",
+                }}
+              >
+                {/* Ícono campana */}
+                <div style={{
+                  background: "#0a7c4e", borderRadius: "50%",
+                  width: 48, height: 48,
+                  display: "flex", alignItems: "center", justifyContent: "center",
+                  margin: "0 auto 16px",
+                }}>
+                  <Bell size={22} color="white" />
+                </div>
+
+                {/* Título */}
+                <p style={{ fontSize: 20, fontWeight: 800, color: "#0f172a", margin: "0 0 8px" }}>
+                  ¿Cambian los beneficios de tu tarjeta?
+                </p>
+
+                {/* Subtítulo */}
+                <p style={{
+                  fontSize: 15, color: "#475569", lineHeight: 1.6,
+                  maxWidth: 400, margin: "0 auto 24px",
+                }}>
+                  Te avisamos cada lunes con las promos actualizadas y si aparece una tarjeta mejor para tu perfil.
+                </p>
+
+                {emailEnviado ? (
+                  /* Estado de éxito */
+                  <div>
+                    <CheckCircle size={40} color="#0a7c4e" style={{ margin: "0 auto 12px", display: "block" }} />
+                    <p style={{ fontSize: 18, fontWeight: 700, color: "#0f172a", margin: "0 0 6px" }}>
+                      ¡Listo! Te avisamos cada lunes.
+                    </p>
+                    <p style={{ fontSize: 14, color: "#475569", margin: 0 }}>
+                      Revisá tu bandeja de entrada el próximo lunes.
+                    </p>
+                  </div>
+                ) : (
+                  /* Formulario */
+                  <div>
+                    <div style={{ display: "flex", gap: 8 }}>
+                      <input
+                        type="email"
+                        placeholder="tu@email.com"
+                        value={emailInput}
+                        onChange={(e) => { setEmailInput(e.target.value); setEmailError(false) }}
+                        style={{
+                          flex: 1, minWidth: 0,
+                          padding: "12px 16px",
+                          border: emailError ? "1.5px solid #f87171" : "1.5px solid #e2e8f0",
+                          borderRadius: 10, fontSize: 15,
+                          outline: "none", transition: "border-color 0.15s, box-shadow 0.15s",
+                        }}
+                        onFocus={(e) => { e.target.style.borderColor = "#0a7c4e"; e.target.style.boxShadow = "0 0 0 3px rgba(10,124,78,0.1)" }}
+                        onBlur={(e) => { e.target.style.borderColor = emailError ? "#f87171" : "#e2e8f0"; e.target.style.boxShadow = "none" }}
+                      />
+                      <button
+                        onClick={() => {
+                          if (!emailInput.includes("@")) {
+                            setEmailError(true)
+                            return
+                          }
+                          localStorage.setItem("rateargy_email", emailInput)
+                          localStorage.setItem("rateargy_perfil_email", JSON.stringify({
+                            email: emailInput,
+                            gastos,
+                            timestamp: new Date().toISOString(),
+                          }))
+                          setEmailEnviado(true)
+                          console.log("email_capturado", { email: emailInput, timestamp: new Date().toISOString() })
+                        }}
+                        style={{
+                          background: "#0a7c4e", color: "white",
+                          padding: "12px 20px", borderRadius: 10,
+                          fontSize: 15, fontWeight: 600,
+                          border: "none", cursor: "pointer",
+                          whiteSpace: "nowrap", flexShrink: 0,
+                          transition: "opacity 0.15s",
+                        }}
+                        onMouseEnter={(e) => { e.currentTarget.style.opacity = "0.88" }}
+                        onMouseLeave={(e) => { e.currentTarget.style.opacity = "1" }}
+                      >
+                        Avisame →
+                      </button>
+                    </div>
+                    {emailError && (
+                      <p style={{ fontSize: 13, color: "#ef4444", margin: "6px 0 0", textAlign: "left" }}>
+                        Ingresá un email válido
+                      </p>
+                    )}
+                    <p style={{ fontSize: 12, color: "#94a3b8", marginTop: 12 }}>
+                      Sin spam. Cancelás cuando quieras.
+                    </p>
+                  </div>
+                )}
+              </motion.div>
+            )}
           </div>
         </div>
 
