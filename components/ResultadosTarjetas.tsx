@@ -623,7 +623,7 @@ export default function ResultadosTarjetas({ resultados, gastos, tarjetaActual }
           <div>
             {/* Nombre — PROBLEMA 2: 18px 700 */}
             <h3 style={{ fontSize:18, fontWeight:700, color:"#111827", margin:"0 0 4px" }}>
-              {top1.nombre}
+              <a href={`/tarjetas/${top1.id}`} style={{ textDecoration: "none", color: "inherit" }}>{top1.nombre}</a>
             </h3>
             {/* Banco — PROBLEMA 2: 13px 500 */}
             <p style={{ fontSize:13, fontWeight:500, color:"#6b7280", marginBottom:20 }}>
@@ -775,7 +775,7 @@ export default function ResultadosTarjetas({ resultados, gastos, tarjetaActual }
                   {/* Nombre — PROBLEMA 2 */}
                   <p style={{ fontSize:15, fontWeight:700, color:"#111827", margin:"0 0 2px",
                     overflow:"hidden", textOverflow:"ellipsis", whiteSpace:"nowrap" }}>
-                    {t.nombre}
+                    <a href={`/tarjetas/${t.id}`} style={{ textDecoration: "none", color: "inherit" }}>{t.nombre}</a>
                   </p>
                   {/* Banco — PROBLEMA 2 */}
                   <p style={{ fontSize:13, fontWeight:500, color:"#6b7280", margin:"0 0 10px",
