@@ -36,14 +36,12 @@ function useCountUp(target: number, duration = 800) {
 
 // ─── SVG paths exportados ─────────────────────────────────────────────────────
 export const CAT_SVG_PATHS: Record<CatKey, string> = {
-  super:      "M3 6h18l-1.5 9H4.5L3 6zM3 6L2 2H0M8 11V8m4 3V8",
-  nafta:      "M5 4h10l2 4v10a1 1 0 01-1 1H4a1 1 0 01-1-1V8l2-4zM9 12h6",
-  farmacia:   "M12 5v14M5 12h14",
-  delivery:   "M3 12l2-2m0 0l7-7 7 7M5 10v10a1 1 0 001 1h3m10-11l2 2m-2-2v10a1 1 0 01-1 1h-3m-6 0a1 1 0 001-1v-4a1 1 0 011-1h2a1 1 0 011 1v4a1 1 0 001 1m-6 0h6",
-  online:     "M16 11a4 4 0 10-8 0 4 4 0 008 0zM12 3v2m0 12v2M3 11h2m12 0h2",
-  viajes:     "M12 19l9 2-9-18-9 18 9-2zm0 0v-8",
-  transporte: "M8 6h8a2 2 0 012 2v6a2 2 0 01-2 2H8a2 2 0 01-2-2V8a2 2 0 012-2zM6 10h12M8 14h1m6 0h1",
-  servicios:  "M13 10V3L4 14h7v7l9-11h-7z",
+  super:     "M3 6h18l-1.5 9H4.5L3 6zM3 6L2 2H0M8 11V8m4 3V8",
+  nafta:     "M5 4h10l2 4v10a1 1 0 01-1 1H4a1 1 0 01-1-1V8l2-4zM9 12h6",
+  farmacia:  "M12 5v14M5 12h14",
+  delivery:  "M3 12l2-2m0 0l7-7 7 7M5 10v10a1 1 0 001 1h3m10-11l2 2m-2-2v10a1 1 0 01-1 1h-3m-6 0a1 1 0 001-1v-4a1 1 0 011-1h2a1 1 0 011 1v4a1 1 0 001 1m-6 0h6",
+  online:    "M16 11a4 4 0 10-8 0 4 4 0 008 0zM12 3v2m0 12v2M3 11h2m12 0h2",
+  servicios: "M13 10V3L4 14h7v7l9-11h-7z",
 }
 
 export function CatIcon({ catKey, className, style }: { catKey: CatKey; className?: string; style?: CSSProperties }) {
@@ -57,25 +55,21 @@ export function CatIcon({ catKey, className, style }: { catKey: CatKey; classNam
 
 // ─── Colores suaves por categoría (para los círculos del breakdown) ───────────
 const CAT_COLORS: Record<CatKey, { bg: string; color: string }> = {
-  super:      { bg: "#d1fae5", color: "#059669" },
-  nafta:      { bg: "#fef3c7", color: "#d97706" },
-  farmacia:   { bg: "#fce7f3", color: "#db2777" },
-  delivery:   { bg: "#ede9fe", color: "#7c3aed" },
-  online:     { bg: "#dbeafe", color: "#2563eb" },
-  viajes:     { bg: "#e0f2fe", color: "#0284c7" },
-  transporte: { bg: "#f3f4f6", color: "#6b7280" },
-  servicios:  { bg: "#fef9c3", color: "#ca8a04" },
+  super:     { bg: "#d1fae5", color: "#059669" },
+  nafta:     { bg: "#fef3c7", color: "#d97706" },
+  farmacia:  { bg: "#fce7f3", color: "#db2777" },
+  delivery:  { bg: "#ede9fe", color: "#7c3aed" },
+  online:    { bg: "#dbeafe", color: "#2563eb" },
+  servicios: { bg: "#fef9c3", color: "#ca8a04" },
 }
 
 const CAT_META: Record<CatKey, { label: string }> = {
-  super:      { label: "Supermercados" },
-  nafta:      { label: "Nafta" },
-  farmacia:   { label: "Farmacia" },
-  delivery:   { label: "Delivery" },
-  online:     { label: "Online" },
-  viajes:     { label: "Viajes" },
-  transporte: { label: "Transporte" },
-  servicios:  { label: "Servicios" },
+  super:     { label: "Supermercados" },
+  nafta:     { label: "Nafta" },
+  farmacia:  { label: "Farmacia" },
+  delivery:  { label: "Delivery" },
+  online:    { label: "Online" },
+  servicios: { label: "Servicios" },
 }
 
 // ─── Gradientes premium por tarjeta (override visual, no toca tarjetas-data) ──
@@ -251,19 +245,17 @@ type LucideIcon = React.ComponentType<{ size?: number; color?: string; strokeWid
 
 const CAT_LUCIDE: Record<CatKey, LucideIcon> = {
   super: ShoppingCart, nafta: Car, farmacia: Pill, delivery: Zap,
-  online: CreditCard, viajes: Plane, transporte: Car, servicios: Zap,
+  online: CreditCard, servicios: Zap,
 }
 
 // ─── Gradientes de fondo por categoría para BeneficiosMes ────────────────────
 const CAT_GRAD_BG: Record<CatKey, string> = {
-  super:      "linear-gradient(135deg, #ecfdf5 0%, #d1fae5 100%)",
-  nafta:      "linear-gradient(135deg, #fffbeb 0%, #fef3c7 100%)",
-  farmacia:   "linear-gradient(135deg, #fdf2f8 0%, #fce7f3 100%)",
-  delivery:   "linear-gradient(135deg, #f5f3ff 0%, #ede9fe 100%)",
-  online:     "linear-gradient(135deg, #eff6ff 0%, #dbeafe 100%)",
-  viajes:     "linear-gradient(135deg, #f0f9ff 0%, #e0f2fe 100%)",
-  transporte: "linear-gradient(135deg, #f9fafb 0%, #f3f4f6 100%)",
-  servicios:  "linear-gradient(135deg, #fefce8 0%, #fef9c3 100%)",
+  super:     "linear-gradient(135deg, #ecfdf5 0%, #d1fae5 100%)",
+  nafta:     "linear-gradient(135deg, #fffbeb 0%, #fef3c7 100%)",
+  farmacia:  "linear-gradient(135deg, #fdf2f8 0%, #fce7f3 100%)",
+  delivery:  "linear-gradient(135deg, #f5f3ff 0%, #ede9fe 100%)",
+  online:    "linear-gradient(135deg, #eff6ff 0%, #dbeafe 100%)",
+  servicios: "linear-gradient(135deg, #fefce8 0%, #fef9c3 100%)",
 }
 
 // ─── Beneficios que aplican a tu perfil (solo visible post-cálculo) ───────────
@@ -546,9 +538,11 @@ interface ResultadosTarjetasProps {
   resultados: Array<Tarjeta & { ahorro: number }>
   gastos: Gastos
   tarjetaActual: string
+  noElegiblesIds?: string[]
+  haySegmentacion?: boolean
 }
 
-export default function ResultadosTarjetas({ resultados, gastos, tarjetaActual }: ResultadosTarjetasProps) {
+export default function ResultadosTarjetas({ resultados, gastos, tarjetaActual, noElegiblesIds = [], haySegmentacion = false }: ResultadosTarjetasProps) {
   const [verTodas, setVerTodas] = useState(false)
 
   const totalGasto   = Object.values(gastos).reduce((a, b) => a + b, 0)
@@ -589,6 +583,18 @@ export default function ResultadosTarjetas({ resultados, gastos, tarjetaActual }
         )}
       </AnimatePresence>
 
+      {/* ── Mensaje segmentación activa (CAMBIO 5) ── */}
+      {haySegmentacion && (
+        <div style={{
+          background: "#f0fdf7", border: "1px solid #bbf7d0",
+          borderRadius: 10, padding: "10px 16px", marginBottom: 16,
+          fontSize: 13, color: "#065f46", display: "flex",
+          alignItems: "center", gap: 8
+        }}>
+          ✓ Mostrando primero las tarjetas disponibles para tu perfil de ingresos
+        </div>
+      )}
+
       {/* ════════════ TOP 1 — PROBLEMA 4 ════════════ */}
       <motion.div
         initial={{ opacity:0, scale:0.97 }} animate={{ opacity:1, scale:1 }}
@@ -604,6 +610,18 @@ export default function ResultadosTarjetas({ resultados, gastos, tarjetaActual }
           overflow:"hidden",
         }}
       >
+        {/* Badge no elegible — top1 */}
+        {noElegiblesIds.includes(top1.id) && (
+          <div style={{
+            background: "#f8fafc", border: "1px solid #e2e8f0",
+            borderRadius: 8, padding: "6px 12px", marginBottom: 8,
+            fontSize: 12, color: "#94a3b8", fontWeight: 500,
+            display: "flex", alignItems: "center", gap: 6
+          }}>
+            ⚠️ Puede requerir ingresos mayores · Verificá con el banco
+          </div>
+        )}
+
         {/* Badge — PROBLEMA 4 */}
         <div style={{ display:"flex", alignItems:"center", gap:10, marginBottom:20 }}>
           <span style={{
@@ -743,9 +761,22 @@ export default function ResultadosTarjetas({ resultados, gastos, tarjetaActual }
           const diff     = t.ahorro - ahorroActual
           const showDiff = tarjetaActualData && t.id !== tarjetaActual
 
+          const esNoElegible = noElegiblesIds.includes(t.id)
+
           return (
+            <div key={t.id}>
+              {/* Badge no elegible — ranking #2+ */}
+              {esNoElegible && (
+                <div style={{
+                  background: "#f8fafc", border: "1px solid #e2e8f0",
+                  borderRadius: 8, padding: "6px 12px", marginBottom: 8,
+                  fontSize: 12, color: "#94a3b8", fontWeight: 500,
+                  display: "flex", alignItems: "center", gap: 6
+                }}>
+                  ⚠️ Puede requerir ingresos mayores · Verificá con el banco
+                </div>
+              )}
             <motion.div
-              key={t.id}
               initial={{ opacity:0, x:-20 }} animate={{ opacity:1, x:0 }}
               whileHover={{ scale:1.02, y:-3, boxShadow:"0 12px 40px rgba(0,0,0,0.1)" }}
               transition={{ delay: idx * 0.06, duration: 0.4, ease: [0.22, 1, 0.36, 1] }}
@@ -758,6 +789,7 @@ export default function ResultadosTarjetas({ resultados, gastos, tarjetaActual }
                 display:"flex", flexDirection:"column", gap:16,
                 position:"relative", overflow:"hidden",
                 cursor:"default",
+                opacity: esNoElegible ? 0.75 : 1,
               }}
             >
               {/* Número decorativo — PROBLEMA 4: absolute top-right 32px #f3f4f6 */}
@@ -820,6 +852,7 @@ export default function ResultadosTarjetas({ resultados, gastos, tarjetaActual }
                 </button>
               )}
             </motion.div>
+            </div>
           )
         })}
       </div>

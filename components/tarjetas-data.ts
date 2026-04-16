@@ -5,7 +5,7 @@
 // Última sincronización: 15/4/2026, 08:46:46
 // ============================================================
 
-export type CatKey = "super"|"nafta"|"farmacia"|"delivery"|"online"|"viajes"|"transporte"|"servicios"
+export type CatKey = "super"|"nafta"|"farmacia"|"delivery"|"online"|"servicios"
 export type Gastos = Record<CatKey, number>
 
 export type Beneficio = {
@@ -25,7 +25,7 @@ export type Tarjeta = {
   costoAnual: number
   urlSolicitud: string
   gradiente: string
-  beneficios: Record<CatKey, Beneficio>
+  beneficios: Record<string, Beneficio>
   pills: string[]
 }
 
@@ -1454,14 +1454,12 @@ export const TARJETAS: Tarjeta[] = [
 ]
 
 export const CATS: { key: CatKey; label: string }[] = [
-  { key: "super",      label: "Supermercados" },
-  { key: "nafta",      label: "Nafta / combustible" },
-  { key: "farmacia",   label: "Farmacia / salud" },
-  { key: "delivery",   label: "Restaurantes / delivery" },
-  { key: "online",     label: "Compras online" },
-  { key: "viajes",     label: "Viajes / turismo" },
-  { key: "transporte", label: "Transporte (SUBE/peajes)" },
-  { key: "servicios",  label: "Servicios (luz, gas, tel.)" },
+  { key: "super",     label: "Supermercados" },
+  { key: "nafta",     label: "Nafta / combustible" },
+  { key: "farmacia",  label: "Farmacia / salud" },
+  { key: "delivery",  label: "Restaurantes / delivery" },
+  { key: "online",    label: "Compras online" },
+  { key: "servicios", label: "Servicios (luz, gas, tel.)" },
 ]
 
 export function calcularAhorro(tarjeta: Tarjeta, gastos: Gastos): number {

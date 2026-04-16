@@ -18,19 +18,17 @@ const CAT_FIELDS: { label: string; key: CatKey }[] = [
   { label: "Farmacia / salud",           key: "farmacia" },
   { label: "Restaurantes / delivery",    key: "delivery" },
   { label: "Compras online",             key: "online" },
-  { label: "Viajes / turismo",           key: "viajes" },
-  { label: "Transporte (SUBE/peajes)",   key: "transporte" },
   { label: "Servicios (luz, gas, tel.)", key: "servicios" },
 ]
 
 const GASTOS_VACIO: Gastos = {
   super: 0, nafta: 0, farmacia: 0, delivery: 0,
-  online: 0, viajes: 0, transporte: 0, servicios: 0,
+  online: 0, servicios: 0,
 }
 
 const STATS = [
   { value: "20",  label: "tarjetas comparadas" },
-  { value: "8",   label: "categorías de gasto" },
+  { value: "6",   label: "categorías de gasto" },
   { value: "~3m", label: "para ver tu ranking" },
 ]
 
@@ -46,6 +44,28 @@ const GUIAS = [
   { Icono: Banknote,   titulo: "Dólar MEP paso a paso",  desc: "La forma legal y sin límite de dolarizar tus ahorros.", href: "/articulos/como-comprar-dolar-mep-homebanking" },
   { Icono: PiggyBank,  titulo: "MP vs Ualá: cuál rinde más", desc: "Comparamos tasas, beneficios y funcionalidades.", href: "/articulos/mercado-pago-vs-uala-cual-rinde-mas" },
 ]
+
+// ─── Elegibilidad por segmento de ingresos ────────────────────────────────────
+
+const ELEGIBILIDAD: Record<string, string[]> = {
+  "bajo": [
+    "naranja-x", "uala", "mercado-pago", "cuenta-dni", "personal-pay"
+  ],
+  "medio": [
+    "naranja-x", "uala", "mercado-pago", "cuenta-dni", "personal-pay",
+    "bna-gold", "macro-visa", "santander-gold", "credicoop",
+    "supervielle", "patagonia", "hipotecario"
+  ],
+  "alto": [
+    "naranja-x", "uala", "mercado-pago", "cuenta-dni", "personal-pay",
+    "bna-gold", "macro-visa", "santander-gold", "credicoop",
+    "supervielle", "patagonia", "hipotecario",
+    "bbva-platinum", "santander-platinum", "macro-platinum",
+    "icbc-platinum", "galicia-gold", "brubank"
+  ],
+  "muy-alto": [],
+  "nodice": [],
+}
 
 // ─── URL helpers ─────────────────────────────────────────────────────────────
 
@@ -238,7 +258,7 @@ function MarqueeLogos() {
 // ─── Perfil típico para teaser ────────────────────────────────────────────────
 const PERFIL_TIPICO: Gastos = {
   super: 200000, nafta: 50000, farmacia: 50000, delivery: 25000,
-  online: 30000, viajes: 0, transporte: 5000, servicios: 10000,
+  online: 30000, servicios: 10000,
 }
 
 // Gradientes representativos (sin importar ResultadosTarjetas)
@@ -412,6 +432,8 @@ export default function Home() {
   const [emailInput, setEmailInput] = useState("")
   const [emailEnviado, setEmailEnviado] = useState(false)
   const [emailError, setEmailError] = useState(false)
+  const [ingresos, setIngresos] = useState<string>("")
+  const [haySegmentacion, setHaySegmentacion] = useState(false)
 
   const resultadosRef  = useRef<HTMLDivElement>(null)
   const calculadoraRef = useRef<HTMLDivElement>(null)
@@ -440,13 +462,24 @@ export default function Home() {
     setLoading(true)
     saveToURL(gastos)
     setTimeout(() => {
-      setResultados(rankear(gastos))
+      const ranked = rankear(gastos)
+      const tieneSegmentacion = ingresos !== "" && ingresos !== "muy-alto" && ingresos !== "nodice"
+      setHaySegmentacion(tieneSegmentacion)
+
+      let finalRanked = ranked
+      if (tieneSegmentacion && ELEGIBILIDAD[ingresos]?.length > 0) {
+        const elegibles   = ranked.filter(t =>  ELEGIBILIDAD[ingresos].includes(t.id))
+        const noElegibles = ranked.filter(t => !ELEGIBILIDAD[ingresos].includes(t.id))
+        finalRanked = [...elegibles, ...noElegibles]
+      }
+
+      setResultados(finalRanked)
       setLoading(false)
       setTimeout(() => {
         resultadosRef.current?.scrollIntoView({ behavior: "smooth", block: "start" })
       }, 100)
     }, 420)
-  }, [gastos])
+  }, [gastos, ingresos])
 
   const handleGuardarPerfil = useCallback(() => {
     localStorage.setItem("rateargy_perfil", JSON.stringify(gastos))
@@ -943,6 +976,67 @@ export default function Home() {
                 )}
               </div>
 
+              {/* SELECTOR INGRESOS (CAMBIO 2) */}
+              <div style={{ marginBottom: 28 }}>
+                <div style={{ fontSize: 12, fontWeight: 700, color: "#374151", letterSpacing: "0.04em", textTransform: "uppercase", marginBottom: 8 }}>
+                  ¿Cuál es tu ingreso mensual aproximado?
+                </div>
+                <div style={{ fontSize: 12, color: "#94a3b8", marginBottom: 12 }}>
+                  Lo usamos para mostrarte solo las tarjetas que podés obtener con tu perfil
+                </div>
+
+                {/* Grid 2x2 */}
+                <div style={{ display: "grid", gridTemplateColumns: "1fr 1fr", gap: 8, marginBottom: 8 }}>
+                  {[
+                    { value: "bajo",     texto: "Hasta $400.000/mes",     subtexto: "Tarjetas accesibles" },
+                    { value: "medio",    texto: "$400k a $800.000/mes",   subtexto: "Mayoría de tarjetas" },
+                    { value: "alto",     texto: "$800k a $1.500.000/mes", subtexto: "Tarjetas premium" },
+                    { value: "muy-alto", texto: "Más de $1.500.000/mes",  subtexto: "Todas las tarjetas" },
+                  ].map(({ value, texto, subtexto }) => {
+                    const sel = ingresos === value
+                    return (
+                      <button
+                        key={value}
+                        onClick={() => setIngresos(sel ? "" : value)}
+                        style={{
+                          border: `1.5px solid ${sel ? "#0a7c4e" : "#e2e8f0"}`,
+                          borderRadius: 10,
+                          padding: "12px 16px",
+                          background: sel ? "#f0fdf7" : "white",
+                          cursor: "pointer",
+                          textAlign: "left",
+                          transition: "all 0.2s",
+                          fontSize: 13,
+                          color: sel ? "#065f46" : "#374151",
+                        }}
+                      >
+                        <div style={{ fontWeight: 600 }}>{texto}</div>
+                        <div style={{ fontSize: 11, color: sel ? "#065f46" : "#94a3b8", marginTop: 2 }}>{subtexto}</div>
+                      </button>
+                    )
+                  })}
+                </div>
+
+                {/* Opción: prefiero no indicarlo */}
+                <button
+                  onClick={() => setIngresos(ingresos === "nodice" ? "" : "nodice")}
+                  style={{
+                    width: "100%",
+                    border: `1px solid ${ingresos === "nodice" ? "#0a7c4e" : "#e2e8f0"}`,
+                    borderRadius: 10,
+                    padding: "8px 16px",
+                    background: "transparent",
+                    cursor: "pointer",
+                    textAlign: "left",
+                    transition: "all 0.2s",
+                    fontSize: 12,
+                    color: ingresos === "nodice" ? "#065f46" : "#94a3b8",
+                  }}
+                >
+                  Prefiero no indicarlo
+                </button>
+              </div>
+
               {/* Botón calcular */}
               <motion.button
                 onClick={handleCalcular}
@@ -1089,6 +1183,12 @@ export default function Home() {
                   resultados={resultados}
                   gastos={gastos}
                   tarjetaActual={tarjetaActual}
+                  haySegmentacion={haySegmentacion}
+                  noElegiblesIds={
+                    haySegmentacion && ingresos && ELEGIBILIDAD[ingresos]?.length > 0
+                      ? TARJETAS.filter(t => !ELEGIBILIDAD[ingresos].includes(t.id)).map(t => t.id)
+                      : []
+                  }
                 />
               )}
             </AnimatePresence>
