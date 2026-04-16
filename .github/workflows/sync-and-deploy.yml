@@ -1,0 +1,41 @@
+name: Sync Sheet y Deploy
+
+on:
+  push:
+    branches: [main]
+  schedule:
+    - cron: '0 11 * * 1'  # Todos los lunes a las 8am Argentina (UTC-3)
+  workflow_dispatch:  # Permite correrlo manualmente desde GitHub
+
+jobs:
+  sync-and-deploy:
+    runs-on: ubuntu-latest
+    steps:
+      - name: Checkout código
+        uses: actions/checkout@v4
+
+      - name: Setup Node.js
+        uses: actions/setup-node@v4
+        with:
+          node-version: '20'
+          cache: 'npm'
+
+      - name: Instalar dependencias
+        run: npm ci
+
+      - name: Sincronizar datos desde Google Sheet
+        run: npm run sync
+
+      - name: Verificar si hubo cambios en los datos
+        id: cambios
+        run: |
+          git diff --quiet || echo "hay_cambios=true" >> $GITHUB_OUTPUT
+
+      - name: Commit y push si hubo cambios
+        if: steps.cambios.outputs.hay_cambios == 'true'
+        run: |
+          git config --global user.name "rateargy-bot"
+          git config --global user.email "bot@rateargy.ar"
+          git add components/tarjetas-data.ts data/nafta-data.ts
+          git commit -m "sync: datos actualizados desde Google Sheet $(date +'%d/%m/%Y')"
+          git push
