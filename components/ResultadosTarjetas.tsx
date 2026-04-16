@@ -659,6 +659,31 @@ export default function ResultadosTarjetas({ resultados, gastos, tarjetaActual }
 
         {/* Breakdown */}
         <Breakdown tarjeta={top1} gastos={gastos} />
+
+        {/* Botón solicitar — top1 */}
+        {top1.urlSolicitud && (
+          <div style={{ marginTop: 24 }}>
+            <button
+              onClick={() => {
+                console.log("solicitud_click", { tarjetaId: top1.id, banco: top1.banco, timestamp: new Date().toISOString() })
+                window.open(top1.urlSolicitud, "_blank")
+              }}
+              style={{
+                width: "100%", background: "#0a7c4e", color: "white",
+                border: "none", borderRadius: 10, padding: "11px 20px",
+                fontSize: 14, fontWeight: 600, cursor: "pointer",
+                transition: "all 0.2s",
+              }}
+              onMouseEnter={(e) => { e.currentTarget.style.opacity = "0.85"; e.currentTarget.style.transform = "translateY(-1px)" }}
+              onMouseLeave={(e) => { e.currentTarget.style.opacity = "1"; e.currentTarget.style.transform = "translateY(0px)" }}
+            >
+              Solicitar tarjeta →
+            </button>
+            <p style={{ fontSize: 11, color: "#94a3b8", textAlign: "center", marginTop: 6, margin: "6px 0 0" }}>
+              Gratis · Sin compromiso · Te redirigimos al sitio oficial del banco
+            </p>
+          </div>
+        )}
       </motion.div>
 
       {/* ── Botones compartir / guardar ── */}
@@ -730,7 +755,7 @@ export default function ResultadosTarjetas({ resultados, gastos, tarjetaActual }
                 border:"1px solid #f3f4f6",
                 boxShadow:"0 2px 8px rgba(0,0,0,0.04)",
                 background:"white",
-                display:"flex", alignItems:"center", gap:16,
+                display:"flex", flexDirection:"column", gap:16,
                 position:"relative", overflow:"hidden",
                 cursor:"default",
               }}
@@ -742,35 +767,58 @@ export default function ResultadosTarjetas({ resultados, gastos, tarjetaActual }
                 lineHeight:1, userSelect:"none", pointerEvents:"none",
               }}>{idx + 2}</span>
 
-              <MiniCard tarjeta={t} size="sm" />
+              {/* Fila horizontal: mini-card + info + ahorro */}
+              <div style={{ display:"flex", alignItems:"center", gap:16 }}>
+                <MiniCard tarjeta={t} size="sm" />
 
-              <div style={{ flex:1, minWidth:0, position:"relative", zIndex:1 }}>
-                {/* Nombre — PROBLEMA 2 */}
-                <p style={{ fontSize:15, fontWeight:700, color:"#111827", margin:"0 0 2px",
-                  overflow:"hidden", textOverflow:"ellipsis", whiteSpace:"nowrap" }}>
-                  {t.nombre}
-                </p>
-                {/* Banco — PROBLEMA 2 */}
-                <p style={{ fontSize:13, fontWeight:500, color:"#6b7280", margin:"0 0 10px",
-                  overflow:"hidden", textOverflow:"ellipsis", whiteSpace:"nowrap" }}>
-                  {t.banco}
-                </p>
-                {/* Barra score — PROBLEMA 5 */}
-                <ScoreBar pct={score} isTop1={false} />
-              </div>
-
-              {/* Ahorro */}
-              <div style={{ textAlign:"right", flexShrink:0, position:"relative", zIndex:1 }}>
-                <p style={{ fontSize:22, fontWeight:900, color:"#10b981", margin:0, letterSpacing:"-0.02em" }}>
-                  {formatARS(t.ahorro)}/mes
-                </p>
-                {showDiff && (
-                  <p style={{ fontSize:12, fontWeight:600, marginTop:3,
-                    color: diff >= 0 ? "#10b981" : "#f87171" }}>
-                    {diff >= 0 ? "+" : ""}{formatARS(diff)} vs tu tarjeta
+                <div style={{ flex:1, minWidth:0, position:"relative", zIndex:1 }}>
+                  {/* Nombre — PROBLEMA 2 */}
+                  <p style={{ fontSize:15, fontWeight:700, color:"#111827", margin:"0 0 2px",
+                    overflow:"hidden", textOverflow:"ellipsis", whiteSpace:"nowrap" }}>
+                    {t.nombre}
                   </p>
-                )}
+                  {/* Banco — PROBLEMA 2 */}
+                  <p style={{ fontSize:13, fontWeight:500, color:"#6b7280", margin:"0 0 10px",
+                    overflow:"hidden", textOverflow:"ellipsis", whiteSpace:"nowrap" }}>
+                    {t.banco}
+                  </p>
+                  {/* Barra score — PROBLEMA 5 */}
+                  <ScoreBar pct={score} isTop1={false} />
+                </div>
+
+                {/* Ahorro */}
+                <div style={{ textAlign:"right", flexShrink:0, position:"relative", zIndex:1 }}>
+                  <p style={{ fontSize:22, fontWeight:900, color:"#10b981", margin:0, letterSpacing:"-0.02em" }}>
+                    {formatARS(t.ahorro)}/mes
+                  </p>
+                  {showDiff && (
+                    <p style={{ fontSize:12, fontWeight:600, marginTop:3,
+                      color: diff >= 0 ? "#10b981" : "#f87171" }}>
+                      {diff >= 0 ? "+" : ""}{formatARS(diff)} vs tu tarjeta
+                    </p>
+                  )}
+                </div>
               </div>
+
+              {/* Botón solicitar — ranking #2+ */}
+              {t.urlSolicitud && (
+                <button
+                  onClick={() => {
+                    console.log("solicitud_click", { tarjetaId: t.id, banco: t.banco, timestamp: new Date().toISOString() })
+                    window.open(t.urlSolicitud, "_blank")
+                  }}
+                  style={{
+                    width: "100%", background: "transparent", color: "#0a7c4e",
+                    border: "1.5px solid #0a7c4e", borderRadius: 10, padding: "11px 20px",
+                    fontSize: 14, fontWeight: 600, cursor: "pointer",
+                    transition: "all 0.2s", position: "relative", zIndex: 1,
+                  }}
+                  onMouseEnter={(e) => { e.currentTarget.style.opacity = "0.85"; e.currentTarget.style.transform = "translateY(-1px)" }}
+                  onMouseLeave={(e) => { e.currentTarget.style.opacity = "1"; e.currentTarget.style.transform = "translateY(0px)" }}
+                >
+                  Solicitar tarjeta →
+                </button>
+              )}
             </motion.div>
           )
         })}
