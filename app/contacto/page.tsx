@@ -144,8 +144,8 @@ export default function ContactoPage() {
 
             <p style={{ fontSize: 12, color: "#9ca3af", textAlign: "center", margin: 0 }}>
               O escribinos directo a{" "}
-              <a href="mailto:hola@rateargy.ar" style={{ color: "#059669", textDecoration: "none", fontWeight: 600 }}>
-                hola@rateargy.ar
+              <a href="mailto:contacto@rateargy.ar" style={{ color: "#059669", textDecoration: "none", fontWeight: 600 }}>
+                contacto@rateargy.ar
               </a>
             </p>
           </form>
