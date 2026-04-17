@@ -2,7 +2,7 @@
 // GENERADO AUTOMÁTICAMENTE DESDE GOOGLE SHEETS
 // NO EDITAR MANUALMENTE — usar el Sheet
 // Sheet: https://docs.google.com/spreadsheets/d/1bv7iUYwgrLcKLTA715Z8p1F3RqgMwaQtXKkYLgZXCoY
-// Última sincronización: 15/4/2026, 08:46:46
+// Última sincronización: 17/4/2026, 10:00:38
 // ============================================================
 
 export type CatKey = "super"|"nafta"|"farmacia"|"delivery"|"online"|"servicios"
@@ -26,7 +26,7 @@ export type Tarjeta = {
   costoAnual: number
   urlSolicitud: string
   gradiente: string
-  beneficios: Record<string, Beneficio>
+  beneficios: Record<CatKey, Beneficio>
   pills: string[]
 }
 
@@ -76,20 +76,6 @@ export const TARJETAS: Tarjeta[] = [
         "dias": "",
         "lugar": "",
         "descripcion": "Sin beneficio verificado"
-      },
-      "viajes": {
-        "pct": 0,
-        "tope": 0,
-        "dias": "",
-        "lugar": "",
-        "descripcion": "Sin beneficio verificado"
-      },
-      "transporte": {
-        "pct": 0,
-        "tope": 0,
-        "dias": "",
-        "lugar": "",
-        "descripcion": ""
       },
       "servicios": {
         "pct": 0,
@@ -144,20 +130,6 @@ export const TARJETAS: Tarjeta[] = [
         "descripcion": ""
       },
       "online": {
-        "pct": 0,
-        "tope": 0,
-        "dias": "",
-        "lugar": "",
-        "descripcion": ""
-      },
-      "viajes": {
-        "pct": 0,
-        "tope": 0,
-        "dias": "",
-        "lugar": "",
-        "descripcion": ""
-      },
-      "transporte": {
         "pct": 0,
         "tope": 0,
         "dias": "",
@@ -223,20 +195,6 @@ export const TARJETAS: Tarjeta[] = [
         "lugar": "",
         "descripcion": ""
       },
-      "viajes": {
-        "pct": 0,
-        "tope": 0,
-        "dias": "",
-        "lugar": "",
-        "descripcion": ""
-      },
-      "transporte": {
-        "pct": 0,
-        "tope": 0,
-        "dias": "",
-        "lugar": "",
-        "descripcion": ""
-      },
       "servicios": {
         "pct": 0,
         "tope": 0,
@@ -293,20 +251,6 @@ export const TARJETAS: Tarjeta[] = [
         "lugar": "",
         "descripcion": ""
       },
-      "viajes": {
-        "pct": 0,
-        "tope": 0,
-        "dias": "",
-        "lugar": "",
-        "descripcion": ""
-      },
-      "transporte": {
-        "pct": 0,
-        "tope": 0,
-        "dias": "",
-        "lugar": "",
-        "descripcion": ""
-      },
       "servicios": {
         "pct": 0,
         "tope": 0,
@@ -357,20 +301,6 @@ export const TARJETAS: Tarjeta[] = [
         "descripcion": ""
       },
       "online": {
-        "pct": 0,
-        "tope": 0,
-        "dias": "",
-        "lugar": "",
-        "descripcion": ""
-      },
-      "viajes": {
-        "pct": 0,
-        "tope": 0,
-        "dias": "",
-        "lugar": "",
-        "descripcion": ""
-      },
-      "transporte": {
         "pct": 0,
         "tope": 0,
         "dias": "",
@@ -435,20 +365,6 @@ export const TARJETAS: Tarjeta[] = [
         "lugar": "",
         "descripcion": ""
       },
-      "viajes": {
-        "pct": 0,
-        "tope": 0,
-        "dias": "",
-        "lugar": "",
-        "descripcion": ""
-      },
-      "transporte": {
-        "pct": 0,
-        "tope": 0,
-        "dias": "",
-        "lugar": "",
-        "descripcion": ""
-      },
       "servicios": {
         "pct": 0,
         "tope": 0,
@@ -499,20 +415,6 @@ export const TARJETAS: Tarjeta[] = [
         "descripcion": ""
       },
       "online": {
-        "pct": 0,
-        "tope": 0,
-        "dias": "",
-        "lugar": "",
-        "descripcion": ""
-      },
-      "viajes": {
-        "pct": 0,
-        "tope": 0,
-        "dias": "",
-        "lugar": "",
-        "descripcion": ""
-      },
-      "transporte": {
         "pct": 0,
         "tope": 0,
         "dias": "",
@@ -578,20 +480,6 @@ export const TARJETAS: Tarjeta[] = [
         "lugar": "",
         "descripcion": ""
       },
-      "viajes": {
-        "pct": 0,
-        "tope": 0,
-        "dias": "",
-        "lugar": "",
-        "descripcion": ""
-      },
-      "transporte": {
-        "pct": 0,
-        "tope": 0,
-        "dias": "",
-        "lugar": "",
-        "descripcion": ""
-      },
       "servicios": {
         "pct": 0,
         "tope": 0,
@@ -650,20 +538,6 @@ export const TARJETAS: Tarjeta[] = [
         "lugar": "",
         "descripcion": "VERIFICAR en naranjax.com"
       },
-      "viajes": {
-        "pct": 0,
-        "tope": 0,
-        "dias": "",
-        "lugar": "",
-        "descripcion": ""
-      },
-      "transporte": {
-        "pct": 0,
-        "tope": 0,
-        "dias": "",
-        "lugar": "",
-        "descripcion": ""
-      },
       "servicios": {
         "pct": 0,
         "tope": 0,
@@ -714,20 +588,6 @@ export const TARJETAS: Tarjeta[] = [
         "descripcion": ""
       },
       "online": {
-        "pct": 0,
-        "tope": 0,
-        "dias": "",
-        "lugar": "",
-        "descripcion": ""
-      },
-      "viajes": {
-        "pct": 0,
-        "tope": 0,
-        "dias": "",
-        "lugar": "",
-        "descripcion": ""
-      },
-      "transporte": {
         "pct": 0,
         "tope": 0,
         "dias": "",
@@ -793,20 +653,6 @@ export const TARJETAS: Tarjeta[] = [
         "lugar": "",
         "descripcion": ""
       },
-      "viajes": {
-        "pct": 0,
-        "tope": 0,
-        "dias": "",
-        "lugar": "",
-        "descripcion": ""
-      },
-      "transporte": {
-        "pct": 0,
-        "tope": 0,
-        "dias": "",
-        "lugar": "",
-        "descripcion": ""
-      },
       "servicios": {
         "pct": 0,
         "tope": 0,
@@ -860,20 +706,6 @@ export const TARJETAS: Tarjeta[] = [
         "descripcion": ""
       },
       "online": {
-        "pct": 0,
-        "tope": 0,
-        "dias": "",
-        "lugar": "",
-        "descripcion": ""
-      },
-      "viajes": {
-        "pct": 0,
-        "tope": 0,
-        "dias": "",
-        "lugar": "",
-        "descripcion": ""
-      },
-      "transporte": {
         "pct": 0,
         "tope": 0,
         "dias": "",
@@ -939,20 +771,6 @@ export const TARJETAS: Tarjeta[] = [
         "lugar": "Todas",
         "descripcion": "5% cashback general"
       },
-      "viajes": {
-        "pct": 0,
-        "tope": 0,
-        "dias": "",
-        "lugar": "",
-        "descripcion": ""
-      },
-      "transporte": {
-        "pct": 0,
-        "tope": 0,
-        "dias": "",
-        "lugar": "",
-        "descripcion": ""
-      },
       "servicios": {
         "pct": 0,
         "tope": 0,
@@ -1011,20 +829,6 @@ export const TARJETAS: Tarjeta[] = [
         "lugar": "",
         "descripcion": ""
       },
-      "viajes": {
-        "pct": 0,
-        "tope": 0,
-        "dias": "",
-        "lugar": "",
-        "descripcion": ""
-      },
-      "transporte": {
-        "pct": 0,
-        "tope": 0,
-        "dias": "",
-        "lugar": "",
-        "descripcion": ""
-      },
       "servicios": {
         "pct": 0,
         "tope": 0,
@@ -1077,20 +881,6 @@ export const TARJETAS: Tarjeta[] = [
         "descripcion": ""
       },
       "online": {
-        "pct": 0,
-        "tope": 0,
-        "dias": "",
-        "lugar": "",
-        "descripcion": ""
-      },
-      "viajes": {
-        "pct": 0,
-        "tope": 0,
-        "dias": "",
-        "lugar": "",
-        "descripcion": ""
-      },
-      "transporte": {
         "pct": 0,
         "tope": 0,
         "dias": "",
@@ -1156,20 +946,6 @@ export const TARJETAS: Tarjeta[] = [
         "lugar": "",
         "descripcion": ""
       },
-      "viajes": {
-        "pct": 0,
-        "tope": 0,
-        "dias": "",
-        "lugar": "",
-        "descripcion": ""
-      },
-      "transporte": {
-        "pct": 0,
-        "tope": 0,
-        "dias": "",
-        "lugar": "",
-        "descripcion": ""
-      },
       "servicios": {
         "pct": 0,
         "tope": 0,
@@ -1229,20 +1005,6 @@ export const TARJETAS: Tarjeta[] = [
         "lugar": "",
         "descripcion": ""
       },
-      "viajes": {
-        "pct": 0,
-        "tope": 0,
-        "dias": "",
-        "lugar": "",
-        "descripcion": ""
-      },
-      "transporte": {
-        "pct": 0,
-        "tope": 0,
-        "dias": "",
-        "lugar": "",
-        "descripcion": ""
-      },
       "servicios": {
         "pct": 0,
         "tope": 0,
@@ -1264,7 +1026,7 @@ export const TARJETAS: Tarjeta[] = [
     "bancoId": "provincia",
     "red": "Visa",
     "costoAnual": 0,
-    "urlSolicitud": "https://www.bancoProvincia.com.ar/cuentadni",
+    "urlSolicitud": "https://www.bancoprovincia.com.ar/cuentadni",
     "gradiente": "linear-gradient(135deg, #0d3d3d 0%, #0f766e 60%, #2dd4bf 100%)",
     "beneficios": {
       "super": {
@@ -1296,20 +1058,6 @@ export const TARJETAS: Tarjeta[] = [
         "descripcion": "30% delivery los fines de semana"
       },
       "online": {
-        "pct": 0,
-        "tope": 0,
-        "dias": "",
-        "lugar": "",
-        "descripcion": ""
-      },
-      "viajes": {
-        "pct": 0,
-        "tope": 0,
-        "dias": "",
-        "lugar": "",
-        "descripcion": ""
-      },
-      "transporte": {
         "pct": 0,
         "tope": 0,
         "dias": "",
@@ -1374,20 +1122,6 @@ export const TARJETAS: Tarjeta[] = [
         "lugar": "",
         "descripcion": ""
       },
-      "viajes": {
-        "pct": 0,
-        "tope": 0,
-        "dias": "",
-        "lugar": "",
-        "descripcion": ""
-      },
-      "transporte": {
-        "pct": 0,
-        "tope": 0,
-        "dias": "",
-        "lugar": "",
-        "descripcion": ""
-      },
       "servicios": {
         "pct": 0,
         "tope": 0,
@@ -1446,20 +1180,6 @@ export const TARJETAS: Tarjeta[] = [
         "lugar": "",
         "descripcion": ""
       },
-      "viajes": {
-        "pct": 0,
-        "tope": 0,
-        "dias": "",
-        "lugar": "",
-        "descripcion": ""
-      },
-      "transporte": {
-        "pct": 0,
-        "tope": 0,
-        "dias": "",
-        "lugar": "",
-        "descripcion": ""
-      },
       "servicios": {
         "pct": 0,
         "tope": 0,
@@ -1473,6 +1193,8 @@ export const TARJETAS: Tarjeta[] = [
     ]
   }
 ]
+
+export const TARJETAS_PUBLICAS: Tarjeta[] = TARJETAS.filter(t => t.publicada)
 
 export const CATS: { key: CatKey; label: string }[] = [
   { key: "super",     label: "Supermercados" },
@@ -1492,8 +1214,6 @@ export function calcularAhorro(tarjeta: Tarjeta, gastos: Gastos): number {
     }, 0)
   )
 }
-
-export const TARJETAS_PUBLICAS: Tarjeta[] = TARJETAS.filter(t => t.publicada)
 
 export function rankear(gastos: Gastos) {
   return [...TARJETAS_PUBLICAS]
