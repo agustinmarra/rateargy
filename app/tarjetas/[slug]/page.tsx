@@ -124,8 +124,9 @@ export async function generateStaticParams() {
 
 // ─── Metadata ─────────────────────────────────────────────────────────────────
 
-export async function generateMetadata({ params }: { params: { slug: string } }): Promise<Metadata> {
-  const t = TARJETAS_PUBLICAS.find(t => t.id === params.slug)
+export async function generateMetadata({ params }: { params: Promise<{ slug: string }> }): Promise<Metadata> {
+  const { slug } = await params
+  const t = TARJETAS_PUBLICAS.find(t => t.id === slug)
   if (!t) return {}
   const cat = getCatPrincipal(t)
   const extra = cat ? `${cat.pct}% en ${cat.label}. ` : ""
@@ -143,8 +144,9 @@ export async function generateMetadata({ params }: { params: { slug: string } })
 
 // ─── Page ─────────────────────────────────────────────────────────────────────
 
-export default function TarjetaPage({ params }: { params: { slug: string } }) {
-  const t = TARJETAS_PUBLICAS.find(t => t.id === params.slug)
+export default async function TarjetaPage({ params }: { params: Promise<{ slug: string }> }) {
+  const { slug } = await params
+  const t = TARJETAS_PUBLICAS.find(t => t.id === slug)
   if (!t) notFound()
 
   const activos    = getBeneficiosActivos(t)
@@ -193,6 +195,7 @@ export default function TarjetaPage({ params }: { params: { slug: string } }) {
   return (
     <>
       <script type="application/ld+json" dangerouslySetInnerHTML={{ __html: JSON.stringify(jsonLd) }} />
+      <style>{`.alt-card{text-decoration:none;color:inherit;display:block;background:white;border:1px solid #f1f5f9;border-radius:16px;padding:16px 18px;box-shadow:0 2px 8px rgba(0,0,0,.04);transition:box-shadow .18s,transform .18s}.alt-card:hover{box-shadow:0 8px 24px rgba(0,0,0,.1);transform:translateY(-2px)}`}</style>
 
       <main style={{ maxWidth: 860, margin: "0 auto", padding: "40px 24px 80px" }}>
 
@@ -481,21 +484,7 @@ export default function TarjetaPage({ params }: { params: { slug: string } }) {
                   <a
                     key={alt.id}
                     href={`/tarjetas/${alt.id}`}
-                    style={{
-                      textDecoration: "none", color: "inherit",
-                      display: "block", background: "white",
-                      border: "1px solid #f1f5f9", borderRadius: 16, padding: "16px 18px",
-                      boxShadow: "0 2px 8px rgba(0,0,0,0.04)",
-                      transition: "box-shadow 0.18s, transform 0.18s",
-                    }}
-                    onMouseEnter={e => {
-                      e.currentTarget.style.boxShadow = "0 8px 24px rgba(0,0,0,0.1)"
-                      e.currentTarget.style.transform = "translateY(-2px)"
-                    }}
-                    onMouseLeave={e => {
-                      e.currentTarget.style.boxShadow = "0 2px 8px rgba(0,0,0,0.04)"
-                      e.currentTarget.style.transform = "translateY(0)"
-                    }}
+                    className="alt-card"
                   >
                     {/* Mini tarjeta visual */}
                     <div style={{
