@@ -1,6 +1,8 @@
 import Link from 'next/link'
 
-const COL_TARJETAS = [
+type FooterLink = { label: string; href: string } | { label: string; href: null }
+
+const COL_TARJETAS: FooterLink[] = [
   { label: 'Comparar tarjetas', href: '/tarjetas' },
   { label: 'Sin costo anual', href: '/tarjetas?perfil=sin-costo' },
   { label: 'Mejores para viajes', href: '/tarjetas?perfil=viajes' },
@@ -8,16 +10,16 @@ const COL_TARJETAS = [
   { label: 'Con cuotas sin interés', href: '/tarjetas?perfil=cuotas' },
 ]
 
-const COL_RECURSOS = [
+const COL_RECURSOS: FooterLink[] = [
   { label: 'Guías financieras', href: '/articulos' },
-  { label: 'Cómo elegir una tarjeta', href: '/articulos/como-elegir-tarjeta-de-credito-argentina-2025' },
-  { label: 'Dólar MEP paso a paso', href: '/articulos/como-comprar-dolar-mep-homebanking' },
-  { label: 'MP vs Ualá', href: '/articulos/mercado-pago-vs-uala-cual-rinde-mas' },
+  { label: 'Cómo elegir una tarjeta', href: '/articulos/como-elegir-tarjeta-de-credito-argentina-2026' },
+  { label: 'Dólar MEP paso a paso', href: null },
+  { label: 'MP vs Ualá', href: null },
 ]
 
-const COL_EMPRESA = [
-  { label: 'Sobre rateargy', href: '/nosotros' },
-  { label: 'Metodología', href: '/metodologia' },
+const COL_EMPRESA: FooterLink[] = [
+  { label: 'Sobre rateargy', href: null },
+  { label: 'Metodología', href: null },
   { label: 'Contacto', href: '/contacto' },
 ]
 
@@ -74,13 +76,19 @@ export default function Footer() {
               </h4>
               <ul className="space-y-2">
                 {links.map((link) => (
-                  <li key={link.href + link.label}>
-                    <Link
-                      href={link.href}
-                      className="text-[#6b7280] text-sm hover:text-[#1a1a1a] transition-colors"
-                    >
-                      {link.label}
-                    </Link>
+                  <li key={link.label}>
+                    {link.href ? (
+                      <Link
+                        href={link.href}
+                        className="text-[#6b7280] text-sm hover:text-[#1a1a1a] transition-colors"
+                      >
+                        {link.label}
+                      </Link>
+                    ) : (
+                      <span className="text-gray-400 text-sm cursor-default">
+                        {link.label}
+                      </span>
+                    )}
                   </li>
                 ))}
               </ul>
@@ -101,12 +109,12 @@ export default function Footer() {
               © {new Date().getFullYear()} rateargy. Todos los derechos reservados. No somos una entidad financiera regulada.
             </p>
             <div className="flex items-center gap-4">
-              <Link href="/terminos" className="text-xs text-[#9ca3af] hover:text-[#6b7280] transition-colors">
+              <span className="text-xs text-gray-400 cursor-default">
                 Términos y condiciones
-              </Link>
-              <Link href="/privacidad" className="text-xs text-[#9ca3af] hover:text-[#6b7280] transition-colors">
+              </span>
+              <span className="text-xs text-gray-400 cursor-default">
                 Política de privacidad
-              </Link>
+              </span>
             </div>
           </div>
         </div>

@@ -40,9 +40,9 @@ const COMO_FUNCIONA = [
 
 
 const GUIAS = [
-  { Icono: CreditCard, titulo: "Cómo elegir tu tarjeta", desc: "Los 5 factores clave para no equivocarte en Argentina.", href: "/articulos/como-elegir-tarjeta-de-credito-argentina-2025" },
-  { Icono: Banknote,   titulo: "Dólar MEP paso a paso",  desc: "La forma legal y sin límite de dolarizar tus ahorros.", href: "/articulos/como-comprar-dolar-mep-homebanking" },
-  { Icono: PiggyBank,  titulo: "MP vs Ualá: cuál rinde más", desc: "Comparamos tasas, beneficios y funcionalidades.", href: "/articulos/mercado-pago-vs-uala-cual-rinde-mas" },
+  { Icono: CreditCard, titulo: "Cómo elegir tu tarjeta", desc: "Los 5 factores clave para no equivocarte en Argentina.", href: "/articulos/como-elegir-tarjeta-de-credito-argentina-2026" },
+  { Icono: Banknote,   titulo: "Dólar MEP paso a paso",  desc: "La forma legal y sin límite de dolarizar tus ahorros.", href: "/articulos" },
+  { Icono: PiggyBank,  titulo: "MP vs Ualá: cuál rinde más", desc: "Comparamos tasas, beneficios y funcionalidades.", href: "/articulos" },
 ]
 
 // ─── Elegibilidad por segmento de ingresos ────────────────────────────────────
@@ -1465,10 +1465,7 @@ export default function Home() {
                   color: "#4b5563", marginBottom: 16 }}>
                   Productos
                 </p>
-                {[
-                  { label: "Tarjetas de crédito", href: "/tarjetas" },
-                  { label: "Inversiones", href: "/inversiones" },
-                ].map(({ label, href }) => (
+                {[{ label: "Tarjetas de crédito", href: "/tarjetas" }].map(({ label, href }) => (
                   <a key={label} href={href} style={{ display: "block", fontSize: 14,
                     color: "#9ca3af", textDecoration: "none", marginBottom: 10,
                     transition: "color 0.15s" }}
@@ -1477,6 +1474,9 @@ export default function Home() {
                     {label}
                   </a>
                 ))}
+                <span style={{ display: "block", fontSize: 14, color: "#4b5563", marginBottom: 10, cursor: "default" }}>
+                  Inversiones
+                </span>
               </div>
 
               {/* Información */}
@@ -1487,8 +1487,6 @@ export default function Home() {
                 </p>
                 {[
                   { label: "Guías financieras", href: "/articulos" },
-                  { label: "Metodología", href: "/metodologia" },
-                  { label: "Sobre rateargy", href: "/nosotros" },
                   { label: "Contacto", href: "/contacto" },
                 ].map(({ label, href }) => (
                   <a key={label} href={href} style={{ display: "block", fontSize: 14,
@@ -1498,6 +1496,11 @@ export default function Home() {
                     onMouseLeave={e => e.currentTarget.style.color="#9ca3af"}>
                     {label}
                   </a>
+                ))}
+                {["Metodología", "Sobre rateargy"].map(label => (
+                  <span key={label} style={{ display: "block", fontSize: 14, color: "#4b5563", marginBottom: 10, cursor: "default" }}>
+                    {label}
+                  </span>
                 ))}
               </div>
             </div>
@@ -1509,16 +1512,10 @@ export default function Home() {
                 © 2026 rateargy · Información orientativa, no constituye asesoramiento financiero.
               </p>
               <div style={{ display: "flex", gap: 16 }}>
-                {[
-                  { label: "Términos", href: "/terminos" },
-                  { label: "Privacidad", href: "/privacidad" },
-                ].map(({ label, href }) => (
-                  <a key={label} href={href} style={{ fontSize: 12, color: "#4b5563",
-                    textDecoration: "none", transition: "color 0.15s" }}
-                    onMouseEnter={e => e.currentTarget.style.color="#9ca3af"}
-                    onMouseLeave={e => e.currentTarget.style.color="#4b5563"}>
+                {["Términos", "Privacidad"].map(label => (
+                  <span key={label} style={{ fontSize: 12, color: "#4b5563", cursor: "default" }}>
                     {label}
-                  </a>
+                  </span>
                 ))}
               </div>
             </div>
