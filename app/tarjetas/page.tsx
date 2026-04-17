@@ -1,4 +1,4 @@
-import { TARJETAS } from "@/components/tarjetas-data"
+import { TARJETAS_PUBLICAS } from "@/components/tarjetas-data"
 import { BancoLogo } from "@/components/BancoLogo"
 import type { Metadata } from "next"
 
@@ -33,7 +33,7 @@ export default function TarjetasPage() {
           Tarjetas de crédito en Argentina
         </h1>
         <p style={{ fontSize: 16, color: "#475569", maxWidth: 600 }}>
-          {TARJETAS.length} tarjetas comparadas. Usá el comparador para ver cuál te conviene según tu perfil de gasto.
+          {TARJETAS_PUBLICAS.length} tarjetas comparadas. Usá el comparador para ver cuál te conviene según tu perfil de gasto.
         </p>
         <div style={{ marginTop: 20 }}>
           <a href="/" style={{
@@ -75,7 +75,7 @@ export default function TarjetasPage() {
       `}</style>
 
       <div className="tarjetas-grid">
-        {TARJETAS.map(t => {
+        {TARJETAS_PUBLICAS.map(t => {
           const beneficiosActivos = Object.values(t.beneficios).filter(b => (b?.pct ?? 0) > 0).length
 
           return (

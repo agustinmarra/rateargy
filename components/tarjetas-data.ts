@@ -18,6 +18,7 @@ export type Beneficio = {
 
 export type Tarjeta = {
   id: string
+  publicada: boolean
   nombre: string
   banco: string
   bancoId: string
@@ -32,6 +33,7 @@ export type Tarjeta = {
 export const TARJETAS: Tarjeta[] = [
   {
     "id": "galicia-eminent",
+    "publicada": true,
     "nombre": "Galicia Éminent Visa Signature",
     "banco": "Banco Galicia",
     "bancoId": "galicia",
@@ -104,6 +106,7 @@ export const TARJETAS: Tarjeta[] = [
   },
   {
     "id": "galicia-gold",
+    "publicada": true,
     "nombre": "Galicia Visa Gold",
     "banco": "Banco Galicia",
     "bancoId": "galicia",
@@ -176,6 +179,7 @@ export const TARJETAS: Tarjeta[] = [
   },
   {
     "id": "bbva-platinum",
+    "publicada": false,
     "nombre": "BBVA Visa Platinum",
     "banco": "BBVA",
     "bancoId": "bbva",
@@ -245,6 +249,7 @@ export const TARJETAS: Tarjeta[] = [
   },
   {
     "id": "bbva-gold",
+    "publicada": false,
     "nombre": "BBVA Visa Gold",
     "banco": "BBVA",
     "bancoId": "bbva",
@@ -314,6 +319,7 @@ export const TARJETAS: Tarjeta[] = [
   },
   {
     "id": "santander-gold",
+    "publicada": true,
     "nombre": "Santander Visa Gold",
     "banco": "Santander",
     "bancoId": "santander",
@@ -385,6 +391,7 @@ export const TARJETAS: Tarjeta[] = [
   },
   {
     "id": "santander-platinum",
+    "publicada": false,
     "nombre": "Santander Visa Platinum",
     "banco": "Santander",
     "bancoId": "santander",
@@ -454,6 +461,7 @@ export const TARJETAS: Tarjeta[] = [
   },
   {
     "id": "macro-visa",
+    "publicada": true,
     "nombre": "Macro Visa Gold",
     "banco": "Banco Macro",
     "bancoId": "macro",
@@ -526,6 +534,7 @@ export const TARJETAS: Tarjeta[] = [
   },
   {
     "id": "macro-platinum",
+    "publicada": true,
     "nombre": "Macro Visa Platinum",
     "banco": "Banco Macro",
     "bancoId": "macro",
@@ -597,6 +606,7 @@ export const TARJETAS: Tarjeta[] = [
   },
   {
     "id": "naranja-x",
+    "publicada": false,
     "nombre": "Naranja X Mastercard",
     "banco": "Naranja X",
     "bancoId": "naranja-x",
@@ -666,6 +676,7 @@ export const TARJETAS: Tarjeta[] = [
   },
   {
     "id": "bna-gold",
+    "publicada": true,
     "nombre": "BNA Visa Gold",
     "banco": "Banco Nación",
     "bancoId": "bna",
@@ -738,6 +749,7 @@ export const TARJETAS: Tarjeta[] = [
   },
   {
     "id": "supervielle",
+    "publicada": true,
     "nombre": "Supervielle Visa",
     "banco": "Supervielle",
     "bancoId": "supervielle",
@@ -810,6 +822,7 @@ export const TARJETAS: Tarjeta[] = [
   },
   {
     "id": "icbc-platinum",
+    "publicada": true,
     "nombre": "ICBC Visa Platinum",
     "banco": "ICBC",
     "bancoId": "icbc",
@@ -882,6 +895,7 @@ export const TARJETAS: Tarjeta[] = [
   },
   {
     "id": "uala",
+    "publicada": true,
     "nombre": "Ualá Mastercard",
     "banco": "Ualá",
     "bancoId": "uala",
@@ -953,6 +967,7 @@ export const TARJETAS: Tarjeta[] = [
   },
   {
     "id": "mercado-pago",
+    "publicada": true,
     "nombre": "Tarjeta Mercado Pago",
     "banco": "Mercado Pago",
     "bancoId": "mercado-pago",
@@ -1024,6 +1039,7 @@ export const TARJETAS: Tarjeta[] = [
   },
   {
     "id": "personal-pay",
+    "publicada": true,
     "nombre": "Personal Pay Visa",
     "banco": "Personal Pay",
     "bancoId": "personal-pay",
@@ -1096,6 +1112,7 @@ export const TARJETAS: Tarjeta[] = [
   },
   {
     "id": "credicoop",
+    "publicada": true,
     "nombre": "Credicoop Cabal",
     "banco": "Banco Credicoop",
     "bancoId": "credicoop",
@@ -1168,6 +1185,7 @@ export const TARJETAS: Tarjeta[] = [
   },
   {
     "id": "patagonia",
+    "publicada": true,
     "nombre": "Patagonia Visa",
     "banco": "Banco Patagonia",
     "bancoId": "patagonia",
@@ -1240,6 +1258,7 @@ export const TARJETAS: Tarjeta[] = [
   },
   {
     "id": "cuenta-dni",
+    "publicada": true,
     "nombre": "Cuenta DNI Visa",
     "banco": "Banco Provincia",
     "bancoId": "provincia",
@@ -1311,6 +1330,7 @@ export const TARJETAS: Tarjeta[] = [
   },
   {
     "id": "brubank",
+    "publicada": true,
     "nombre": "Brubank Mastercard",
     "banco": "Brubank",
     "bancoId": "brubank",
@@ -1382,6 +1402,7 @@ export const TARJETAS: Tarjeta[] = [
   },
   {
     "id": "hipotecario",
+    "publicada": true,
     "nombre": "Hipotecario Visa",
     "banco": "Banco Hipotecario",
     "bancoId": "hipotecario",
@@ -1472,8 +1493,10 @@ export function calcularAhorro(tarjeta: Tarjeta, gastos: Gastos): number {
   )
 }
 
+export const TARJETAS_PUBLICAS: Tarjeta[] = TARJETAS.filter(t => t.publicada)
+
 export function rankear(gastos: Gastos) {
-  return [...TARJETAS]
+  return [...TARJETAS_PUBLICAS]
     .map(t => ({ ...t, ahorro: calcularAhorro(t, gastos) }))
     .sort((a, b) => b.ahorro - a.ahorro)
 }

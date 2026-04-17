@@ -2,6 +2,7 @@ import type { Metadata } from 'next'
 import { Inter } from 'next/font/google'
 import './globals.css'
 import ClientShell from '@/components/ClientShell'
+import { TARJETAS_PUBLICAS } from '@/components/tarjetas-data'
 
 const inter = Inter({
   subsets: ['latin'],
@@ -15,7 +16,7 @@ export const metadata: Metadata = {
     template: '%s | rateargy',
   },
   description:
-    'Comparamos tarjetas de crédito en Argentina para que tomés la mejor decisión financiera. 13 tarjetas. 100% gratis.',
+    `Comparamos tarjetas de crédito en Argentina para que tomés la mejor decisión financiera. ${TARJETAS_PUBLICAS.length} tarjetas. 100% gratis.`,
   keywords: [
     'tarjetas de crédito argentina',
     'comparar tarjetas',

@@ -4,7 +4,7 @@ import { useState, useEffect, useCallback, useRef } from "react"
 import { motion, AnimatePresence } from "framer-motion"
 import dynamic from "next/dynamic"
 import { Calculator, BarChart2, Trophy, ArrowRight, BookOpen, CreditCard, Banknote, PiggyBank, ChevronDown, X, Check, Bell, CheckCircle } from "lucide-react"
-import { TARJETAS, rankear, type Gastos, type CatKey } from "@/components/tarjetas-data"
+import { TARJETAS_PUBLICAS, rankear, type Gastos, type CatKey } from "@/components/tarjetas-data"
 import { formatARS, CatIcon } from "@/components/ResultadosTarjetas"
 import { BancoLogo } from "@/components/BancoLogo"
 
@@ -27,14 +27,14 @@ const GASTOS_VACIO: Gastos = {
 }
 
 const STATS = [
-  { value: "20",  label: "tarjetas comparadas" },
+  { value: String(TARJETAS_PUBLICAS.length), label: "tarjetas comparadas" },
   { value: "6",   label: "categorías de gasto" },
   { value: "~3m", label: "para ver tu ranking" },
 ]
 
 const COMO_FUNCIONA = [
   { Icono: Calculator, num: "01", title: "Ingresá tus gastos",   desc: "Sin registro ni datos personales. Todo queda en tu navegador." },
-  { Icono: BarChart2,  num: "02", title: "Calculamos tu ahorro", desc: "Comparamos 13 tarjetas en tiempo real usando sus beneficios reales." },
+  { Icono: BarChart2,  num: "02", title: "Calculamos tu ahorro", desc: `Comparamos ${TARJETAS_PUBLICAS.length} tarjetas en tiempo real usando sus beneficios reales.` },
   { Icono: Trophy,     num: "03", title: "Elegís la mejor",      desc: "Ranking ordenado por ahorro real mensual para tu perfil de gasto." },
 ]
 
@@ -163,7 +163,7 @@ function DashboardPreview() {
           fontSize: 11, fontWeight: 700, color: "#059669",
           boxShadow: "0 2px 8px rgba(16,185,129,0.12)",
         }}>
-          20 tarjetas
+          {TARJETAS_PUBLICAS.length} tarjetas
         </div>
       </div>
 
@@ -223,7 +223,7 @@ function DashboardPreview() {
 function MarqueeLogos() {
   // Dedup: un item por banco (puede haber varias tarjetas del mismo banco)
   const seen = new Set<string>()
-  const unique = TARJETAS.filter(t => {
+  const unique = TARJETAS_PUBLICAS.filter(t => {
     if (seen.has(t.banco)) return false
     seen.add(t.banco)
     return true
@@ -621,7 +621,7 @@ export default function Home() {
                     maxWidth: 500, lineHeight: 1.75, margin: "0 0 40px" }}
                 >
                   Ingresá tus gastos mensuales y te mostramos exactamente
-                  cuánto ahorrás con cada tarjeta argentina. 20 tarjetas. Gratis.
+                  cuánto ahorrás con cada tarjeta argentina. {TARJETAS_PUBLICAS.length} tarjetas. Gratis.
                 </motion.p>
 
                 {/* CTA Button */}
@@ -720,7 +720,7 @@ export default function Home() {
           <section style={{ marginBottom: 112 }}>
             <p style={{ fontSize: 11, fontWeight: 700, letterSpacing: "0.1em", textTransform: "uppercase",
               color: "#94a3b8", textAlign: "center", marginBottom: 20 }}>
-              Comparamos 20 tarjetas líderes de Argentina
+              Comparamos {TARJETAS_PUBLICAS.length} tarjetas líderes de Argentina
             </p>
             <div className="partners-wrap">
               <MarqueeLogos />
@@ -848,10 +848,10 @@ export default function Home() {
                           <BancoLogo banco={tarjetaActual} size={32} />
                           <div>
                             <div style={{ fontSize: 15, fontWeight: 600, color: "#0f172a", lineHeight: 1.2 }}>
-                              {TARJETAS.find(t => t.id === tarjetaActual)?.nombre}
+                              {TARJETAS_PUBLICAS.find(t => t.id === tarjetaActual)?.nombre}
                             </div>
                             <div style={{ fontSize: 12, color: "#94a3b8", marginTop: 2 }}>
-                              {TARJETAS.find(t => t.id === tarjetaActual)?.banco}
+                              {TARJETAS_PUBLICAS.find(t => t.id === tarjetaActual)?.banco}
                             </div>
                           </div>
                         </>
@@ -907,7 +907,7 @@ export default function Home() {
                         </div>
 
                         {/* Lista de tarjetas */}
-                        {TARJETAS.map((t) => (
+                        {TARJETAS_PUBLICAS.map((t) => (
                           <div
                             key={t.id}
                             onClick={() => { setTarjetaActual(t.id); setSelectorAbierto(false) }}
@@ -1186,7 +1186,7 @@ export default function Home() {
                   haySegmentacion={haySegmentacion}
                   noElegiblesIds={
                     haySegmentacion && ingresos && ELEGIBILIDAD[ingresos]?.length > 0
-                      ? TARJETAS.filter(t => !ELEGIBILIDAD[ingresos].includes(t.id)).map(t => t.id)
+                      ? TARJETAS_PUBLICAS.filter(t => !ELEGIBILIDAD[ingresos].includes(t.id)).map(t => t.id)
                       : []
                   }
                 />

@@ -1,14 +1,14 @@
-import { TARJETAS, CATS } from "@/components/tarjetas-data"
+import { TARJETAS_PUBLICAS, CATS } from "@/components/tarjetas-data"
 import { BancoLogo } from "@/components/BancoLogo"
 import { notFound } from "next/navigation"
 import type { Metadata } from "next"
 
 export async function generateStaticParams() {
-  return TARJETAS.map(t => ({ slug: t.id }))
+  return TARJETAS_PUBLICAS.map(t => ({ slug: t.id }))
 }
 
 export async function generateMetadata({ params }: { params: { slug: string } }): Promise<Metadata> {
-  const tarjeta = TARJETAS.find(t => t.id === params.slug)
+  const tarjeta = TARJETAS_PUBLICAS.find(t => t.id === params.slug)
   if (!tarjeta) return {}
   return {
     title: `${tarjeta.nombre} — Beneficios y descuentos 2026 | rateargy`,
@@ -21,7 +21,7 @@ export async function generateMetadata({ params }: { params: { slug: string } })
 }
 
 export default function TarjetaPage({ params }: { params: { slug: string } }) {
-  const tarjeta = TARJETAS.find(t => t.id === params.slug)
+  const tarjeta = TARJETAS_PUBLICAS.find(t => t.id === params.slug)
   if (!tarjeta) notFound()
 
   const beneficiosActivos = CATS.filter(c =>
