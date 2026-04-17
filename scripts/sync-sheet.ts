@@ -48,8 +48,8 @@ async function sync() {
 
   console.log(`✅ Leídas: ${tarjetasRaw.length} tarjetas, ${beneficiosRaw.length} beneficios, ${naftaRaw.length} descuentos nafta`)
 
-  // Categorías válidas
-  const CATS = ["super","nafta","farmacia","delivery","online","viajes","transporte","servicios"]
+  // Categorías válidas (6 categorías que usa la calculadora)
+  const CATS = ["super","nafta","farmacia","delivery","online","servicios"]
 
   // Construir objeto de tarjetas con beneficios
   const tarjetas = tarjetasRaw.map(t => {
@@ -81,6 +81,7 @@ async function sync() {
 
     return {
       id: t.id,
+      publicada: t.publicada?.toUpperCase() !== "FALSE",
       nombre: t.nombre,
       banco: t.banco,
       bancoId: t.bancoId,
@@ -137,7 +138,7 @@ async function sync() {
 // Última sincronización: ${new Date().toLocaleString("es-AR")}
 // ============================================================
 
-export type CatKey = "super"|"nafta"|"farmacia"|"delivery"|"online"|"viajes"|"transporte"|"servicios"
+export type CatKey = "super"|"nafta"|"farmacia"|"delivery"|"online"|"servicios"
 export type Gastos = Record<CatKey, number>
 
 export type Beneficio = {
@@ -150,6 +151,7 @@ export type Beneficio = {
 
 export type Tarjeta = {
   id: string
+  publicada: boolean
   nombre: string
   banco: string
   bancoId: string
@@ -163,15 +165,15 @@ export type Tarjeta = {
 
 export const TARJETAS: Tarjeta[] = ${JSON.stringify(tarjetas, null, 2)}
 
+export const TARJETAS_PUBLICAS: Tarjeta[] = TARJETAS.filter(t => t.publicada)
+
 export const CATS: { key: CatKey; label: string }[] = [
-  { key: "super",      label: "Supermercados" },
-  { key: "nafta",      label: "Nafta / combustible" },
-  { key: "farmacia",   label: "Farmacia / salud" },
-  { key: "delivery",   label: "Restaurantes / delivery" },
-  { key: "online",     label: "Compras online" },
-  { key: "viajes",     label: "Viajes / turismo" },
-  { key: "transporte", label: "Transporte (SUBE/peajes)" },
-  { key: "servicios",  label: "Servicios (luz, gas, tel.)" },
+  { key: "super",     label: "Supermercados" },
+  { key: "nafta",     label: "Nafta / combustible" },
+  { key: "farmacia",  label: "Farmacia / salud" },
+  { key: "delivery",  label: "Restaurantes / delivery" },
+  { key: "online",    label: "Compras online" },
+  { key: "servicios", label: "Servicios (luz, gas, tel.)" },
 ]
 
 export function calcularAhorro(tarjeta: Tarjeta, gastos: Gastos): number {
@@ -185,7 +187,7 @@ export function calcularAhorro(tarjeta: Tarjeta, gastos: Gastos): number {
 }
 
 export function rankear(gastos: Gastos) {
-  return [...TARJETAS]
+  return [...TARJETAS_PUBLICAS]
     .map(t => ({ ...t, ahorro: calcularAhorro(t, gastos) }))
     .sort((a, b) => b.ahorro - a.ahorro)
 }
