@@ -63,6 +63,8 @@ const CAT_COLORS: Record<CatKey, { bg: string; color: string }> = {
   servicios: { bg: "#fef9c3", color: "#ca8a04" },
 }
 
+const VALID_CAT_KEYS = new Set(Object.keys(CAT_COLORS) as CatKey[])
+
 const CAT_META: Record<CatKey, { label: string }> = {
   super:     { label: "Supermercados" },
   nafta:     { label: "Nafta" },
@@ -183,7 +185,7 @@ function MiniCard({ tarjeta, size = "lg" }: { tarjeta: Tarjeta; size?: "sm" | "l
 // ─── Breakdown por categoría — PROBLEMA 6 ────────────────────────────────────
 function Breakdown({ tarjeta, gastos }: { tarjeta: Tarjeta & { ahorro: number }; gastos: Gastos }) {
   // Muestra TODAS las categorías donde el usuario gasta (con o sin beneficio)
-  const rows = (Object.keys(gastos) as CatKey[]).filter((cat) => gastos[cat] > 0)
+  const rows = (Object.keys(gastos) as CatKey[]).filter((cat) => gastos[cat] > 0 && VALID_CAT_KEYS.has(cat))
   if (rows.length === 0) return null
 
   return (
@@ -195,7 +197,7 @@ function Breakdown({ tarjeta, gastos }: { tarjeta: Tarjeta & { ahorro: number };
           const b = tarjeta.beneficios[cat]
           const tieneDesc = (b?.pct ?? 0) > 0
           const ahorroCat = tieneDesc ? Math.min(gastos[cat] * ((b?.pct ?? 0) / 100), b?.tope || Infinity) : 0
-          const { bg, color } = CAT_COLORS[cat]
+          const { bg, color } = CAT_COLORS[cat] ?? { bg: "#f3f4f6", color: "#6b7280" }
 
           return (
             <div key={cat} style={{
@@ -270,7 +272,7 @@ function BeneficiosMes({ resultados, gastos }: {
   }
 
   const beneficios: Bene[] = []
-  for (const cat of Object.keys(gastos) as CatKey[]) {
+  for (const cat of (Object.keys(gastos) as CatKey[]).filter(k => VALID_CAT_KEYS.has(k))) {
     if (gastos[cat] <= 0) continue
     let bestTarjeta: (Tarjeta & { ahorro: number }) | null = null
     let bestPct = 0
@@ -332,8 +334,8 @@ function BeneficiosMes({ resultados, gastos }: {
       <div className="bperfil-grid">
         {visibles.map((b, idx) => {
           const Icon = CAT_LUCIDE[b.catKey]
-          const { bg, color } = CAT_COLORS[b.catKey]
-          const gradBg = CAT_GRAD_BG[b.catKey]
+          const { bg, color } = CAT_COLORS[b.catKey] ?? { bg: "#f3f4f6", color: "#6b7280" }
+          const gradBg = CAT_GRAD_BG[b.catKey] ?? "linear-gradient(135deg, #f9fafb 0%, #f3f4f6 100%)"
 
           return (
             <motion.div
@@ -550,6 +552,7 @@ export default function ResultadosTarjetas({ resultados, gastos, tarjetaActual, 
   const tarjetaActualData = TARJETAS.find((t) => t.id === tarjetaActual)
   const ahorroActual = resultados.find((t) => t.id === tarjetaActual)?.ahorro ?? 0
   const top1         = resultados[0]
+  if (!top1) return null
 
   // Por defecto: top 5 (posiciones 2-5 en el ranking, la 1 se muestra aparte)
   const rankingVisible = verTodas ? resultados.slice(1) : resultados.slice(1, 5)
