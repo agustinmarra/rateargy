@@ -1,0 +1,71 @@
+---
+title: "Cómo funciona el ranking de rateargy"
+slug: "como-funciona-el-ranking-de-rateargy"
+description: "Metodología abierta: así calculamos cuánto ahorrás con cada tarjeta. Sin cajas negras, sin sesgos."
+category: "General"
+readTime: 3
+publishedAt: "2026-05-15"
+coverEmoji: "🔢"
+featured: false
+---
+
+Una de las cosas que nos importa en rateargy es que cualquier usuario pueda verificar cómo llegamos a los números que mostramos. Esta página explica exactamente eso.
+
+## Qué calcula el ranking
+
+El ranking ordena tarjetas de crédito según el **ahorro mensual real** que generan para un perfil de gasto específico. No es un ranking de "mejores tarjetas en general" — es un ranking personalizado para vos, con tus números.
+
+## La fórmula base
+
+Para cada categoría de gasto (supermercados, nafta, farmacia, delivery, compras online, servicios), el cálculo es:
+
+```
+ahorro_categoría = MIN(gasto × porcentaje_descuento, tope_mensual)
+```
+
+El `MIN` es clave: si el descuento aplicado sobre tu gasto supera el tope mensual del banco, solo se computa hasta el tope. El banco no devuelve más allá de ese límite.
+
+**Ejemplo concreto:**
+
+- Gastás $150.000/mes en supermercados
+- Tarjeta X ofrece 25% de descuento con tope $20.000
+- Descuento teórico: $150.000 × 25% = $37.500
+- Descuento real: MIN($37.500, $20.000) = **$20.000**
+
+El ahorro total de la tarjeta es la suma de los ahorros en cada categoría donde tenés gasto declarado.
+
+## Condiciones que se aplican
+
+Los beneficios de tarjetas en Argentina tienen condiciones. Las más comunes que computamos:
+
+**Días de semana** — si un descuento aplica solo los jueves, lo computamos al 100% asumiendo que el usuario puede organizar su compra ese día. Esto es una simplificación: si no podés ir los jueves, el ahorro real es menor.
+
+**Medio de pago** — algunos bancos requieren pagar con su app o con MODO para acceder al descuento. Lo indicamos en la descripción de cada tarjeta.
+
+**Estación de combustible** — los descuentos de nafta aplican en estaciones específicas (YPF, Shell, Axion, Puma). Si el descuento aplica en todas, se computa completo. Si aplica solo en una cadena, lo indicamos.
+
+**Segmentación por nivel de ingreso** — algunos beneficios aplican solo a clientes de cierto segmento (Éminent, Select, Black, etc.). Filtramos las tarjetas según el rango de ingreso que declarás.
+
+## Lo que el ranking no computa
+
+Para ser transparentes, hay cosas que dejamos afuera deliberadamente:
+
+- **Puntos y millas** — no sumamos el valor de los puntos porque su valoración es subjetiva (depende de cómo los uses). Los mencionamos en la descripción de cada tarjeta, pero no los sumamos al ahorro en pesos.
+- **Beneficios en comercios específicos** — algunos bancos tienen acuerdos con comercios puntuales. No los computamos porque son muy variables y difíciles de cuantificar.
+- **Tasas de financiación** — el ranking es para quienes pagan el saldo completo. Si financiás saldos, la tasa de interés pesa más que cualquier descuento.
+
+## De dónde vienen los datos
+
+Los porcentajes, topes, días y condiciones de cada tarjeta vienen de las comunicaciones oficiales de cada banco (sitios web, apps, PDFs de beneficios). Se actualizan manualmente cada semana los lunes.
+
+Si encontrás un error en los datos de alguna tarjeta, podés reportarlo desde la [página de contacto](/contacto). Lo revisamos y corregimos antes del próximo lunes.
+
+## Por qué el ranking puede no coincidir con tu experiencia
+
+Los beneficios de tarjetas cambian frecuentemente en Argentina. Un descuento que existía el mes pasado puede no existir hoy. Si calculaste con rateargy y en el supermercado no te aplicaron el descuento, puede ser que:
+
+1. El beneficio cambió y todavía no actualizamos la base
+2. No se cumplió alguna condición (día equivocado, estación de combustible incorrecta, monto mínimo de compra)
+3. El comercio no está adherido a la red del banco
+
+Siempre verificá las condiciones vigentes en el sitio oficial de tu banco antes de tomar decisiones basadas en el ranking.
