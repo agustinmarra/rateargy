@@ -1265,19 +1265,19 @@ export default function Home() {
                         onBlur={(e) => { e.target.style.borderColor = emailError ? "#f87171" : "#e2e8f0"; e.target.style.boxShadow = "none" }}
                       />
                       <button
-                        onClick={() => {
+                        onClick={async () => {
                           if (!emailInput.includes("@")) {
                             setEmailError(true)
                             return
                           }
-                          localStorage.setItem("rateargy_email", emailInput)
-                          localStorage.setItem("rateargy_perfil_email", JSON.stringify({
-                            email: emailInput,
-                            gastos,
-                            timestamp: new Date().toISOString(),
-                          }))
+                          try {
+                            await fetch("/api/suscribir", {
+                              method: "POST",
+                              headers: { "Content-Type": "application/json" },
+                              body: JSON.stringify({ email: emailInput, gastos }),
+                            })
+                          } catch {}
                           setEmailEnviado(true)
-                          console.log("email_capturado", { email: emailInput, timestamp: new Date().toISOString() })
                         }}
                         style={{
                           background: "#0a7c4e", color: "white",

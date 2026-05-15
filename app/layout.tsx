@@ -1,8 +1,11 @@
 import type { Metadata } from 'next'
 import { Inter } from 'next/font/google'
+import Script from 'next/script'
 import './globals.css'
 import ClientShell from '@/components/ClientShell'
 import { TARJETAS_PUBLICAS } from '@/components/tarjetas-data'
+
+const GA_ID = process.env.NEXT_PUBLIC_GA_MEASUREMENT_ID
 
 const inter = Inter({
   subsets: ['latin'],
@@ -41,6 +44,22 @@ export default function RootLayout({
     <html lang="es-AR" className="h-full antialiased">
       <body className={`min-h-full flex flex-col font-sans antialiased ${inter.variable}`}>
         <ClientShell>{children}</ClientShell>
+        {GA_ID && (
+          <>
+            <Script
+              src={`https://www.googletagmanager.com/gtag/js?id=${GA_ID}`}
+              strategy="afterInteractive"
+            />
+            <Script id="google-analytics" strategy="afterInteractive">
+              {`
+                window.dataLayer = window.dataLayer || [];
+                function gtag(){dataLayer.push(arguments);}
+                gtag('js', new Date());
+                gtag('config', '${GA_ID}');
+              `}
+            </Script>
+          </>
+        )}
       </body>
     </html>
   )

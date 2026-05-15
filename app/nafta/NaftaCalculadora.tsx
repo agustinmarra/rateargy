@@ -40,15 +40,15 @@ const ESTACIONES = [
 ]
 
 const AUTOS = [
-  { nombre: "Renault Kwid",   litros: 38, tipo: "hatch"  },
-  { nombre: "Toyota Etios",   litros: 42, tipo: "sedan"  },
-  { nombre: "Chevrolet Onix", litros: 45, tipo: "hatch"  },
-  { nombre: "VW Polo / Gol",  litros: 45, tipo: "sedan"  },
-  { nombre: "Toyota Corolla", litros: 55, tipo: "sedan"  },
-  { nombre: "Ford Ranger",    litros: 70, tipo: "pickup" },
-  { nombre: "Toyota Hilux",   litros: 80, tipo: "pickup" },
-  { nombre: "Moto",           litros: 12, tipo: "moto"   },
-  { nombre: "Personalizado",  litros: 0,  tipo: "edit"   },
+  { nombre: "Renault Kwid",   litros: 38, tipo: "hatch",  kmLitro: 16 },
+  { nombre: "Toyota Etios",   litros: 42, tipo: "sedan",  kmLitro: 15 },
+  { nombre: "Chevrolet Onix", litros: 45, tipo: "hatch",  kmLitro: 14 },
+  { nombre: "VW Polo / Gol",  litros: 45, tipo: "sedan",  kmLitro: 14 },
+  { nombre: "Toyota Corolla", litros: 55, tipo: "sedan",  kmLitro: 13 },
+  { nombre: "Ford Ranger",    litros: 70, tipo: "pickup", kmLitro: 10 },
+  { nombre: "Toyota Hilux",   litros: 80, tipo: "pickup", kmLitro: 9  },
+  { nombre: "Moto",           litros: 12, tipo: "moto",   kmLitro: 30 },
+  { nombre: "Personalizado",  litros: 0,  tipo: "edit",   kmLitro: 0  },
 ]
 
 const fmt = (n: number) => "$" + Math.round(n).toLocaleString("es-AR")
@@ -286,19 +286,27 @@ function IconGear({ color = "#10b981", size = 18 }: { color?: string; size?: num
 // ────────────────────────────────────────────────────────────────────────────
 
 export default function NaftaCalculadora() {
-  const [autoIdx,      setAutoIdx]      = useState(1)
-  const [customLitros, setCustomLitros] = useState(50)
-  const [pctTanque,    setPctTanque]    = useState(100)
-  const [tipoNafta,    setTipoNafta]    = useState<"super" | "premium" | "diesel">("super")
+  const [autoIdx,        setAutoIdx]        = useState(1)
+  const [customLitros,   setCustomLitros]   = useState(50)
+  const [customKmLitro,  setCustomKmLitro]  = useState(12)
+  const [pctTanque,      setPctTanque]      = useState(100)
+  const [tipoNafta,      setTipoNafta]      = useState<"super" | "premium" | "diesel">("super")
+  const [kmMes,          setKmMes]          = useState(1200)
 
   const esPersonalizado = autoIdx === AUTOS.length - 1
   const litrosTanque    = esPersonalizado ? customLitros : AUTOS[autoIdx].litros
   const litros          = Math.round(litrosTanque * pctTanque / 100)
   const trackPct        = `${((pctTanque - 10) / 90 * 100).toFixed(1)}%`
+  const kmLitro         = esPersonalizado ? customKmLitro : (AUTOS[autoIdx].kmLitro ?? 12)
+  const litrosMes       = kmLitro > 0 ? Math.round(kmMes / kmLitro) : 0
 
   const resultados = ESTACIONES
     .map(e => ({ ...e, pxl: e.precios[tipoNafta], total: e.precios[tipoNafta] * litros }))
     .sort((a, b) => a.total - b.total)
+
+  const resultadosMes = ESTACIONES
+    .map(e => ({ ...e, pxl: e.precios[tipoNafta], totalMes: e.precios[tipoNafta] * litrosMes }))
+    .sort((a, b) => a.totalMes - b.totalMes)
 
   const diferencia = resultados[resultados.length - 1].total - resultados[0].total
 
@@ -306,6 +314,8 @@ export default function NaftaCalculadora() {
     .filter(t => (t.beneficios.nafta?.pct ?? 0) > 0)
     .sort((a, b) => (b.beneficios.nafta?.pct ?? 0) - (a.beneficios.nafta?.pct ?? 0))
     .slice(0, 8)
+
+  const costoMensualRef = resultadosMes[0]?.totalMes ?? 0
 
   return (
     <main style={{ minHeight: "calc(100vh - 64px)", background: "#f7fffe" }}>
@@ -436,19 +446,35 @@ export default function NaftaCalculadora() {
             </div>
 
             {esPersonalizado && (
-              <div style={{ marginTop: 16, display: "flex", alignItems: "center", gap: 12 }}>
-                <span style={{ fontSize: 13, color: "#64748b", fontWeight: 600 }}>Capacidad del tanque:</span>
-                <input
-                  type="number" min={1} max={250}
-                  value={customLitros}
-                  onChange={e => setCustomLitros(Math.max(1, parseInt(e.target.value) || 1))}
-                  style={{
-                    width: 80, padding: "8px 12px", textAlign: "center",
-                    background: "#ecfdf5", border: "1.5px solid #10b981",
-                    borderRadius: 10, fontSize: 16, fontWeight: 700, color: "#0f172a", outline: "none",
-                  }}
-                />
-                <span style={{ fontSize: 13, color: "#64748b" }}>litros</span>
+              <div style={{ marginTop: 16, display: "flex", flexWrap: "wrap", gap: 16 }}>
+                <div style={{ display: "flex", alignItems: "center", gap: 10 }}>
+                  <span style={{ fontSize: 13, color: "#64748b", fontWeight: 600 }}>Tanque:</span>
+                  <input
+                    type="number" min={1} max={250}
+                    value={customLitros}
+                    onChange={e => setCustomLitros(Math.max(1, parseInt(e.target.value) || 1))}
+                    style={{
+                      width: 72, padding: "8px 10px", textAlign: "center",
+                      background: "#ecfdf5", border: "1.5px solid #10b981",
+                      borderRadius: 10, fontSize: 15, fontWeight: 700, color: "#0f172a", outline: "none",
+                    }}
+                  />
+                  <span style={{ fontSize: 13, color: "#64748b" }}>litros</span>
+                </div>
+                <div style={{ display: "flex", alignItems: "center", gap: 10 }}>
+                  <span style={{ fontSize: 13, color: "#64748b", fontWeight: 600 }}>Rendimiento:</span>
+                  <input
+                    type="number" min={1} max={50}
+                    value={customKmLitro}
+                    onChange={e => setCustomKmLitro(Math.max(1, parseInt(e.target.value) || 1))}
+                    style={{
+                      width: 72, padding: "8px 10px", textAlign: "center",
+                      background: "#ecfdf5", border: "1.5px solid #10b981",
+                      borderRadius: 10, fontSize: 15, fontWeight: 700, color: "#0f172a", outline: "none",
+                    }}
+                  />
+                  <span style={{ fontSize: 13, color: "#64748b" }}>km/litro</span>
+                </div>
               </div>
             )}
           </div>
@@ -494,7 +520,7 @@ export default function NaftaCalculadora() {
           </div>
 
           {/* 3. Tipo combustible */}
-          <div>
+          <div style={{ marginBottom: 36 }}>
             <p style={{ fontSize: 12, fontWeight: 700, color: "#059669", letterSpacing: "0.1em", textTransform: "uppercase", margin: "0 0 16px" }}>
               3 — Tipo de combustible
             </p>
@@ -521,6 +547,51 @@ export default function NaftaCalculadora() {
                   </button>
                 )
               })}
+            </div>
+          </div>
+
+          {/* 4. Km por mes */}
+          <div style={{ paddingTop: 28, borderTop: "1px dashed rgba(16,185,129,0.2)" }}>
+            <div style={{ display: "flex", justifyContent: "space-between", alignItems: "flex-end", marginBottom: 16, flexWrap: "wrap", gap: 8 }}>
+              <p style={{ fontSize: 12, fontWeight: 700, color: "#059669", letterSpacing: "0.1em", textTransform: "uppercase", margin: 0 }}>
+                4 — ¿Cuántos km manejás por mes?
+              </p>
+              {litrosMes > 0 && (
+                <span style={{ fontSize: 13, color: "#94a3b8" }}>
+                  ≈ <strong style={{ color: "#10b981" }}>{litrosMes} litros/mes</strong>
+                  {kmLitro > 0 && <span> · {kmLitro} km/litro</span>}
+                </span>
+              )}
+            </div>
+            <div style={{ display: "flex", alignItems: "center", gap: 14, flexWrap: "wrap" }}>
+              <input
+                type="number" min={0} max={10000} step={100}
+                value={kmMes}
+                onChange={e => setKmMes(Math.max(0, parseInt(e.target.value) || 0))}
+                style={{
+                  width: 110, padding: "10px 14px", textAlign: "center",
+                  background: "#ecfdf5", border: "1.5px solid #10b981",
+                  borderRadius: 10, fontSize: 18, fontWeight: 700, color: "#0f172a", outline: "none",
+                }}
+              />
+              <span style={{ fontSize: 14, color: "#64748b" }}>km/mes</span>
+              <div style={{ display: "flex", gap: 8 }}>
+                {[600, 1000, 1500, 2000].map(v => (
+                  <button
+                    key={v}
+                    onClick={() => setKmMes(v)}
+                    style={{
+                      fontSize: 11, fontWeight: 700, padding: "5px 10px",
+                      background: kmMes === v ? "#ecfdf5" : "#f8fafc",
+                      border: `1px solid ${kmMes === v ? "#10b981" : "#e2e8f0"}`,
+                      color: kmMes === v ? "#059669" : "#94a3b8",
+                      borderRadius: 8, cursor: "pointer", transition: "all 0.15s",
+                    }}
+                  >
+                    {v.toLocaleString("es-AR")}
+                  </button>
+                ))}
+              </div>
             </div>
           </div>
         </div>
@@ -605,6 +676,95 @@ export default function NaftaCalculadora() {
         <p style={{ fontSize: 11, color: "#cbd5e1", textAlign: "center", margin: "12px 0 40px", lineHeight: 1.6 }}>
           Precios de referencia en CABA al 1° de abril 2026. Los precios varían por zona y se actualizan periódicamente.
         </p>
+
+        {/* ── Costo mensual ─────────────────────────────────────────────────────── */}
+        {litrosMes > 0 && (
+          <div style={{ marginBottom: 48 }}>
+            <div style={{ marginBottom: 20 }}>
+              <h2 style={{ fontSize: 20, fontWeight: 800, color: "#0f172a", margin: "0 0 6px", letterSpacing: "-0.02em" }}>
+                Tu gasto mensual en nafta
+              </h2>
+              <p style={{ fontSize: 14, color: "#94a3b8", margin: 0 }}>
+                Basado en {kmMes.toLocaleString("es-AR")} km/mes · {litrosMes} litros · {kmLitro} km/litro
+              </p>
+            </div>
+
+            <div className="na-stations" style={{ display: "grid", gridTemplateColumns: "repeat(4, 1fr)", gap: 16, marginBottom: 24 }}>
+              {resultadosMes.map((est, i) => {
+                const esMasBarata = i === 0
+                const mejorDescuento = promoTarjetas[0]
+                const pctDesc = mejorDescuento?.beneficios.nafta?.pct ?? 0
+                const tope    = mejorDescuento?.beneficios.nafta?.tope ?? 0
+                const ahorro  = Math.min(est.totalMes * pctDesc / 100, tope)
+                return (
+                  <div
+                    key={est.id}
+                    className="na-station"
+                    style={{
+                      background: "#fff",
+                      border: `1.5px solid ${esMasBarata ? "#10b981" : "#f1f5f9"}`,
+                      borderRadius: 20, padding: "20px 16px",
+                      position: "relative", overflow: "hidden",
+                      boxShadow: esMasBarata ? "0 8px 28px rgba(16,185,129,0.1)" : "0 2px 8px rgba(0,0,0,0.04)",
+                      textAlign: "center",
+                    }}
+                  >
+                    {esMasBarata && (
+                      <div style={{ position: "absolute", top: 0, left: 0, right: 0, height: 3, background: "linear-gradient(90deg, #10b981, #059669)" }} />
+                    )}
+                    <div style={{ fontSize: 13, fontWeight: 800, color: "#0f172a", marginBottom: 4 }}>{est.nombre}</div>
+                    <div style={{ fontSize: "clamp(18px,2.2vw,24px)", fontWeight: 900, color: esMasBarata ? "#10b981" : "#0f172a", letterSpacing: "-0.03em", marginBottom: 4 }}>
+                      {fmt(est.totalMes)}
+                      <span style={{ fontSize: 11, fontWeight: 600, color: "#94a3b8", marginLeft: 4 }}>/mes</span>
+                    </div>
+                    {ahorro > 0 && (
+                      <div style={{ fontSize: 12, color: "#059669", fontWeight: 700 }}>
+                        Ahorrás {fmt(ahorro)}/mes con tarjeta
+                      </div>
+                    )}
+                  </div>
+                )
+              })}
+            </div>
+
+            {/* Banner mejor combo */}
+            {promoTarjetas[0] && costoMensualRef > 0 && (() => {
+              const t = promoTarjetas[0]
+              const pct = t.beneficios.nafta?.pct ?? 0
+              const tope = t.beneficios.nafta?.tope ?? 0
+              const ahorro = Math.min(costoMensualRef * pct / 100, tope)
+              const ahorroAnual = ahorro * 12
+              return (
+                <div style={{
+                  background: "linear-gradient(135deg, #ecfdf5 0%, #f0fdf4 100%)",
+                  border: "1.5px solid rgba(16,185,129,0.25)",
+                  borderRadius: 20, padding: "24px 28px",
+                  display: "flex", alignItems: "center", justifyContent: "space-between", flexWrap: "wrap", gap: 16,
+                }}>
+                  <div>
+                    <div style={{ fontSize: 12, fontWeight: 700, color: "#10b981", letterSpacing: "0.08em", textTransform: "uppercase", marginBottom: 6 }}>
+                      Mejor combinación
+                    </div>
+                    <div style={{ fontSize: 18, fontWeight: 800, color: "#0f172a", marginBottom: 4 }}>
+                      {t.nombre} + {resultadosMes[0].nombre}
+                    </div>
+                    <div style={{ fontSize: 13, color: "#64748b" }}>
+                      {t.beneficios.nafta?.lugar} · {pct}% de descuento
+                    </div>
+                  </div>
+                  <div style={{ textAlign: "right" }}>
+                    <div style={{ fontSize: 28, fontWeight: 900, color: "#059669", letterSpacing: "-0.04em", lineHeight: 1 }}>
+                      {fmt(ahorro)}<span style={{ fontSize: 14, fontWeight: 600, color: "#94a3b8" }}>/mes</span>
+                    </div>
+                    <div style={{ fontSize: 13, color: "#94a3b8", marginTop: 4 }}>
+                      {fmt(ahorroAnual)} al año
+                    </div>
+                  </div>
+                </div>
+              )
+            })()}
+          </div>
+        )}
 
         {/* ── Promos tarjetas ────────────────────────────────────────────────────── */}
         <div style={{ marginBottom: 48 }}>

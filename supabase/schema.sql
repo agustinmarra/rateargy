@@ -119,6 +119,18 @@ create index if not exists articulos_publicado_idx on articulos(publicado);
 create index if not exists articulos_categoria_idx on articulos(categoria);
 
 -- =============================================
+-- SUSCRIPTORES (Newsletter)
+-- =============================================
+create table if not exists suscriptores (
+  id         uuid primary key default uuid_generate_v4(),
+  email      text not null unique,
+  gastos     jsonb,
+  created_at timestamptz default now()
+);
+
+create index if not exists suscriptores_email_idx on suscriptores(email);
+
+-- =============================================
 -- RLS Policies (Row Level Security)
 -- =============================================
 
@@ -126,6 +138,11 @@ create index if not exists articulos_categoria_idx on articulos(categoria);
 alter table productos enable row level security;
 alter table categorias enable row level security;
 alter table articulos enable row level security;
+alter table suscriptores enable row level security;
+
+create policy "Anyone can subscribe"
+  on suscriptores for insert
+  with check (true);
 
 -- Public read for active products
 create policy "Public can read active products"
