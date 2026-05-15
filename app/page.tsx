@@ -1403,7 +1403,7 @@ export default function Home() {
                   background: "rgba(16,185,129,0.1)", border: "1px solid rgba(16,185,129,0.2)",
                   borderRadius: 999, padding: "5px 12px",
                   fontSize: 11, fontWeight: 700, color: "#10b981" }}>
-                  ✓ Actualizado abril 2026
+                  ✓ Actualizado mayo 2026
                 </div>
               </div>
 
@@ -1413,7 +1413,12 @@ export default function Home() {
                   color: "#4b5563", marginBottom: 16 }}>
                   Productos
                 </p>
-                {[{ label: "Tarjetas de crédito", href: "/tarjetas" }].map(({ label, href }) => (
+                {[
+                  { label: "Tarjetas de crédito", href: "/tarjetas" },
+                  { label: "Calculadora de nafta", href: "/nafta" },
+                  { label: "Billeteras digitales", href: "/billeteras" },
+                  { label: "Precios de streaming", href: "/streaming" },
+                ].map(({ label, href }) => (
                   <a key={label} href={href} style={{ display: "block", fontSize: 14,
                     color: "#9ca3af", textDecoration: "none", marginBottom: 10,
                     transition: "color 0.15s" }}
@@ -1422,9 +1427,6 @@ export default function Home() {
                     {label}
                   </a>
                 ))}
-                <span style={{ display: "block", fontSize: 14, color: "#4b5563", marginBottom: 10, cursor: "default" }}>
-                  Inversiones
-                </span>
               </div>
 
               {/* Información */}
@@ -1435,7 +1437,9 @@ export default function Home() {
                 </p>
                 {[
                   { label: "Guías financieras", href: "/articulos" },
+                  { label: "Metodología", href: "/metodologia" },
                   { label: "Contacto", href: "/contacto" },
+                  { label: "Términos y privacidad", href: "/terminos" },
                 ].map(({ label, href }) => (
                   <a key={label} href={href} style={{ display: "block", fontSize: 14,
                     color: "#9ca3af", textDecoration: "none", marginBottom: 10,
@@ -1444,11 +1448,6 @@ export default function Home() {
                     onMouseLeave={e => e.currentTarget.style.color="#9ca3af"}>
                     {label}
                   </a>
-                ))}
-                {["Metodología", "Sobre rateargy"].map(label => (
-                  <span key={label} style={{ display: "block", fontSize: 14, color: "#4b5563", marginBottom: 10, cursor: "default" }}>
-                    {label}
-                  </span>
                 ))}
               </div>
             </div>

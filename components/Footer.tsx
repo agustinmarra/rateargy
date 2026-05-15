@@ -5,7 +5,8 @@ type FooterLink = { label: string; href: string }
 const COL_HERRAMIENTAS: FooterLink[] = [
   { label: 'Comparador de tarjetas', href: '/tarjetas' },
   { label: 'Calculadora de nafta', href: '/nafta' },
-  { label: 'Guías financieras', href: '/articulos' },
+  { label: 'Billeteras digitales', href: '/billeteras' },
+  { label: 'Precios de streaming', href: '/streaming' },
 ]
 
 const COL_GUIAS: FooterLink[] = [
