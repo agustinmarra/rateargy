@@ -6,10 +6,11 @@ import { useState } from 'react'
 import { Menu, X } from 'lucide-react'
 
 const NAV_LINKS = [
-  { href: '/tarjetas',  label: 'Tarjetas'  },
-  { href: '/nafta',     label: 'Nafta'     },
-  { href: '/articulos', label: 'Artículos' },
-  { href: '/contacto',  label: 'Contacto'  },
+  { href: '/tarjetas',   label: 'Tarjetas'   },
+  { href: '/nafta',      label: 'Nafta'      },
+  { href: '/billeteras', label: 'Billeteras' },
+  { href: '/streaming',  label: 'Streaming'  },
+  { href: '/articulos',  label: 'Artículos'  },
 ]
 
 export default function Navbar() {
