@@ -1,0 +1,24 @@
+{
+  "permissions": {
+    "allow": [
+      "WebSearch",
+      "WebFetch(domain:www.comparaencasa.com)",
+      "WebFetch(domain:tarjetasdecredito.com.ar)",
+      "WebFetch(domain:www.bankrate.com)",
+      "WebFetch(domain:www.nerdwallet.com)",
+      "Bash(npm run *)",
+      "Bash(git add *)",
+      "Bash(git commit -m ' *)",
+      "Bash(git config *)",
+      "Bash(git push *)",
+      "Bash(git commit *)",
+      "Bash(git pull *)",
+      "Bash(npx vercel *)",
+      "Bash(gh run *)",
+      "Bash(curl -s \"https://rateargy.ar\")",
+      "Bash(curl -s -L \"https://rateargy.ar\")",
+      "Bash(curl -s -L \"https://rateargy.ar/billeteras\")",
+      "Bash(npm install *)"
+    ]
+  }
+}

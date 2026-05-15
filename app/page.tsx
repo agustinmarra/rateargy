@@ -211,14 +211,13 @@ export default function Home() {
         @media (max-width: 900px) { .guias-grid { grid-template-columns: 1fr; } }
         .hero-pill {
           display: inline-flex; align-items: center; gap: 8px;
-          background: rgba(255,255,255,0.06);
-          border: 1px solid rgba(255,255,255,0.12);
-          border-radius: 999px; padding: 6px 14px;
-          font-size: 12px; font-weight: 600; color: rgba(255,255,255,0.7);
+          background: rgba(91,160,208,0.08);
+          border: 1px solid rgba(91,160,208,0.2);
+          border-radius: 999px; padding: 6px 16px;
+          font-size: 12px; font-weight: 600; color: rgba(255,255,255,0.6);
           letter-spacing: 0.02em; margin-bottom: 28px;
         }
-        .hero-pill span { color: #4ade80; }
-        .input-wrap:focus-within label { color: #059669; }
+        .input-wrap:focus-within label { color: #2B7CB5; }
       `}</style>
 
       {/* ════ HERO — fondo oscuro ════ */}
@@ -228,11 +227,18 @@ export default function Home() {
         position: "relative",
         overflow: "hidden",
       }}>
-        {/* Glow sutil */}
+        {/* Glow celeste sutil */}
         <div aria-hidden style={{
-          position: "absolute", top: -120, left: "50%", transform: "translateX(-50%)",
-          width: 600, height: 300, borderRadius: "50%",
-          background: "radial-gradient(ellipse, rgba(16,185,129,0.12) 0%, transparent 70%)",
+          position: "absolute", top: -100, left: "30%",
+          width: 500, height: 300, borderRadius: "50%",
+          background: "radial-gradient(ellipse, rgba(91,160,208,0.15) 0%, transparent 70%)",
+          pointerEvents: "none",
+        }} />
+        {/* Glow dorado sutil */}
+        <div aria-hidden style={{
+          position: "absolute", bottom: -60, right: "20%",
+          width: 350, height: 200, borderRadius: "50%",
+          background: "radial-gradient(ellipse, rgba(201,168,76,0.12) 0%, transparent 70%)",
           pointerEvents: "none",
         }} />
 
@@ -240,11 +246,11 @@ export default function Home() {
 
           {/* Badge */}
           <div className="hero-pill">
-            <span style={{ width: 6, height: 6, borderRadius: "50%", background: "#4ade80", display: "inline-block" }} />
-            <span>{TARJETAS_PUBLICAS.length} tarjetas</span>
-            <span style={{ color: "rgba(255,255,255,0.25)" }}>·</span>
+            <span style={{ width: 6, height: 6, borderRadius: "50%", background: "#5BA0D0", display: "inline-block" }} />
+            <span style={{ color: "#5BA0D0" }}>{TARJETAS_PUBLICAS.length} tarjetas</span>
+            <span style={{ color: "rgba(255,255,255,0.2)" }}>·</span>
             <span>Gratis</span>
-            <span style={{ color: "rgba(255,255,255,0.25)" }}>·</span>
+            <span style={{ color: "rgba(255,255,255,0.2)" }}>·</span>
             <span>Actualizado cada lunes</span>
           </div>
 
@@ -259,14 +265,19 @@ export default function Home() {
           }}>
             La tarjeta que más<br />
             te conviene,{" "}
-            <span style={{ color: "#4ade80" }}>calculada.</span>
+            <span style={{
+              background: "linear-gradient(90deg, #C9A84C 0%, #E8C96A 50%, #C9A84C 100%)",
+              WebkitBackgroundClip: "text", WebkitTextFillColor: "transparent", backgroundClip: "text",
+            }}>
+              calculada.
+            </span>
           </h1>
 
           {/* Subtítulo */}
           <p style={{
             fontSize: "clamp(15px, 2vw, 18px)",
-            color: "rgba(255,255,255,0.55)",
-            lineHeight: 1.7,
+            color: "rgba(255,255,255,0.5)",
+            lineHeight: 1.75,
             margin: "0 0 36px",
             maxWidth: 520,
           }}>
@@ -274,29 +285,31 @@ export default function Home() {
             Te decimos exactamente cuánto ahorrás con cada tarjeta argentina.
           </p>
 
-          {/* CTA */}
+          {/* CTA — dorado */}
           <button
             onClick={scrollToCalculadora}
             style={{
               display: "inline-flex", alignItems: "center", gap: 10,
-              background: "#16a34a",
-              color: "#fff", border: "none", borderRadius: 12,
-              padding: "14px 28px", fontSize: 15, fontWeight: 700,
+              background: "linear-gradient(135deg, #C9A84C 0%, #E8C96A 50%, #C9A84C 100%)",
+              backgroundSize: "200% auto",
+              color: "#0C1623", border: "none", borderRadius: 12,
+              padding: "15px 32px", fontSize: 15, fontWeight: 800,
               cursor: "pointer",
-              boxShadow: "0 4px 24px rgba(22,163,74,0.35)",
-              transition: "background 0.15s, transform 0.15s",
+              boxShadow: "0 4px 24px rgba(201,168,76,0.35), 0 1px 0 rgba(255,255,255,0.2) inset",
+              transition: "box-shadow 0.15s, transform 0.15s",
+              letterSpacing: "-0.01em",
             }}
-            onMouseEnter={e => { e.currentTarget.style.background = "#15803d"; e.currentTarget.style.transform = "translateY(-1px)" }}
-            onMouseLeave={e => { e.currentTarget.style.background = "#16a34a"; e.currentTarget.style.transform = "translateY(0)" }}
+            onMouseEnter={e => { e.currentTarget.style.boxShadow = "0 8px 32px rgba(201,168,76,0.5)"; e.currentTarget.style.transform = "translateY(-1px)" }}
+            onMouseLeave={e => { e.currentTarget.style.boxShadow = "0 4px 24px rgba(201,168,76,0.35)"; e.currentTarget.style.transform = "translateY(0)" }}
           >
-            Calculá tu ahorro gratis
+            Calculá tu ahorro
             <ArrowRight size={16} />
           </button>
 
           {/* Stats strip */}
           <div style={{
-            display: "flex", gap: 32, marginTop: 48,
-            paddingTop: 40, borderTop: "1px solid rgba(255,255,255,0.07)",
+            display: "flex", gap: 40, marginTop: 52,
+            paddingTop: 40, borderTop: "1px solid rgba(255,255,255,0.06)",
             flexWrap: "wrap",
           }}>
             {[
@@ -305,8 +318,8 @@ export default function Home() {
               { value: "~2 min", label: "para ver tu ranking" },
             ].map(({ value, label }) => (
               <div key={label}>
-                <div style={{ fontSize: 26, fontWeight: 900, color: "#ffffff", letterSpacing: "-0.03em" }}>{value}</div>
-                <div style={{ fontSize: 12, color: "rgba(255,255,255,0.4)", marginTop: 3 }}>{label}</div>
+                <div style={{ fontSize: 28, fontWeight: 900, color: "#ffffff", letterSpacing: "-0.03em" }}>{value}</div>
+                <div style={{ fontSize: 12, color: "rgba(255,255,255,0.35)", marginTop: 3, fontWeight: 500 }}>{label}</div>
               </div>
             ))}
           </div>
@@ -380,8 +393,8 @@ export default function Home() {
                         transition: "border-color 0.15s, box-shadow 0.15s, background 0.15s",
                       }}
                       onFocus={(e) => {
-                        e.target.style.borderColor = "#16a34a"
-                        e.target.style.boxShadow = "0 0 0 3px rgba(22,163,74,0.1)"
+                        e.target.style.borderColor = "#5BA0D0"
+                        e.target.style.boxShadow = "0 0 0 3px rgba(91,160,208,0.12)"
                         e.target.style.background = "#fff"
                       }}
                       onBlur={(e) => {
@@ -407,12 +420,12 @@ export default function Home() {
                   style={{
                     display: "flex", alignItems: "center", justifyContent: "space-between",
                     padding: "12px 16px",
-                    border: selectorAbierto ? "1.5px solid #16a34a" : "1.5px solid #e2e8f0",
+                    border: selectorAbierto ? "1.5px solid #5BA0D0" : "1.5px solid #e2e8f0",
                     borderRadius: 12,
                     background: "white",
                     cursor: "pointer",
                     transition: "all 0.15s",
-                    boxShadow: selectorAbierto ? "0 0 0 3px rgba(22,163,74,0.1)" : "none",
+                    boxShadow: selectorAbierto ? "0 0 0 3px rgba(91,160,208,0.12)" : "none",
                     userSelect: "none",
                   }}
                 >
@@ -549,15 +562,15 @@ export default function Home() {
                       key={value}
                       onClick={() => setIngresos(sel ? "" : value)}
                       style={{
-                        border: `1.5px solid ${sel ? "#16a34a" : "#e2e8f0"}`,
+                        border: `1.5px solid ${sel ? "#5BA0D0" : "#e2e8f0"}`,
                         borderRadius: 10, padding: "11px 14px",
-                        background: sel ? "#f0fdf7" : "white",
+                        background: sel ? "#EDF5FB" : "white",
                         cursor: "pointer", textAlign: "left",
                         transition: "all 0.15s",
                       }}
                     >
-                      <div style={{ fontSize: 13, fontWeight: 600, color: sel ? "#14532d" : "#374151" }}>{texto}</div>
-                      <div style={{ fontSize: 11, color: sel ? "#16a34a" : "#94a3b8", marginTop: 2 }}>{subtexto}</div>
+                      <div style={{ fontSize: 13, fontWeight: 600, color: sel ? "#1A4F6E" : "#374151" }}>{texto}</div>
+                      <div style={{ fontSize: 11, color: sel ? "#2B7CB5" : "#94a3b8", marginTop: 2 }}>{subtexto}</div>
                     </button>
                   )
                 })}
@@ -565,7 +578,7 @@ export default function Home() {
               <button
                 onClick={() => setIngresos(ingresos === "nodice" ? "" : "nodice")}
                 style={{
-                  width: "100%", border: `1px solid ${ingresos === "nodice" ? "#16a34a" : "#e2e8f0"}`,
+                  width: "100%", border: `1px solid ${ingresos === "nodice" ? "#5BA0D0" : "#e2e8f0"}`,
                   borderRadius: 10, padding: "8px 14px", background: "transparent",
                   cursor: "pointer", textAlign: "left", fontSize: 12,
                   color: ingresos === "nodice" ? "#14532d" : "#94a3b8",
@@ -581,18 +594,22 @@ export default function Home() {
               onClick={handleCalcular}
               disabled={loading || totalGasto === 0}
               style={{
-                width: "100%", height: 56,
-                background: totalGasto === 0 || loading ? "#cbd5e1" : "#16a34a",
-                color: "white", border: "none", borderRadius: 14,
-                fontSize: 16, fontWeight: 700,
+                width: "100%", height: 58,
+                background: totalGasto === 0 || loading
+                  ? "#e2e8f0"
+                  : "linear-gradient(135deg, #C9A84C 0%, #E8C96A 50%, #C9A84C 100%)",
+                backgroundSize: "200% auto",
+                color: totalGasto === 0 || loading ? "#94a3b8" : "#0C1623", border: "none", borderRadius: 14,
+                fontSize: 16, fontWeight: 800,
                 cursor: totalGasto === 0 || loading ? "not-allowed" : "pointer",
                 display: "flex", alignItems: "center", justifyContent: "center", gap: 8,
-                boxShadow: totalGasto > 0 && !loading ? "0 4px 20px rgba(22,163,74,0.3)" : "none",
-                transition: "background 0.15s, box-shadow 0.15s, transform 0.1s",
+                boxShadow: totalGasto > 0 && !loading ? "0 4px 24px rgba(201,168,76,0.35), 0 1px 0 rgba(255,255,255,0.25) inset" : "none",
+                transition: "box-shadow 0.15s, transform 0.1s",
+                letterSpacing: "-0.01em",
                 marginBottom: 12,
               }}
-              onMouseEnter={e => { if (totalGasto > 0 && !loading) e.currentTarget.style.background = "#15803d" }}
-              onMouseLeave={e => { if (totalGasto > 0 && !loading) e.currentTarget.style.background = "#16a34a" }}
+              onMouseEnter={e => { if (totalGasto > 0 && !loading) { e.currentTarget.style.boxShadow = "0 8px 32px rgba(201,168,76,0.5)"; e.currentTarget.style.transform = "translateY(-1px)" } }}
+              onMouseLeave={e => { if (totalGasto > 0 && !loading) { e.currentTarget.style.boxShadow = "0 4px 24px rgba(201,168,76,0.35)"; e.currentTarget.style.transform = "translateY(0)" } }}
             >
               {loading ? (
                 <><Spinner />Calculando…</>
@@ -670,9 +687,9 @@ export default function Home() {
                       display: "flex", alignItems: "center", justifyContent: "center",
                       marginBottom: 20,
                     }}>
-                      <Icono size={22} color="#16a34a" strokeWidth={1.75} />
+                      <Icono size={22} color="#2B7CB5" strokeWidth={1.75} />
                     </div>
-                    <div style={{ fontSize: 11, fontWeight: 800, color: "#16a34a", letterSpacing: "0.06em", marginBottom: 8 }}>
+                    <div style={{ fontSize: 11, fontWeight: 800, color: "#C9A84C", letterSpacing: "0.06em", marginBottom: 8 }}>
                       PASO {num}
                     </div>
                     <h3 style={{ fontSize: 17, fontWeight: 800, color: "#0f172a", margin: "0 0 8px", letterSpacing: "-0.02em" }}>{title}</h3>
@@ -788,7 +805,7 @@ export default function Home() {
         <div style={{ maxWidth: 1100, margin: "0 auto" }}>
 
           <div style={{ marginBottom: 48 }}>
-            <div style={{ fontSize: 11, fontWeight: 700, color: "#16a34a", letterSpacing: "0.1em", textTransform: "uppercase", marginBottom: 10 }}>
+            <div style={{ fontSize: 11, fontWeight: 700, color: "#C9A84C", letterSpacing: "0.1em", textTransform: "uppercase", marginBottom: 10 }}>
               Guías financieras
             </div>
             <h2 style={{ fontSize: "clamp(26px, 3.5vw, 40px)", fontWeight: 900, letterSpacing: "-0.04em", color: "#0f172a", margin: 0 }}>
@@ -825,11 +842,11 @@ export default function Home() {
                 >
                   <div style={{
                     width: 44, height: 44, borderRadius: 12,
-                    background: "#f0fdf4", border: "1px solid #bbf7d0",
+                    background: "rgba(201,168,76,0.08)", border: "1px solid rgba(201,168,76,0.2)",
                     display: "flex", alignItems: "center", justifyContent: "center",
                     marginBottom: 20,
                   }}>
-                    <Icono size={22} color="#16a34a" strokeWidth={1.75} />
+                    <Icono size={22} color="#C9A84C" strokeWidth={1.75} />
                   </div>
 
                   <h3 style={{ fontSize: 17, fontWeight: 800, color: "#0f172a", margin: "0 0 10px", letterSpacing: "-0.02em" }}>
@@ -838,7 +855,7 @@ export default function Home() {
                   <p style={{ fontSize: 14, color: "#64748b", margin: "0 0 24px", lineHeight: 1.65, flex: 1 }}>
                     {desc}
                   </p>
-                  <span style={{ fontSize: 13, fontWeight: 700, color: "#16a34a", display: "inline-flex", alignItems: "center", gap: 5 }}>
+                  <span style={{ fontSize: 13, fontWeight: 700, color: "#C9A84C", display: "inline-flex", alignItems: "center", gap: 5 }}>
                     Leer guía <ArrowRight size={13} />
                   </span>
                 </div>

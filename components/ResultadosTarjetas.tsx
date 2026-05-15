@@ -2,8 +2,11 @@
 
 import { useState, useEffect, type CSSProperties } from "react"
 import { motion, AnimatePresence } from "framer-motion"
+import dynamic from "next/dynamic"
 import { CreditCard, Percent, ShoppingCart, Zap, Plane, Pill, Car, ArrowUpRight, TrendingUp, Share2, Bookmark } from "lucide-react"
 import { TARJETAS, type Tarjeta, type CatKey, type Gastos } from "./tarjetas-data"
+
+const AhorroChart = dynamic(() => import("./AhorroChart"), { ssr: false })
 
 // ─── Utilidades ──────────────────────────────────────────────────────────────
 
@@ -563,14 +566,19 @@ export default function ResultadosTarjetas({ resultados, gastos, tarjetaActual, 
       animate={{ opacity: 1, y: 0 }}
       transition={{ duration: 0.6, ease: [0.22, 1, 0.36, 1] }}
     >
-      {/* ── Header ranking — PROBLEMA 2: títulos 32px 800 */}
+      {/* ── Gráfico visual ── */}
+      <AhorroChart datos={resultados.map(t => ({ nombre: t.nombre, ahorro: t.ahorro }))} />
+
+      {/* ── Header ranking ── */}
       <div style={{ display:"flex", flexWrap:"wrap", alignItems:"center", gap:12, marginBottom:24 }}>
-        <h2 style={{ fontSize:36, fontWeight:900, letterSpacing:"-0.03em", color:"#111827", margin:0 }}>
+        <h2 style={{ fontSize:32, fontWeight:900, letterSpacing:"-0.03em", color:"#0F1923", margin:0 }}>
           Tu ranking personalizado
         </h2>
-        <span style={{ background:"rgba(16,185,129,0.1)", color:"#059669",
-          border:"1px solid rgba(16,185,129,0.2)", borderRadius:999,
-          fontSize:14, fontWeight:600, padding:"4px 14px" }}>
+        <span style={{
+          background: "rgba(91,160,208,0.1)", color: "#2B7CB5",
+          border: "1px solid rgba(91,160,208,0.25)", borderRadius: 999,
+          fontSize: 13, fontWeight: 600, padding: "4px 14px",
+        }}>
           {formatARS(totalGasto)}/mes
         </span>
       </div>

@@ -42,12 +42,12 @@ export default function Navbar() {
           display: 'flex', alignItems: 'center', gap: 8,
         }}>
           <span style={{ fontSize: 21, fontWeight: 800, letterSpacing: '-0.03em' }}>
-            <span style={{ color: '#10b981' }}>r</span>
+            <span style={{ color: '#5BA0D0' }}>r</span>
             <span style={{ color: '#111827' }}>ateargy</span>
           </span>
           <span style={{
             display: 'inline-block', width: 7, height: 7, borderRadius: '50%',
-            background: '#10b981', animation: 'navbar-pulse 2s ease-in-out infinite',
+            background: '#C9A84C', animation: 'navbar-pulse 2s ease-in-out infinite',
           }} />
         </Link>
 
@@ -63,8 +63,8 @@ export default function Navbar() {
                 style={{
                   textDecoration: 'none', padding: '6px 13px', borderRadius: 8,
                   fontSize: 14, fontWeight: active ? 600 : 500,
-                  color: active ? '#059669' : '#6b7280',
-                  background: active ? 'rgba(16,185,129,0.08)' : 'transparent',
+                  color: active ? '#2B7CB5' : '#6b7280',
+                  background: active ? 'rgba(91,160,208,0.08)' : 'transparent',
                   transition: 'color 0.15s, background 0.15s',
                 }}
               >
