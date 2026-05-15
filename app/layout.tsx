@@ -5,7 +5,7 @@ import './globals.css'
 import ClientShell from '@/components/ClientShell'
 import { TARJETAS_PUBLICAS } from '@/components/tarjetas-data'
 
-const GA_ID = process.env.NEXT_PUBLIC_GA_MEASUREMENT_ID
+const GA_ID = "G-3ZH4BFR37K"
 
 const inter = Inter({
   subsets: ['latin'],
