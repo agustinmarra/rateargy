@@ -1,7 +1,7 @@
 // ============================================================
 // GENERADO AUTOMÁTICAMENTE DESDE GOOGLE SHEETS
 // NO EDITAR MANUALMENTE — usar el Sheet
-// Última sincronización: 15/5/2026, 08:56:55
+// Última sincronización: 15/5/2026, 09:32:45
 // ============================================================
 
 export const MES_ACTUALIZACION = "mayo de 2026"
