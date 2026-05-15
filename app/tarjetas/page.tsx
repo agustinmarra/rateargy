@@ -35,7 +35,7 @@ export default function TarjetasPage() {
         <p style={{ fontSize: 16, color: "#475569", maxWidth: 600 }}>
           {TARJETAS_PUBLICAS.length} tarjetas comparadas. Usá el comparador para ver cuál te conviene según tu perfil de gasto.
         </p>
-        <div style={{ marginTop: 20 }}>
+        <div style={{ marginTop: 20, display: "flex", gap: 12, flexWrap: "wrap" }}>
           <a href="/" style={{
             display: "inline-block",
             background: "#0a7c4e", color: "white",
@@ -43,6 +43,15 @@ export default function TarjetasPage() {
             fontSize: 14, fontWeight: 700, textDecoration: "none"
           }}>
             Comparar con mi perfil →
+          </a>
+          <a href="/tarjetas/comparar" style={{
+            display: "inline-block",
+            background: "white", color: "#0a7c4e",
+            padding: "12px 24px", borderRadius: 10,
+            fontSize: 14, fontWeight: 700, textDecoration: "none",
+            border: "1.5px solid #0a7c4e"
+          }}>
+            Comparar dos tarjetas →
           </a>
         </div>
       </div>
