@@ -3,14 +3,14 @@
 import { useState, useEffect, useCallback, useRef } from "react"
 import { motion, AnimatePresence } from "framer-motion"
 import dynamic from "next/dynamic"
-import { Calculator, BarChart2, Trophy, ArrowRight, BookOpen, CreditCard, Banknote, PiggyBank, ChevronDown, X, Check, Bell, CheckCircle } from "lucide-react"
+import { Calculator, BarChart2, Trophy, ArrowRight, BookOpen, CreditCard, PiggyBank, ChevronDown, X, Check, Bell, CheckCircle } from "lucide-react"
 import { TARJETAS_PUBLICAS, rankear, type Gastos, type CatKey } from "@/components/tarjetas-data"
 import { formatARS, CatIcon } from "@/components/ResultadosTarjetas"
 import { BancoLogo } from "@/components/BancoLogo"
 
 const ResultadosTarjetas = dynamic(() => import("@/components/ResultadosTarjetas"), { ssr: false })
 
-// ─── Constantes ──────────────────────────────────────────────────────────────
+// ─── Constantes ───────────────────────────────────────────────────────────────
 
 const CAT_FIELDS: { label: string; key: CatKey }[] = [
   { label: "Supermercados",             key: "super" },
@@ -26,26 +26,17 @@ const GASTOS_VACIO: Gastos = {
   online: 0, servicios: 0,
 }
 
-const STATS = [
-  { value: String(TARJETAS_PUBLICAS.length), label: "tarjetas comparadas" },
-  { value: "6",   label: "categorías de gasto" },
-  { value: "~3m", label: "para ver tu ranking" },
-]
-
 const COMO_FUNCIONA = [
-  { Icono: Calculator, num: "01", title: "Ingresá tus gastos",   desc: "Sin registro ni datos personales. Todo queda en tu navegador." },
-  { Icono: BarChart2,  num: "02", title: "Calculamos tu ahorro", desc: `Comparamos ${TARJETAS_PUBLICAS.length} tarjetas en tiempo real usando sus beneficios reales.` },
-  { Icono: Trophy,     num: "03", title: "Elegís la mejor",      desc: "Ranking ordenado por ahorro real mensual para tu perfil de gasto." },
+  { Icono: Calculator, num: "1", title: "Ingresá tus gastos",   desc: "Sin registro ni datos personales. Ponés cuánto gastás por categoría." },
+  { Icono: BarChart2,  num: "2", title: "Calculamos tu ahorro", desc: `Comparamos ${TARJETAS_PUBLICAS.length} tarjetas usando sus beneficios y topes reales.` },
+  { Icono: Trophy,     num: "3", title: "Elegís la mejor",      desc: "Ranking ordenado por ahorro real mensual para tu perfil de gasto." },
 ]
-
 
 const GUIAS = [
   { Icono: CreditCard, titulo: "Cómo elegir tu tarjeta", desc: "Los factores clave para no equivocarte al elegir en Argentina.", href: "/articulos/como-elegir-tarjeta-de-credito-argentina-2026" },
-  { Icono: BookOpen,   titulo: "7 errores al elegir tarjeta",  desc: "Los errores más comunes que hacen que la gente pierda plata.", href: "/articulos/errores-comunes-al-elegir-tarjeta-argentina" },
+  { Icono: BookOpen,   titulo: "7 errores al elegir tarjeta", desc: "Los errores más comunes que hacen que la gente pierda plata.", href: "/articulos/errores-comunes-al-elegir-tarjeta-argentina" },
   { Icono: PiggyBank,  titulo: "Cómo funciona el ranking", desc: "La metodología detrás de los cálculos de ahorro de rateargy.", href: "/articulos/como-funciona-el-ranking-de-rateargy" },
 ]
-
-// ─── Elegibilidad por segmento de ingresos ────────────────────────────────────
 
 const ELEGIBILIDAD: Record<string, string[]> = {
   "bajo": [
@@ -67,7 +58,7 @@ const ELEGIBILIDAD: Record<string, string[]> = {
   "nodice": [],
 }
 
-// ─── URL helpers ─────────────────────────────────────────────────────────────
+// ─── URL helpers ──────────────────────────────────────────────────────────────
 
 function loadFromURL(): Partial<Gastos> {
   if (typeof window === "undefined") return {}
@@ -97,7 +88,7 @@ function getTotalGasto(g: Gastos): number {
   return Object.values(g).reduce((a, b) => a + b, 0)
 }
 
-// ─── Spinner ─────────────────────────────────────────────────────────────────
+// ─── Spinner ──────────────────────────────────────────────────────────────────
 
 function Spinner() {
   return (
@@ -114,303 +105,9 @@ function Toast({ msg }: { msg: string | null }) {
   if (!msg) return null
   return (
     <div className="fixed bottom-5 right-5 text-white px-4 py-2.5 rounded-xl text-sm shadow-2xl z-50 pointer-events-none"
-      style={{ background: "rgba(15,23,42,0.92)", backdropFilter: "blur(12px)", border: "1px solid rgba(255,255,255,0.08)" }}>
+      style={{ background: "rgba(15,23,42,0.95)", backdropFilter: "blur(12px)", border: "1px solid rgba(255,255,255,0.08)" }}>
       {msg}
     </div>
-  )
-}
-
-// ─── DashboardPreview (hero widget) ──────────────────────────────────────────
-
-function DashboardPreview() {
-  // Mock de los top 3 resultados para un perfil típico
-  const mockTop = [
-    { id: "galicia-eminent",  bancoId: "galicia-eminent",  nombre: "Galicia Éminent",  banco: "Banco Galicia", ahorro: 18400, gradiente: "linear-gradient(135deg, #1a7f4f 0%, #0d4f31 100%)" },
-    { id: "santander-gold",   bancoId: "santander-gold",   nombre: "Santander Gold",   banco: "Santander",     ahorro: 14200, gradiente: "linear-gradient(135deg, #cc0000 0%, #ff4444 100%)" },
-    { id: "naranja-x",        bancoId: "naranja-x",        nombre: "Naranja X",        banco: "Naranja X",     ahorro: 11800, gradiente: "linear-gradient(135deg, #e05a00 0%, #ff8c42 100%)" },
-  ]
-
-  return (
-    <motion.div
-      initial={{ opacity: 0, y: 24, scale: 0.97 }}
-      animate={{ opacity: 1, y: 0, scale: 1 }}
-      transition={{ duration: 0.55, delay: 0.2 }}
-      style={{
-        background: "rgba(255,255,255,0.95)",
-        backdropFilter: "blur(24px)", WebkitBackdropFilter: "blur(24px)",
-        border: "1px solid rgba(0,0,0,0.07)",
-        borderRadius: 24,
-        boxShadow: "0 32px 80px rgba(0,0,0,0.1), 0 0 0 1px rgba(0,0,0,0.03)",
-        padding: 24,
-        maxWidth: 380,
-        width: "100%",
-      }}
-    >
-      {/* Header del widget */}
-      <div style={{ display: "flex", alignItems: "center", justifyContent: "space-between", marginBottom: 18 }}>
-        <div>
-          <p style={{ fontSize: 11, fontWeight: 700, letterSpacing: "0.08em", textTransform: "uppercase", color: "#94a3b8", margin: 0 }}>
-            Ejemplo real · esta semana
-          </p>
-          <p style={{ fontSize: 14, fontWeight: 600, color: "#111827", margin: "2px 0 0" }}>
-            Gasto típico de un argentino
-          </p>
-        </div>
-        <div style={{
-          background: "linear-gradient(135deg, #ecfdf5 0%, #d1fae5 100%)",
-          border: "1px solid rgba(16,185,129,0.25)",
-          borderRadius: 10, padding: "5px 11px",
-          fontSize: 11, fontWeight: 700, color: "#059669",
-          boxShadow: "0 2px 8px rgba(16,185,129,0.12)",
-        }}>
-          {TARJETAS_PUBLICAS.length} tarjetas
-        </div>
-      </div>
-
-      {/* Top 3 cards */}
-      <div style={{ display: "flex", flexDirection: "column", gap: 10 }}>
-        {mockTop.map((t, i) => (
-          <div key={t.id} style={{
-            display: "flex", alignItems: "center", gap: 12,
-            padding: "12px 14px",
-            background: i === 0 ? "linear-gradient(135deg, #f0fdf4 0%, #dcfce7 100%)" : "#f8fafc",
-            border: `1.5px solid ${i === 0 ? "#86efac" : "#e2e8f0"}`,
-            borderRadius: 14,
-          }}>
-            {/* Posición */}
-            <div style={{
-              width: 28, height: 28, borderRadius: "50%",
-              background: i === 0 ? "#10b981" : "#e2e8f0",
-              color: i === 0 ? "#fff" : "#64748b",
-              display: "flex", alignItems: "center", justifyContent: "center",
-              fontSize: 13, fontWeight: 800, flexShrink: 0,
-            }}>
-              {i + 1}
-            </div>
-
-            {/* Mini card */}
-            <div style={{
-              width: 36, height: 22, borderRadius: 5,
-              background: t.gradiente, flexShrink: 0,
-              boxShadow: "0 2px 6px rgba(0,0,0,0.15)",
-            }} />
-
-            {/* Nombre */}
-            <div style={{ flex: 1, minWidth: 0 }}>
-              <p style={{ fontSize: 13, fontWeight: 600, color: "#111827", margin: 0, whiteSpace: "nowrap", overflow: "hidden", textOverflow: "ellipsis" }}>
-                {t.nombre}
-              </p>
-              <p style={{ fontSize: 11, color: "#6b7280", margin: 0 }}>{t.banco}</p>
-            </div>
-
-            {/* Ahorro */}
-            <div style={{ textAlign: "right", flexShrink: 0 }}>
-              <p style={{ fontSize: 14, fontWeight: 800, color: i === 0 ? "#059669" : "#374151", margin: 0 }}>
-                {formatARS(t.ahorro)}
-              </p>
-              <p style={{ fontSize: 10, color: "#94a3b8", margin: 0 }}>/ mes</p>
-            </div>
-          </div>
-        ))}
-      </div>
-
-    </motion.div>
-  )
-}
-
-// ─── MarqueeLogos ─────────────────────────────────────────────────────────────
-
-function MarqueeLogos() {
-  // Dedup: un item por banco (puede haber varias tarjetas del mismo banco)
-  const seen = new Set<string>()
-  const unique = TARJETAS_PUBLICAS.filter(t => {
-    if (seen.has(t.banco)) return false
-    seen.add(t.banco)
-    return true
-  })
-  const items = [...unique, ...unique] // duplicar para loop infinito
-  return (
-    <div style={{ overflow: "hidden", position: "relative", padding: "6px 0" }}>
-      {/* Fade izquierdo */}
-      <div style={{ position: "absolute", left: 0, top: 0, bottom: 0, width: 80, zIndex: 1,
-        background: "linear-gradient(to right, #fafafa, transparent)", pointerEvents: "none" }} />
-      {/* Fade derecho */}
-      <div style={{ position: "absolute", right: 0, top: 0, bottom: 0, width: 80, zIndex: 1,
-        background: "linear-gradient(to left, #fafafa, transparent)", pointerEvents: "none" }} />
-
-      <div className="partners-track" style={{ display: "flex", gap: 16, alignItems: "center" }}>
-        {items.map((t, i) => (
-          <div key={`${t.id}-${i}`} style={{
-            display: "flex", alignItems: "center", gap: 8,
-            background: "#fff", border: "1px solid #e2e8f0",
-            borderRadius: 999, padding: "8px 16px",
-            flexShrink: 0, whiteSpace: "nowrap",
-          }}>
-            <BancoLogo banco={t.bancoId} size={20} />
-            <span style={{ fontSize: 13, fontWeight: 600, color: "#374151" }}>{t.banco}</span>
-          </div>
-        ))}
-      </div>
-    </div>
-  )
-}
-
-// ─── Perfil típico para teaser ────────────────────────────────────────────────
-const PERFIL_TIPICO: Gastos = {
-  super: 200000, nafta: 50000, farmacia: 50000, delivery: 25000,
-  online: 30000, servicios: 10000,
-}
-
-// Gradientes representativos (sin importar ResultadosTarjetas)
-const TEASER_GRADIENTS: Record<string, string> = {
-  "galicia-eminent": "linear-gradient(135deg, #134e32 0%, #1a7f4f 60%, #22c55e 100%)",
-  "galicia":         "linear-gradient(135deg, #0f3d24 0%, #1a6b3f 60%, #259a5b 100%)",
-  "bbva":            "linear-gradient(135deg, #00437f 0%, #005cbf 60%, #1a7ae0 100%)",
-  "bbva-platinum":   "linear-gradient(135deg, #1a1a2e 0%, #22304a 60%, #2d4169 100%)",
-  "santander":       "linear-gradient(135deg, #7a0000 0%, #b80000 60%, #e60000 100%)",
-  "santander-gold":  "linear-gradient(135deg, #5c3d00 0%, #96680a 60%, #c9940f 100%)",
-  "macro":           "linear-gradient(135deg, #0a3370 0%, #1254a8 60%, #1a6fd4 100%)",
-  "naranja-x":       "linear-gradient(135deg, #b33a00 0%, #e65200 60%, #ff6a1a 100%)",
-  "uala":            "linear-gradient(135deg, #3d006b 0%, #6200b3 60%, #8c00e6 100%)",
-  "bna":             "linear-gradient(135deg, #002952 0%, #003d7a 60%, #0055ab 100%)",
-}
-
-// ─── MiniTeaser ───────────────────────────────────────────────────────────────
-function MiniTeaser({ onCTA }: { onCTA: () => void }) {
-  const top3 = rankear(PERFIL_TIPICO).slice(0, 3)
-
-  return (
-    <section style={{ paddingBottom: 32 }}>
-      {/* Header */}
-      <div style={{
-        display: "flex", alignItems: "flex-end", justifyContent: "space-between",
-        flexWrap: "wrap", gap: 16, marginBottom: 48,
-      }}>
-        <div>
-          <h2 style={{
-            fontSize: "clamp(26px, 3vw, 40px)", fontWeight: 900,
-            letterSpacing: "-0.04em", color: "#0a0a0a", margin: 0, lineHeight: 1.05,
-          }}>
-            Ejemplo de ahorro real
-          </h2>
-        </div>
-        <button
-          onClick={onCTA}
-          style={{
-            display: "inline-flex", alignItems: "center", gap: 7,
-            padding: "10px 20px", borderRadius: 12,
-            background: "linear-gradient(135deg, #ecfdf5 0%, #d1fae5 100%)",
-            border: "1px solid rgba(16,185,129,0.25)",
-            color: "#059669", fontSize: 13, fontWeight: 700, cursor: "pointer",
-            boxShadow: "0 2px 8px rgba(16,185,129,0.1)",
-            flexShrink: 0,
-          }}
-        >
-          Calculá el tuyo
-          <ArrowRight size={14} />
-        </button>
-      </div>
-
-      {/* Cards */}
-      <div className="teaser-grid">
-        {top3.map((t, i) => {
-          const grad = TEASER_GRADIENTS[t.id] ?? t.gradiente
-          const medals = ["1", "2", "3"]
-
-          return (
-            <motion.div
-              key={t.id}
-              initial={{ opacity: 0, y: 20 }}
-              animate={{ opacity: 1, y: 0 }}
-              transition={{ duration: 0.4, delay: 0.1 + i * 0.08 }}
-              style={{
-                background: i === 0
-                  ? "linear-gradient(145deg, #f0fdf4 0%, #dcfce7 100%)"
-                  : "#ffffff",
-                border: `1.5px solid ${i === 0 ? "rgba(16,185,129,0.25)" : "#f3f4f6"}`,
-                borderRadius: 24,
-                padding: "32px",
-                position: "relative", overflow: "hidden",
-                boxShadow: i === 0
-                  ? "0 8px 32px rgba(16,185,129,0.12)"
-                  : "0 4px 16px rgba(0,0,0,0.04)",
-              }}
-            >
-              {/* Orb decorativo */}
-              <div aria-hidden style={{
-                position: "absolute", bottom: -30, right: -30, width: 120, height: 120,
-                borderRadius: "50%",
-                background: i === 0 ? "rgba(16,185,129,0.08)" : "rgba(0,0,0,0.03)",
-                pointerEvents: "none",
-              }} />
-
-              {/* Posición + mini card */}
-              <div style={{ display: "flex", alignItems: "center", gap: 12, marginBottom: 24 }}>
-                <span style={{
-                  width: 28, height: 28, borderRadius: "50%", flexShrink: 0,
-                  background: i === 0 ? "#10b981" : "#f1f5f9",
-                  color: i === 0 ? "#fff" : "#64748b",
-                  display: "inline-flex", alignItems: "center", justifyContent: "center",
-                  fontSize: 13, fontWeight: 800,
-                }}>{medals[i]}</span>
-                <div style={{
-                  width: 52, height: 32, borderRadius: 8,
-                  background: grad, flexShrink: 0,
-                  boxShadow: "0 4px 12px rgba(0,0,0,0.2)",
-                  position: "relative", overflow: "hidden",
-                }}>
-                  <div style={{
-                    position: "absolute", inset: 0,
-                    background: "linear-gradient(145deg, rgba(255,255,255,0.15) 0%, transparent 60%)",
-                  }} />
-                </div>
-                <div style={{ flex: 1, minWidth: 0 }}>
-                  <p style={{ fontSize: 13, fontWeight: 700, color: "#111827", margin: 0, overflow: "hidden", textOverflow: "ellipsis", whiteSpace: "nowrap" }}>
-                    {t.nombre}
-                  </p>
-                  <p style={{ fontSize: 11, color: "#9ca3af", margin: 0 }}>{t.banco}</p>
-                </div>
-              </div>
-
-              {/* Ahorro */}
-              <div style={{ marginBottom: 20 }}>
-                <p style={{ fontSize: 11, fontWeight: 600, color: "#9ca3af", textTransform: "uppercase", letterSpacing: "0.06em", margin: "0 0 4px" }}>
-                  Ahorro mensual estimado
-                </p>
-                <p style={{
-                  fontSize: "clamp(24px, 2.5vw, 30px)", fontWeight: 900,
-                  color: i === 0 ? "#059669" : "#111827",
-                  margin: 0, letterSpacing: "-0.03em", lineHeight: 1,
-                }}>
-                  {formatARS(t.ahorro)}
-                </p>
-                <p style={{ fontSize: 12, color: "#9ca3af", margin: "4px 0 0" }}>
-                  {formatARS(t.ahorro * 12)} al año
-                </p>
-              </div>
-
-              {/* Pills top beneficios */}
-              <div style={{ display: "flex", flexWrap: "wrap", gap: 6 }}>
-                {t.pills.slice(0, 2).map(p => (
-                  <span key={p} style={{
-                    fontSize: 11, fontWeight: 600,
-                    padding: "3px 8px", borderRadius: 6,
-                    background: i === 0 ? "rgba(16,185,129,0.1)" : "#f3f4f6",
-                    color: i === 0 ? "#059669" : "#6b7280",
-                  }}>
-                    {p}
-                  </span>
-                ))}
-              </div>
-            </motion.div>
-          )
-        })}
-      </div>
-
-      <p style={{ fontSize: 12, color: "#9ca3af", textAlign: "center", marginTop: 16 }}>
-        Basado en un gasto típico mensual · Los montos reales varían según tu perfil
-      </p>
-    </section>
   )
 }
 
@@ -498,978 +195,658 @@ export default function Home() {
     calculadoraRef.current?.scrollIntoView({ behavior: "smooth", block: "start" })
   }
 
-  // ────────────────────────────────────────────────────────────────────────────
   return (
     <>
       <style>{`
-        @keyframes slideShimmer {
-          0%   { transform: translateX(-100%); }
-          100% { transform: translateX(300%); }
-        }
-        @keyframes shine {
-          0%   { transform: translateX(-100%); }
-          100% { transform: translateX(300%); }
-        }
-        @keyframes float {
-          0%, 100% { transform: translateY(0px); }
-          50%       { transform: translateY(-8px); }
-        }
         input[type=number]::-webkit-inner-spin-button,
         input[type=number]::-webkit-outer-spin-button { -webkit-appearance: none; margin: 0; }
         input[type=number] { -moz-appearance: textfield; }
-        .calc-card { padding: 52px; }
-        @media (max-width: 640px) { .calc-card { padding: 24px; } }
-        .hero-grid {
-          display: grid;
-          grid-template-columns: 1fr 1fr;
-          gap: 64px;
-          align-items: center;
-        }
-        @media (max-width: 960px) {
-          .hero-grid { grid-template-columns: 1fr; gap: 40px; }
-          .hero-preview { display: none; }
-        }
+        .calc-card { padding: 48px 52px; }
+        @media (max-width: 640px) { .calc-card { padding: 24px 20px; } }
         .guias-grid {
           display: grid;
           grid-template-columns: repeat(3, 1fr);
-          gap: 24px;
+          gap: 20px;
         }
-        @media (max-width: 768px) { .guias-grid { grid-template-columns: 1fr; } }
-        .teaser-grid {
-          display: grid;
-          grid-template-columns: repeat(3, 1fr);
-          gap: 28px;
+        @media (max-width: 900px) { .guias-grid { grid-template-columns: 1fr; } }
+        .hero-pill {
+          display: inline-flex; align-items: center; gap: 8px;
+          background: rgba(255,255,255,0.06);
+          border: 1px solid rgba(255,255,255,0.12);
+          border-radius: 999px; padding: 6px 14px;
+          font-size: 12px; font-weight: 600; color: rgba(255,255,255,0.7);
+          letter-spacing: 0.02em; margin-bottom: 28px;
         }
-        @media (max-width: 768px) { .teaser-grid { grid-template-columns: 1fr; } }
-        @media (max-width: 768px) { .footer-grid { grid-template-columns: 1fr !important; gap: 32px !important; } }
-        .partners-track { animation: marquee 30s linear infinite; }
-        @keyframes marquee {
-          0%   { transform: translateX(0); }
-          100% { transform: translateX(-50%); }
-        }
+        .hero-pill span { color: #4ade80; }
+        .input-wrap:focus-within label { color: #059669; }
       `}</style>
 
-      <div style={{ position: "relative", minHeight: "100vh", background: "#ffffff", overflow: "clip" }}>
+      {/* ════ HERO — fondo oscuro ════ */}
+      <section style={{
+        background: "linear-gradient(160deg, #0c1118 0%, #0f1923 60%, #111820 100%)",
+        padding: "72px 24px 80px",
+        position: "relative",
+        overflow: "hidden",
+      }}>
+        {/* Glow sutil */}
+        <div aria-hidden style={{
+          position: "absolute", top: -120, left: "50%", transform: "translateX(-50%)",
+          width: 600, height: 300, borderRadius: "50%",
+          background: "radial-gradient(ellipse, rgba(16,185,129,0.12) 0%, transparent 70%)",
+          pointerEvents: "none",
+        }} />
 
+        <div style={{ maxWidth: 760, margin: "0 auto", position: "relative", zIndex: 1 }}>
 
-        <div style={{
-          position: "relative", zIndex: 1,
-          maxWidth: 1120, margin: "0 auto", padding: "0 24px 0",
-        }}>
+          {/* Badge */}
+          <div className="hero-pill">
+            <span style={{ width: 6, height: 6, borderRadius: "50%", background: "#4ade80", display: "inline-block" }} />
+            <span>{TARJETAS_PUBLICAS.length} tarjetas</span>
+            <span style={{ color: "rgba(255,255,255,0.25)" }}>·</span>
+            <span>Gratis</span>
+            <span style={{ color: "rgba(255,255,255,0.25)" }}>·</span>
+            <span>Actualizado cada lunes</span>
+          </div>
 
-          {/* ════ SECCIÓN 1: HERO (dos columnas) ════ */}
-          <section style={{ paddingTop: 96, paddingBottom: 96 }}>
-            <div className="hero-grid">
+          {/* H1 */}
+          <h1 style={{
+            fontSize: "clamp(38px, 6vw, 72px)",
+            fontWeight: 900,
+            letterSpacing: "-0.045em",
+            lineHeight: 1.0,
+            color: "#ffffff",
+            margin: "0 0 20px",
+          }}>
+            La tarjeta que más<br />
+            te conviene,{" "}
+            <span style={{ color: "#4ade80" }}>calculada.</span>
+          </h1>
 
-              {/* Columna izquierda */}
-              <div>
-                {/* Eyebrow */}
-                <motion.div
-                  initial={{ opacity: 0, y: 8 }} animate={{ opacity: 1, y: 0 }} transition={{ duration: 0.4 }}
-                  style={{ display: "inline-flex", alignItems: "center", gap: 7,
-                    background: "#f0fdf4",
-                    border: "1px solid #bbf7d0",
-                    borderRadius: 999, padding: "6px 14px",
-                    fontSize: 12, fontWeight: 600, color: "#059669", marginBottom: 24 }}
-                >
-                  <span style={{ width: 6, height: 6, borderRadius: "50%", background: "#10b981", display: "inline-block" }} />
-                  Datos actualizados · {TARJETAS_PUBLICAS.length} tarjetas
-                </motion.div>
+          {/* Subtítulo */}
+          <p style={{
+            fontSize: "clamp(15px, 2vw, 18px)",
+            color: "rgba(255,255,255,0.55)",
+            lineHeight: 1.7,
+            margin: "0 0 36px",
+            maxWidth: 520,
+          }}>
+            Ingresá cuánto gastás por mes en supermercado, nafta y delivery.
+            Te decimos exactamente cuánto ahorrás con cada tarjeta argentina.
+          </p>
 
-                {/* H1 */}
-                <motion.h1
-                  initial={{ opacity: 0, y: 16 }} animate={{ opacity: 1, y: 0 }} transition={{ duration: 0.45, delay: 0.05 }}
-                  style={{
-                    fontSize: "clamp(40px, 5vw, 68px)",
-                    fontWeight: 900, letterSpacing: "-0.045em",
-                    lineHeight: 1.0, color: "#0a0a0a",
-                    margin: "0 0 28px",
-                  }}
-                >
-                  La tarjeta que más<br />
-                  te conviene,{" "}
-                  <span style={{
-                    background: "linear-gradient(135deg, #10b981 0%, #059669 60%, #6366f1 100%)",
-                    WebkitBackgroundClip: "text", WebkitTextFillColor: "transparent", backgroundClip: "text",
-                  }}>
-                    calculada.
-                  </span>
-                </motion.h1>
+          {/* CTA */}
+          <button
+            onClick={scrollToCalculadora}
+            style={{
+              display: "inline-flex", alignItems: "center", gap: 10,
+              background: "#16a34a",
+              color: "#fff", border: "none", borderRadius: 12,
+              padding: "14px 28px", fontSize: 15, fontWeight: 700,
+              cursor: "pointer",
+              boxShadow: "0 4px 24px rgba(22,163,74,0.35)",
+              transition: "background 0.15s, transform 0.15s",
+            }}
+            onMouseEnter={e => { e.currentTarget.style.background = "#15803d"; e.currentTarget.style.transform = "translateY(-1px)" }}
+            onMouseLeave={e => { e.currentTarget.style.background = "#16a34a"; e.currentTarget.style.transform = "translateY(0)" }}
+          >
+            Calculá tu ahorro gratis
+            <ArrowRight size={16} />
+          </button>
 
-                {/* Subtítulo */}
-                <motion.p
-                  initial={{ opacity: 0, y: 12 }} animate={{ opacity: 1, y: 0 }} transition={{ duration: 0.4, delay: 0.1 }}
-                  style={{ fontSize: 19, fontWeight: 400, color: "#4b5563",
-                    maxWidth: 500, lineHeight: 1.75, margin: "0 0 40px" }}
-                >
-                  Ingresá tus gastos mensuales y te mostramos exactamente
-                  cuánto ahorrás con cada tarjeta argentina. {TARJETAS_PUBLICAS.length} tarjetas. Gratis.
-                </motion.p>
-
-                {/* CTA Button */}
-                <motion.div
-                  initial={{ opacity: 0, y: 8 }} animate={{ opacity: 1, y: 0 }} transition={{ duration: 0.4, delay: 0.15 }}
-                  style={{ display: "flex", gap: 14, flexWrap: "wrap", alignItems: "center" }}
-                >
-                  <motion.button
-                    onClick={scrollToCalculadora}
-                    whileHover={{ y: -2 }}
-                    whileTap={{ scale: 0.97 }}
-                    style={{
-                      display: "inline-flex", alignItems: "center", gap: 10,
-                      background: "#10b981",
-                      color: "#fff", border: "none", borderRadius: 14,
-                      padding: "15px 30px", fontSize: 16, fontWeight: 700,
-                      cursor: "pointer",
-                      boxShadow: "0 8px 24px rgba(16,185,129,0.3)",
-                    }}
-                  >
-                    Calculá tu ahorro
-                    <ArrowRight size={18} />
-                  </motion.button>
-
-                  <span style={{ fontSize: 13, color: "#9ca3af", fontWeight: 500 }}>
-                    Sin registro · En segundos
-                  </span>
-                </motion.div>
-
-                {/* Stats strip */}
-                <motion.div
-                  initial={{ opacity: 0 }} animate={{ opacity: 1 }} transition={{ duration: 0.5, delay: 0.25 }}
-                  style={{ display: "flex", gap: 36, marginTop: 48, flexWrap: "wrap",
-                    paddingTop: 40, borderTop: "1px solid #f3f4f6" }}
-                >
-                  {STATS.map(({ value, label }) => (
-                    <div key={label}>
-                      <p style={{ fontSize: 28, fontWeight: 900, color: "#111827", margin: 0, letterSpacing: "-0.03em" }}>
-                        {value}
-                      </p>
-                      <p style={{ fontSize: 13, color: "#6b7280", margin: "3px 0 0" }}>{label}</p>
-                    </div>
-                  ))}
-                </motion.div>
+          {/* Stats strip */}
+          <div style={{
+            display: "flex", gap: 32, marginTop: 48,
+            paddingTop: 40, borderTop: "1px solid rgba(255,255,255,0.07)",
+            flexWrap: "wrap",
+          }}>
+            {[
+              { value: `${TARJETAS_PUBLICAS.length}`, label: "tarjetas comparadas" },
+              { value: "6",   label: "categorías de gasto" },
+              { value: "~2 min", label: "para ver tu ranking" },
+            ].map(({ value, label }) => (
+              <div key={label}>
+                <div style={{ fontSize: 26, fontWeight: 900, color: "#ffffff", letterSpacing: "-0.03em" }}>{value}</div>
+                <div style={{ fontSize: 12, color: "rgba(255,255,255,0.4)", marginTop: 3 }}>{label}</div>
               </div>
-
-              {/* Columna derecha — dashboard preview */}
-              <div className="hero-preview" style={{ display: "flex", justifyContent: "flex-end" }}>
-                <DashboardPreview />
-              </div>
-            </div>
-          </section>
-
-
-          {/* ════ MINI TEASER ════ */}
-          <MiniTeaser onCTA={scrollToCalculadora} />
-
-          {/* ── Separador teaser → marquee ── */}
-          <div aria-hidden style={{ height:1, background:"linear-gradient(90deg, transparent, #e5e7eb 30%, #e5e7eb 70%, transparent)", marginBottom:80, marginTop: 80 }} />
-
-          {/* ════ MARQUEE — logos bancos ════ */}
-          <section style={{ marginBottom: 112 }}>
-            <p style={{ fontSize: 11, fontWeight: 700, letterSpacing: "0.1em", textTransform: "uppercase",
-              color: "#94a3b8", textAlign: "center", marginBottom: 20 }}>
-              Comparamos {TARJETAS_PUBLICAS.length} tarjetas líderes de Argentina
-            </p>
-            <div className="partners-wrap">
-              <MarqueeLogos />
-            </div>
-          </section>
+            ))}
+          </div>
         </div>
+      </section>
 
-        {/* ════ SECCIÓN CALCULADORA ════ */}
-        <div style={{
-          background: "linear-gradient(180deg, #ffffff 0%, #f0fdf6 35%, #f7fdf9 65%, #ffffff 100%)",
-          padding: "96px 24px 112px",
-        }}>
-          <div style={{ maxWidth: 1120, margin: "0 auto" }}>
+      {/* ════ CALCULADORA ════ */}
+      <div style={{ background: "#f8fafc", padding: "0 24px 80px" }}>
+        <div style={{ maxWidth: 860, margin: "0 auto" }}>
 
-            {/* Encabezado de sección */}
-            <div style={{ textAlign: "center", marginBottom: 56 }}>
-              <div style={{ display:"inline-flex", alignItems:"center", gap:7,
-                background:"linear-gradient(135deg, #ecfdf5 0%, #d1fae5 100%)",
-                border:"1px solid rgba(16,185,129,0.25)",
-                borderRadius:999, padding:"7px 16px", marginBottom:16,
-                fontSize:11, fontWeight:700, letterSpacing:"0.08em", textTransform:"uppercase", color:"#059669",
-                boxShadow:"0 2px 10px rgba(16,185,129,0.15), inset 0 1px 0 rgba(255,255,255,0.8)" }}>
-                <span style={{ width:6, height:6, borderRadius:"50%", background:"#10b981", display:"inline-block", boxShadow:"0 0 6px rgba(16,185,129,0.6)" }} />
-                Calculadora personalizada
-              </div>
-              <h2 style={{ fontSize: "clamp(30px, 3.5vw, 48px)", fontWeight: 900,
-                letterSpacing: "-0.04em", color: "#0a0a0a", margin: "0 0 16px" }}>
-                ¿Cuánto podés ahorrar?
+          {/* Card calculadora */}
+          <motion.section
+            ref={calculadoraRef}
+            className="calc-card"
+            initial={{ opacity: 0, y: 20 }} animate={{ opacity: 1, y: 0 }}
+            transition={{ duration: 0.45, delay: 0.1 }}
+            style={{
+              background: "#ffffff",
+              border: "1px solid rgba(0,0,0,0.07)",
+              boxShadow: "0 1px 3px rgba(0,0,0,0.04), 0 16px 48px rgba(0,0,0,0.07)",
+              borderRadius: 24,
+              marginTop: -32,
+              scrollMarginTop: 80,
+              position: "relative",
+              zIndex: 2,
+            }}
+          >
+
+            {/* Header calculadora */}
+            <div style={{ marginBottom: 32 }}>
+              <h2 style={{ fontSize: 22, fontWeight: 800, color: "#0f172a", margin: "0 0 6px", letterSpacing: "-0.02em" }}>
+                ¿Cuánto gastás por mes?
               </h2>
-              <p style={{ fontSize: 18, color: "#6b7280", maxWidth: 500, margin: "0 auto", lineHeight: 1.7 }}>
-                Ingresá tus gastos mensuales y calculamos el ranking al instante.
+              <p style={{ fontSize: 14, color: "#64748b", margin: 0 }}>
+                Completá las categorías que aplican. Los demás pueden quedar en cero.
               </p>
             </div>
 
-            {/* Card de la calculadora */}
-            <motion.section
-              ref={calculadoraRef}
-              className="calc-card"
-              initial={{ opacity: 0, y: 20 }} animate={{ opacity: 1, y: 0 }} transition={{ duration: 0.5, delay: 0.15 }}
-              style={{
-                background: "rgba(255,255,255,0.98)",
-                backdropFilter: "blur(24px)", WebkitBackdropFilter: "blur(24px)",
-                border: "1px solid rgba(0,0,0,0.06)",
-                boxShadow: "0 48px 100px rgba(0,0,0,0.1), 0 0 0 1px rgba(0,0,0,0.04), inset 0 1px 0 rgba(255,255,255,1)",
-                borderRadius: 28,
-                scrollMarginTop: 80,
-              }}
-            >
-              {/* Grid inputs */}
-              <div style={{ display: "grid", gridTemplateColumns: "repeat(auto-fill, minmax(220px, 1fr))", gap: 24, marginBottom: 28 }}>
-                {CAT_FIELDS.map(({ label, key }, idx) => (
-                  <motion.div key={key}
-                    initial={{ opacity: 0, y: 12 }} animate={{ opacity: 1, y: 0 }}
-                    transition={{ duration: 0.3, delay: idx * 0.06 }}
-                  >
-                    <label htmlFor={`input-${key}`} style={{
-                      display: "flex", alignItems: "center", gap: 7,
-                      fontSize: 13, fontWeight: 600, color: "#374151",
-                      letterSpacing: "0.02em", marginBottom: 10, cursor: "pointer",
-                    }}>
-                      <CatIcon catKey={key} className="w-4 h-4 flex-shrink-0" style={{ color: "#6b7280" }} />
-                      {label}
-                    </label>
+            {/* Grid inputs */}
+            <div style={{ display: "grid", gridTemplateColumns: "repeat(auto-fill, minmax(220px, 1fr))", gap: 20, marginBottom: 28 }}>
+              {CAT_FIELDS.map(({ label, key }) => (
+                <div key={key} className="input-wrap">
+                  <label htmlFor={`input-${key}`} style={{
+                    display: "flex", alignItems: "center", gap: 6,
+                    fontSize: 12, fontWeight: 700, color: "#475569",
+                    letterSpacing: "0.03em", textTransform: "uppercase",
+                    marginBottom: 8, cursor: "pointer",
+                    transition: "color 0.15s",
+                  }}>
+                    <CatIcon catKey={key} className="w-3.5 h-3.5 flex-shrink-0" />
+                    {label}
+                  </label>
 
-                    <div style={{ position: "relative" }}>
-                      <div style={{ position:"absolute", inset:0, right:"auto", width:44,
-                        display:"flex", alignItems:"center", justifyContent:"center", pointerEvents:"none" }}>
-                        <CatIcon catKey={key} className="w-5 h-5" style={{ color: "#94a3b8" }} />
-                      </div>
-                      <div style={{ position:"absolute", inset:0, left:42, right:"auto", width:18,
-                        display:"flex", alignItems:"center", pointerEvents:"none",
-                        fontSize:15, color:"#94a3b8", fontWeight:500, userSelect:"none" }}>$</div>
-                      <input
-                        id={`input-${key}`}
-                        type="number" min="0" placeholder="0"
-                        value={gastos[key] === 0 ? "" : gastos[key]}
-                        onChange={(e) => updateGasto(key, e.target.value)}
-                        style={{
-                          width:"100%", boxSizing:"border-box",
-                          padding:"16px 16px 16px 62px",
-                          background:"#f8fafc", border:"1.5px solid #e2e8f0",
-                          borderRadius:14, fontSize: 16, color:"#0f172a", outline:"none",
-                          transition:"border-color 0.15s, box-shadow 0.15s",
-                        }}
-                        onFocus={(e) => { e.target.style.borderColor="#10b981"; e.target.style.boxShadow="0 0 0 3px rgba(16,185,129,0.1)"; e.target.style.background="#fff" }}
-                        onBlur={(e)  => { e.target.style.borderColor="#e2e8f0"; e.target.style.boxShadow="none"; e.target.style.background="#f8fafc" }}
-                      />
-                    </div>
-                  </motion.div>
-                ))}
-              </div>
-
-              {/* SELECTOR TARJETA ACTUAL + GASTO TOTAL */}
-              <div style={{ marginBottom: 28 }}>
-
-                {/* Label */}
-                <div style={{ fontSize: 12, fontWeight: 700, color: "#374151", letterSpacing: "0.04em", textTransform: "uppercase", marginBottom: 12, display: "flex", alignItems: "center", gap: 8 }}>
-                  <div style={{ width: 20, height: 20, borderRadius: 6, background: "#f0fdf7", border: "1px solid #bbf7d0", display: "flex", alignItems: "center", justifyContent: "center" }}>
-                    <CreditCard size={12} color="#0a7c4e" />
-                  </div>
-                  ¿Tenés una tarjeta actualmente? <span style={{ color: "#94a3b8", fontWeight: 500, textTransform: "none", letterSpacing: 0 }}>(opcional)</span>
-                </div>
-
-                {/* Trigger + dropdown envueltos en position relative */}
-                <div style={{ position: "relative" }} data-selector="true">
-
-                  {/* Trigger */}
-                  <div
-                    onClick={() => setSelectorAbierto(v => !v)}
-                    style={{
-                      display: "flex", alignItems: "center", justifyContent: "space-between",
-                      padding: "14px 16px",
-                      border: selectorAbierto ? "1.5px solid #0a7c4e" : "1.5px solid #e2e8f0",
-                      borderRadius: 12,
-                      background: "white",
-                      cursor: "pointer",
-                      transition: "all 0.2s",
-                      boxShadow: selectorAbierto ? "0 0 0 3px rgba(10,124,78,0.1)" : "none",
+                  <div style={{ position: "relative" }}>
+                    <span style={{
+                      position: "absolute", left: 14, top: "50%", transform: "translateY(-50%)",
+                      fontSize: 15, color: "#94a3b8", fontWeight: 500, pointerEvents: "none",
                       userSelect: "none",
-                    }}
-                  >
-                    <div style={{ display: "flex", alignItems: "center", gap: 12 }}>
-                      {tarjetaActual ? (
-                        <>
-                          <BancoLogo banco={tarjetaActual} size={32} />
-                          <div>
-                            <div style={{ fontSize: 15, fontWeight: 600, color: "#0f172a", lineHeight: 1.2 }}>
-                              {TARJETAS_PUBLICAS.find(t => t.id === tarjetaActual)?.nombre}
-                            </div>
-                            <div style={{ fontSize: 12, color: "#94a3b8", marginTop: 2 }}>
-                              {TARJETAS_PUBLICAS.find(t => t.id === tarjetaActual)?.banco}
-                            </div>
-                          </div>
-                        </>
-                      ) : (
-                        <div style={{ fontSize: 15, color: "#94a3b8" }}>Seleccioná tu tarjeta actual...</div>
-                      )}
-                    </div>
-                    <motion.div animate={{ rotate: selectorAbierto ? 180 : 0 }} transition={{ duration: 0.2 }}>
-                      <ChevronDown size={18} color="#94a3b8" />
-                    </motion.div>
+                    }}>$</span>
+                    <input
+                      id={`input-${key}`}
+                      type="number" min="0" placeholder="0"
+                      value={gastos[key] === 0 ? "" : gastos[key]}
+                      onChange={(e) => updateGasto(key, e.target.value)}
+                      style={{
+                        width: "100%", boxSizing: "border-box",
+                        padding: "13px 14px 13px 28px",
+                        background: "#f8fafc", border: "1.5px solid #e2e8f0",
+                        borderRadius: 12, fontSize: 16, fontWeight: 600,
+                        color: "#0f172a", outline: "none",
+                        transition: "border-color 0.15s, box-shadow 0.15s, background 0.15s",
+                      }}
+                      onFocus={(e) => {
+                        e.target.style.borderColor = "#16a34a"
+                        e.target.style.boxShadow = "0 0 0 3px rgba(22,163,74,0.1)"
+                        e.target.style.background = "#fff"
+                      }}
+                      onBlur={(e) => {
+                        e.target.style.borderColor = "#e2e8f0"
+                        e.target.style.boxShadow = "none"
+                        e.target.style.background = "#f8fafc"
+                      }}
+                    />
                   </div>
-
-                  {/* Dropdown panel */}
-                  <AnimatePresence>
-                    {selectorAbierto && (
-                      <motion.div
-                        initial={{ opacity: 0, y: -8, scale: 0.98 }}
-                        animate={{ opacity: 1, y: 0, scale: 1 }}
-                        exit={{ opacity: 0, y: -8, scale: 0.98 }}
-                        transition={{ duration: 0.15 }}
-                        style={{
-                          position: "absolute",
-                          top: "calc(100% + 8px)",
-                          left: 0, right: 0,
-                          background: "white",
-                          border: "1.5px solid #e2e8f0",
-                          borderRadius: 16,
-                          boxShadow: "0 20px 60px rgba(0,0,0,0.12), 0 0 0 1px rgba(0,0,0,0.04)",
-                          zIndex: 100,
-                          overflow: "hidden",
-                          maxHeight: 320,
-                          overflowY: "auto",
-                        }}
-                      >
-                        {/* Opción ninguna */}
-                        <div
-                          onClick={() => { setTarjetaActual(""); setSelectorAbierto(false) }}
-                          style={{
-                            display: "flex", alignItems: "center", gap: 12,
-                            padding: "12px 16px",
-                            cursor: "pointer",
-                            borderBottom: "1px solid #f8fafc",
-                            background: tarjetaActual === "" ? "#f0fdf7" : "white",
-                            transition: "background 0.15s",
-                          }}
-                          onMouseEnter={e => (e.currentTarget.style.background = "#f8fafc")}
-                          onMouseLeave={e => (e.currentTarget.style.background = tarjetaActual === "" ? "#f0fdf7" : "white")}
-                        >
-                          <div style={{ width: 32, height: 32, borderRadius: 8, background: "#f1f5f9", border: "1px solid #e2e8f0", display: "flex", alignItems: "center", justifyContent: "center" }}>
-                            <X size={14} color="#94a3b8" />
-                          </div>
-                          <span style={{ fontSize: 14, color: "#94a3b8", fontWeight: 500 }}>Ninguna / no sé</span>
-                        </div>
-
-                        {/* Lista de tarjetas */}
-                        {TARJETAS_PUBLICAS.map((t) => (
-                          <div
-                            key={t.id}
-                            onClick={() => { setTarjetaActual(t.id); setSelectorAbierto(false) }}
-                            style={{
-                              display: "flex", alignItems: "center", gap: 12,
-                              padding: "12px 16px",
-                              cursor: "pointer",
-                              background: tarjetaActual === t.id ? "#f0fdf7" : "white",
-                              borderBottom: "1px solid #f8fafc",
-                              transition: "background 0.15s",
-                            }}
-                            onMouseEnter={e => { if (tarjetaActual !== t.id) e.currentTarget.style.background = "#f8fafc" }}
-                            onMouseLeave={e => { e.currentTarget.style.background = tarjetaActual === t.id ? "#f0fdf7" : "white" }}
-                          >
-                            <BancoLogo banco={t.id} size={32} />
-                            <div style={{ flex: 1 }}>
-                              <div style={{ fontSize: 14, fontWeight: 600, color: "#0f172a" }}>{t.nombre}</div>
-                              <div style={{ fontSize: 12, color: "#94a3b8", marginTop: 1 }}>{t.banco} · {t.red}</div>
-                            </div>
-                            <div style={{ width: 40, height: 26, borderRadius: 6, background: t.gradiente, flexShrink: 0 }} />
-                            {tarjetaActual === t.id && (
-                              <div style={{ width: 20, height: 20, borderRadius: "50%", background: "#0a7c4e", display: "flex", alignItems: "center", justifyContent: "center", flexShrink: 0 }}>
-                                <Check size={12} color="white" />
-                              </div>
-                            )}
-                          </div>
-                        ))}
-                      </motion.div>
-                    )}
-                  </AnimatePresence>
                 </div>
+              ))}
+            </div>
 
-                {/* Card gasto total */}
-                {getTotalGasto(gastos) > 0 && (
-                  <motion.div
-                    initial={{ opacity: 0, y: 8 }}
-                    animate={{ opacity: 1, y: 0 }}
-                    style={{
-                      display: "flex", alignItems: "center", justifyContent: "space-between",
-                      padding: "20px 24px",
-                      background: "linear-gradient(135deg, #f0fdf7 0%, #dcfce7 60%, #f0fdf7 100%)",
-                      border: "1.5px solid #86efac",
-                      borderRadius: 16,
-                      marginTop: 20,
-                      boxShadow: "0 4px 20px rgba(16,185,129,0.12)",
-                    }}
-                  >
-                    <div style={{ display: "flex", alignItems: "center", gap: 14 }}>
-                      <div style={{ width: 48, height: 48, borderRadius: 14, background: "linear-gradient(135deg, #10b981 0%, #059669 100%)", display: "flex", alignItems: "center", justifyContent: "center", boxShadow: "0 4px 12px rgba(16,185,129,0.3)", flexShrink: 0 }}>
-                        <BarChart2 size={22} color="white" />
-                      </div>
-                      <div>
-                        <div style={{ fontSize: 11, fontWeight: 700, color: "#6b7280", textTransform: "uppercase", letterSpacing: "0.08em" }}>Gasto mensual total</div>
-                        <div style={{ fontSize: 28, fontWeight: 900, color: "#0f172a", letterSpacing: "-0.03em", lineHeight: 1.1 }}>
-                          {formatARS(getTotalGasto(gastos))}
-                        </div>
-                      </div>
-                    </div>
-                    <div style={{ textAlign: "right", flexShrink: 0 }}>
-                      <div style={{ fontSize: 11, fontWeight: 700, color: "#6b7280", textTransform: "uppercase", letterSpacing: "0.08em" }}>Al año serían</div>
-                      <div style={{ fontSize: 20, fontWeight: 800, color: "#059669", letterSpacing: "-0.02em" }}>
-                        {formatARS(getTotalGasto(gastos) * 12)}
-                      </div>
-                    </div>
-                  </motion.div>
-                )}
+            {/* Tarjeta actual */}
+            <div style={{ marginBottom: 24 }}>
+              <div style={{ fontSize: 12, fontWeight: 700, color: "#475569", letterSpacing: "0.03em", textTransform: "uppercase", marginBottom: 10 }}>
+                ¿Tenés una tarjeta actualmente? <span style={{ color: "#94a3b8", fontWeight: 500, textTransform: "none", letterSpacing: 0 }}>(opcional)</span>
               </div>
 
-              {/* SELECTOR INGRESOS (CAMBIO 2) */}
-              <div style={{ marginBottom: 28 }}>
-                <div style={{ fontSize: 12, fontWeight: 700, color: "#374151", letterSpacing: "0.04em", textTransform: "uppercase", marginBottom: 8 }}>
-                  ¿Cuál es tu ingreso mensual aproximado?
-                </div>
-                <div style={{ fontSize: 12, color: "#94a3b8", marginBottom: 12 }}>
-                  Lo usamos para mostrarte solo las tarjetas que podés obtener con tu perfil
-                </div>
-
-                {/* Grid 2x2 */}
-                <div style={{ display: "grid", gridTemplateColumns: "1fr 1fr", gap: 8, marginBottom: 8 }}>
-                  {[
-                    { value: "bajo",     texto: "Hasta $400.000/mes",     subtexto: "Tarjetas accesibles" },
-                    { value: "medio",    texto: "$400k a $800.000/mes",   subtexto: "Mayoría de tarjetas" },
-                    { value: "alto",     texto: "$800k a $1.500.000/mes", subtexto: "Tarjetas premium" },
-                    { value: "muy-alto", texto: "Más de $1.500.000/mes",  subtexto: "Todas las tarjetas" },
-                  ].map(({ value, texto, subtexto }) => {
-                    const sel = ingresos === value
-                    return (
-                      <button
-                        key={value}
-                        onClick={() => setIngresos(sel ? "" : value)}
-                        style={{
-                          border: `1.5px solid ${sel ? "#0a7c4e" : "#e2e8f0"}`,
-                          borderRadius: 10,
-                          padding: "12px 16px",
-                          background: sel ? "#f0fdf7" : "white",
-                          cursor: "pointer",
-                          textAlign: "left",
-                          transition: "all 0.2s",
-                          fontSize: 13,
-                          color: sel ? "#065f46" : "#374151",
-                        }}
-                      >
-                        <div style={{ fontWeight: 600 }}>{texto}</div>
-                        <div style={{ fontSize: 11, color: sel ? "#065f46" : "#94a3b8", marginTop: 2 }}>{subtexto}</div>
-                      </button>
-                    )
-                  })}
-                </div>
-
-                {/* Opción: prefiero no indicarlo */}
-                <button
-                  onClick={() => setIngresos(ingresos === "nodice" ? "" : "nodice")}
+              <div style={{ position: "relative" }} data-selector="true">
+                <div
+                  onClick={() => setSelectorAbierto(v => !v)}
                   style={{
-                    width: "100%",
-                    border: `1px solid ${ingresos === "nodice" ? "#0a7c4e" : "#e2e8f0"}`,
-                    borderRadius: 10,
-                    padding: "8px 16px",
-                    background: "transparent",
+                    display: "flex", alignItems: "center", justifyContent: "space-between",
+                    padding: "12px 16px",
+                    border: selectorAbierto ? "1.5px solid #16a34a" : "1.5px solid #e2e8f0",
+                    borderRadius: 12,
+                    background: "white",
                     cursor: "pointer",
-                    textAlign: "left",
-                    transition: "all 0.2s",
-                    fontSize: 12,
-                    color: ingresos === "nodice" ? "#065f46" : "#94a3b8",
+                    transition: "all 0.15s",
+                    boxShadow: selectorAbierto ? "0 0 0 3px rgba(22,163,74,0.1)" : "none",
+                    userSelect: "none",
                   }}
                 >
-                  Prefiero no indicarlo
-                </button>
+                  <div style={{ display: "flex", alignItems: "center", gap: 12 }}>
+                    {tarjetaActual ? (
+                      <>
+                        <BancoLogo banco={tarjetaActual} size={28} />
+                        <div>
+                          <div style={{ fontSize: 14, fontWeight: 600, color: "#0f172a", lineHeight: 1.2 }}>
+                            {TARJETAS_PUBLICAS.find(t => t.id === tarjetaActual)?.nombre}
+                          </div>
+                          <div style={{ fontSize: 12, color: "#94a3b8", marginTop: 1 }}>
+                            {TARJETAS_PUBLICAS.find(t => t.id === tarjetaActual)?.banco}
+                          </div>
+                        </div>
+                      </>
+                    ) : (
+                      <div style={{ fontSize: 14, color: "#94a3b8" }}>Seleccioná tu tarjeta actual...</div>
+                    )}
+                  </div>
+                  <motion.div animate={{ rotate: selectorAbierto ? 180 : 0 }} transition={{ duration: 0.2 }}>
+                    <ChevronDown size={16} color="#94a3b8" />
+                  </motion.div>
+                </div>
+
+                <AnimatePresence>
+                  {selectorAbierto && (
+                    <motion.div
+                      initial={{ opacity: 0, y: -6, scale: 0.99 }}
+                      animate={{ opacity: 1, y: 0, scale: 1 }}
+                      exit={{ opacity: 0, y: -6, scale: 0.99 }}
+                      transition={{ duration: 0.12 }}
+                      style={{
+                        position: "absolute", top: "calc(100% + 6px)", left: 0, right: 0,
+                        background: "white", border: "1.5px solid #e2e8f0", borderRadius: 16,
+                        boxShadow: "0 16px 48px rgba(0,0,0,0.1)", zIndex: 100,
+                        overflow: "hidden", maxHeight: 300, overflowY: "auto",
+                      }}
+                    >
+                      <div
+                        onClick={() => { setTarjetaActual(""); setSelectorAbierto(false) }}
+                        style={{
+                          display: "flex", alignItems: "center", gap: 12,
+                          padding: "11px 16px", cursor: "pointer",
+                          borderBottom: "1px solid #f8fafc",
+                          background: tarjetaActual === "" ? "#f0fdf7" : "white",
+                        }}
+                        onMouseEnter={e => { e.currentTarget.style.background = "#f8fafc" }}
+                        onMouseLeave={e => { e.currentTarget.style.background = tarjetaActual === "" ? "#f0fdf7" : "white" }}
+                      >
+                        <div style={{ width: 28, height: 28, borderRadius: 8, background: "#f1f5f9", border: "1px solid #e2e8f0", display: "flex", alignItems: "center", justifyContent: "center" }}>
+                          <X size={12} color="#94a3b8" />
+                        </div>
+                        <span style={{ fontSize: 14, color: "#94a3b8" }}>Ninguna / no sé</span>
+                      </div>
+
+                      {TARJETAS_PUBLICAS.map((t) => (
+                        <div
+                          key={t.id}
+                          onClick={() => { setTarjetaActual(t.id); setSelectorAbierto(false) }}
+                          style={{
+                            display: "flex", alignItems: "center", gap: 12,
+                            padding: "11px 16px", cursor: "pointer",
+                            background: tarjetaActual === t.id ? "#f0fdf7" : "white",
+                            borderBottom: "1px solid #f8fafc",
+                          }}
+                          onMouseEnter={e => { if (tarjetaActual !== t.id) e.currentTarget.style.background = "#f8fafc" }}
+                          onMouseLeave={e => { e.currentTarget.style.background = tarjetaActual === t.id ? "#f0fdf7" : "white" }}
+                        >
+                          <BancoLogo banco={t.id} size={28} />
+                          <div style={{ flex: 1 }}>
+                            <div style={{ fontSize: 13, fontWeight: 600, color: "#0f172a" }}>{t.nombre}</div>
+                            <div style={{ fontSize: 11, color: "#94a3b8" }}>{t.banco} · {t.red}</div>
+                          </div>
+                          <div style={{ width: 36, height: 22, borderRadius: 6, background: t.gradiente, flexShrink: 0 }} />
+                          {tarjetaActual === t.id && (
+                            <div style={{ width: 18, height: 18, borderRadius: "50%", background: "#16a34a", display: "flex", alignItems: "center", justifyContent: "center", flexShrink: 0 }}>
+                              <Check size={10} color="white" />
+                            </div>
+                          )}
+                        </div>
+                      ))}
+                    </motion.div>
+                  )}
+                </AnimatePresence>
               </div>
 
-              {/* Botón calcular */}
-              <motion.button
-                onClick={handleCalcular}
-                disabled={loading || totalGasto === 0}
-                whileHover={!loading && totalGasto > 0 ? { y: -1, boxShadow: "0 12px 32px rgba(16,185,129,0.4)" } : {}}
-                whileTap={!loading && totalGasto > 0 ? { scale: 0.98 } : {}}
+              {/* Gasto total */}
+              {totalGasto > 0 && (
+                <motion.div
+                  initial={{ opacity: 0, y: 6 }} animate={{ opacity: 1, y: 0 }}
+                  style={{
+                    display: "flex", alignItems: "center", justifyContent: "space-between",
+                    padding: "16px 20px",
+                    background: "#f0fdf7",
+                    border: "1px solid #bbf7d0",
+                    borderRadius: 12, marginTop: 14,
+                  }}
+                >
+                  <div>
+                    <div style={{ fontSize: 11, fontWeight: 700, color: "#6b7280", textTransform: "uppercase", letterSpacing: "0.06em" }}>Gasto mensual total</div>
+                    <div style={{ fontSize: 24, fontWeight: 900, color: "#0f172a", letterSpacing: "-0.03em" }}>
+                      {formatARS(totalGasto)}
+                    </div>
+                  </div>
+                  <div style={{ textAlign: "right" }}>
+                    <div style={{ fontSize: 11, fontWeight: 700, color: "#6b7280", textTransform: "uppercase", letterSpacing: "0.06em" }}>Al año</div>
+                    <div style={{ fontSize: 18, fontWeight: 800, color: "#16a34a" }}>
+                      {formatARS(totalGasto * 12)}
+                    </div>
+                  </div>
+                </motion.div>
+              )}
+            </div>
+
+            {/* Ingresos */}
+            <div style={{ marginBottom: 28 }}>
+              <div style={{ fontSize: 12, fontWeight: 700, color: "#475569", letterSpacing: "0.03em", textTransform: "uppercase", marginBottom: 6 }}>
+                Ingreso mensual aproximado
+              </div>
+              <div style={{ fontSize: 12, color: "#94a3b8", marginBottom: 12 }}>
+                Para mostrarte solo las tarjetas que podés obtener con tu perfil
+              </div>
+              <div style={{ display: "grid", gridTemplateColumns: "1fr 1fr", gap: 8, marginBottom: 8 }}>
+                {[
+                  { value: "bajo",     texto: "Hasta $400.000",      subtexto: "Tarjetas accesibles" },
+                  { value: "medio",    texto: "$400k – $800.000",     subtexto: "Mayoría de tarjetas" },
+                  { value: "alto",     texto: "$800k – $1.500.000",   subtexto: "Tarjetas premium" },
+                  { value: "muy-alto", texto: "Más de $1.500.000",    subtexto: "Todas las tarjetas" },
+                ].map(({ value, texto, subtexto }) => {
+                  const sel = ingresos === value
+                  return (
+                    <button
+                      key={value}
+                      onClick={() => setIngresos(sel ? "" : value)}
+                      style={{
+                        border: `1.5px solid ${sel ? "#16a34a" : "#e2e8f0"}`,
+                        borderRadius: 10, padding: "11px 14px",
+                        background: sel ? "#f0fdf7" : "white",
+                        cursor: "pointer", textAlign: "left",
+                        transition: "all 0.15s",
+                      }}
+                    >
+                      <div style={{ fontSize: 13, fontWeight: 600, color: sel ? "#14532d" : "#374151" }}>{texto}</div>
+                      <div style={{ fontSize: 11, color: sel ? "#16a34a" : "#94a3b8", marginTop: 2 }}>{subtexto}</div>
+                    </button>
+                  )
+                })}
+              </div>
+              <button
+                onClick={() => setIngresos(ingresos === "nodice" ? "" : "nodice")}
                 style={{
-                  position:"relative", overflow:"hidden",
-                  width:"100%", height:60, marginTop: 28,
-                  background: totalGasto === 0 || loading
-                    ? "linear-gradient(135deg, #94a3b8 0%, #64748b 100%)"
-                    : "linear-gradient(135deg, #10b981 0%, #059669 100%)",
-                  color:"white", border:"none", borderRadius:18,
-                  fontSize:16, fontWeight:700,
-                  cursor: totalGasto === 0 || loading ? "not-allowed" : "pointer",
-                  display:"flex", alignItems:"center", justifyContent:"center", gap:8,
-                  boxShadow: totalGasto > 0 && !loading ? "0 8px 24px rgba(16,185,129,0.3)" : "none",
-                  transition:"background 0.2s, box-shadow 0.2s",
-                  marginBottom:12,
+                  width: "100%", border: `1px solid ${ingresos === "nodice" ? "#16a34a" : "#e2e8f0"}`,
+                  borderRadius: 10, padding: "8px 14px", background: "transparent",
+                  cursor: "pointer", textAlign: "left", fontSize: 12,
+                  color: ingresos === "nodice" ? "#14532d" : "#94a3b8",
+                  transition: "all 0.15s",
                 }}
               >
-                {!loading && totalGasto > 0 && (
-                  <span aria-hidden style={{
-                    position:"absolute", top:0, bottom:0, width:"40%",
-                    background:"linear-gradient(90deg, transparent 0%, rgba(255,255,255,0.18) 50%, transparent 100%)",
-                    animation:"slideShimmer 2.2s infinite", pointerEvents:"none",
-                  }} />
-                )}
-                <span style={{ position:"relative", zIndex:1, display:"flex", alignItems:"center", gap:8 }}>
-                  {loading ? (
-                    <><Spinner />Calculando…</>
-                  ) : (
-                    <>Calcular mi ahorro
-                      <svg viewBox="0 0 20 20" fill="none" stroke="currentColor" strokeWidth="2" strokeLinecap="round" style={{ width:18, height:18 }}>
-                        <path d="M4 10h12M10 4l6 6-6 6" />
-                      </svg>
-                    </>
-                  )}
-                </span>
-              </motion.button>
+                Prefiero no indicarlo
+              </button>
+            </div>
 
-              {totalGasto === 0 && !loading && (
-                <p style={{ textAlign:"center", fontSize:12, color:"#94a3b8", margin:"0 0 12px" }}>
-                  Ingresá al menos un monto para calcular
-                </p>
+            {/* Botón calcular */}
+            <button
+              onClick={handleCalcular}
+              disabled={loading || totalGasto === 0}
+              style={{
+                width: "100%", height: 56,
+                background: totalGasto === 0 || loading ? "#cbd5e1" : "#16a34a",
+                color: "white", border: "none", borderRadius: 14,
+                fontSize: 16, fontWeight: 700,
+                cursor: totalGasto === 0 || loading ? "not-allowed" : "pointer",
+                display: "flex", alignItems: "center", justifyContent: "center", gap: 8,
+                boxShadow: totalGasto > 0 && !loading ? "0 4px 20px rgba(22,163,74,0.3)" : "none",
+                transition: "background 0.15s, box-shadow 0.15s, transform 0.1s",
+                marginBottom: 12,
+              }}
+              onMouseEnter={e => { if (totalGasto > 0 && !loading) e.currentTarget.style.background = "#15803d" }}
+              onMouseLeave={e => { if (totalGasto > 0 && !loading) e.currentTarget.style.background = "#16a34a" }}
+            >
+              {loading ? (
+                <><Spinner />Calculando…</>
+              ) : (
+                <>Ver mi ranking de tarjetas
+                  <svg viewBox="0 0 20 20" fill="none" stroke="currentColor" strokeWidth="2.5" strokeLinecap="round" style={{ width: 16, height: 16 }}>
+                    <path d="M4 10h12M10 4l6 6-6 6" />
+                  </svg>
+                </>
               )}
+            </button>
 
-              {/* Guardar / cargar perfil */}
-              <div style={{ display:"flex", gap:10 }}>
-                {(["guardar","cargar"] as const).map((action) => (
-                  <button key={action}
-                    onClick={action === "guardar" ? handleGuardarPerfil : handleCargarPerfil}
-                    style={{ flex:1, fontSize:13, color:"#64748b", background:"#f8fafc",
-                      border:"1.5px solid #e2e8f0", borderRadius:10, padding:"8px 12px",
-                      cursor:"pointer", transition:"background 0.15s, border-color 0.15s" }}
-                    onMouseEnter={(e) => { e.currentTarget.style.background="#f1f5f9"; e.currentTarget.style.borderColor="#cbd5e1" }}
-                    onMouseLeave={(e) => { e.currentTarget.style.background="#f8fafc"; e.currentTarget.style.borderColor="#e2e8f0" }}
-                  >
-                    {action === "guardar" ? "Guardar perfil" : "Cargar perfil"}
-                  </button>
+            {totalGasto === 0 && !loading && (
+              <p style={{ textAlign: "center", fontSize: 12, color: "#94a3b8", margin: "0 0 12px" }}>
+                Ingresá al menos un monto para calcular
+              </p>
+            )}
+
+            {/* Guardar / cargar */}
+            <div style={{ display: "flex", gap: 8 }}>
+              {(["guardar", "cargar"] as const).map((action) => (
+                <button key={action}
+                  onClick={action === "guardar" ? handleGuardarPerfil : handleCargarPerfil}
+                  style={{
+                    flex: 1, fontSize: 12, color: "#64748b",
+                    background: "#f8fafc", border: "1px solid #e2e8f0",
+                    borderRadius: 10, padding: "8px 12px", cursor: "pointer",
+                    transition: "background 0.15s",
+                  }}
+                  onMouseEnter={e => { e.currentTarget.style.background = "#f1f5f9" }}
+                  onMouseLeave={e => { e.currentTarget.style.background = "#f8fafc" }}
+                >
+                  {action === "guardar" ? "Guardar perfil" : "Cargar perfil"}
+                </button>
+              ))}
+            </div>
+          </motion.section>
+        </div>
+      </div>
+
+      {/* ════ RESULTADOS ════ */}
+      <div style={{ maxWidth: 1100, margin: "0 auto", padding: "0 24px" }}>
+
+        {/* Cómo funciona — solo antes de calcular */}
+        <AnimatePresence>
+          {resultados === null && (
+            <motion.section
+              key="como-funciona"
+              initial={{ opacity: 0, y: 16 }} animate={{ opacity: 1, y: 0 }}
+              exit={{ opacity: 0 }} transition={{ duration: 0.35 }}
+              style={{ padding: "80px 0 72px" }}
+            >
+              <div style={{ textAlign: "center", marginBottom: 48 }}>
+                <h2 style={{ fontSize: "clamp(24px, 3vw, 38px)", fontWeight: 900, letterSpacing: "-0.04em", color: "#0f172a", margin: "0 0 12px" }}>
+                  Cómo funciona
+                </h2>
+                <p style={{ fontSize: 16, color: "#64748b", margin: 0 }}>
+                  En menos de dos minutos sabés qué tarjeta te conviene más.
+                </p>
+              </div>
+
+              <div style={{ display: "grid", gridTemplateColumns: "repeat(auto-fit, minmax(240px, 1fr))", gap: 20 }}>
+                {COMO_FUNCIONA.map(({ Icono, num, title, desc }) => (
+                  <div key={num} style={{
+                    padding: "32px 28px",
+                    background: "#fff",
+                    borderRadius: 20,
+                    border: "1px solid rgba(0,0,0,0.06)",
+                    boxShadow: "0 1px 3px rgba(0,0,0,0.04), 0 8px 24px rgba(0,0,0,0.04)",
+                  }}>
+                    <div style={{
+                      width: 44, height: 44, borderRadius: 12,
+                      background: "#f0fdf4",
+                      border: "1px solid #bbf7d0",
+                      display: "flex", alignItems: "center", justifyContent: "center",
+                      marginBottom: 20,
+                    }}>
+                      <Icono size={22} color="#16a34a" strokeWidth={1.75} />
+                    </div>
+                    <div style={{ fontSize: 11, fontWeight: 800, color: "#16a34a", letterSpacing: "0.06em", marginBottom: 8 }}>
+                      PASO {num}
+                    </div>
+                    <h3 style={{ fontSize: 17, fontWeight: 800, color: "#0f172a", margin: "0 0 8px", letterSpacing: "-0.02em" }}>{title}</h3>
+                    <p style={{ fontSize: 14, color: "#64748b", margin: 0, lineHeight: 1.65 }}>{desc}</p>
+                  </div>
                 ))}
               </div>
             </motion.section>
-          </div>
-        </div>
+          )}
+        </AnimatePresence>
 
-        {/* ── Separador calculadora → resultados ── */}
-        <div aria-hidden style={{ height:1, background:"linear-gradient(90deg, transparent, #e5e7eb 30%, #e5e7eb 70%, transparent)", maxWidth:1120, margin:"0 auto" }} />
-
-        {/* ════ RESULTADOS ════ */}
-        <div style={{ maxWidth: 1120, margin: "0 auto", padding: "0 24px" }}>
-
-          {/* Cómo funciona — solo antes de calcular */}
+        {/* Resultados */}
+        <div ref={resultadosRef} style={{ scrollMarginTop: 80, paddingTop: resultados ? 64 : 0 }}>
           <AnimatePresence>
-            {resultados === null && (
-              <motion.section
-                key="como-funciona"
-                initial={{ opacity: 0, y: 16 }} animate={{ opacity: 1, y: 0 }}
-                exit={{ opacity: 0, y: -8 }} transition={{ duration: 0.4, delay: 0.2 }}
-                style={{ padding: "96px 0 80px" }}
-              >
-                {/* Eyebrow */}
-                <div style={{ textAlign: "center", marginBottom: 56 }}>
-                  <div style={{ display:"inline-flex", alignItems:"center", gap:7,
-                    background:"linear-gradient(135deg, #ecfdf5 0%, #d1fae5 100%)",
-                    border:"1px solid rgba(16,185,129,0.25)",
-                    borderRadius:999, padding:"7px 16px", marginBottom:16,
-                    fontSize:11, fontWeight:700, letterSpacing:"0.08em", textTransform:"uppercase", color:"#059669",
-                    boxShadow:"0 2px 10px rgba(16,185,129,0.15), inset 0 1px 0 rgba(255,255,255,0.8)" }}>
-                    <span style={{ width:6, height:6, borderRadius:"50%", background:"#10b981", display:"inline-block", boxShadow:"0 0 6px rgba(16,185,129,0.6)" }} />
-                    Simple y transparente
-                  </div>
-                  <h2 style={{ fontSize: "clamp(28px,3.2vw,44px)", fontWeight: 900, letterSpacing: "-0.04em",
-                    color: "#0a0a0a", margin: "0 0 16px" }}>
-                    Cómo funciona
-                  </h2>
-                  <p style={{ fontSize: 17, color: "#6b7280", maxWidth: 440, margin: "0 auto", lineHeight: 1.7 }}>
-                    En menos de un minuto sabés qué tarjeta te conviene más.
-                  </p>
-                </div>
-
-                <div style={{ display: "grid", gridTemplateColumns: "repeat(auto-fit, minmax(280px, 1fr))", gap: 28 }}>
-                  {COMO_FUNCIONA.map(({ Icono, num, title, desc }, i) => (
-                    <motion.div key={num}
-                      initial={{ opacity: 0, y: 16 }} animate={{ opacity: 1, y: 0 }}
-                      transition={{ delay: 0.25 + i * 0.09 }}
-                      whileHover={{ y: -4, boxShadow: "0 24px 56px rgba(0,0,0,0.09)" }}
-                      style={{ position: "relative", padding: "40px 32px 36px",
-                        background: "#fff", borderRadius: 28,
-                        border: "1px solid rgba(0,0,0,0.06)",
-                        boxShadow: "0 8px 32px rgba(0,0,0,0.05)",
-                        transition: "box-shadow 0.25s", }}
-                    >
-                      <span style={{
-                        position: "absolute", top: 16, left: 24,
-                        fontSize: 96, fontWeight: 900, lineHeight: 1,
-                        color: "#10b981", opacity: 0.06,
-                        userSelect: "none", pointerEvents: "none",
-                      }}>{num}</span>
-                      <div style={{ position: "relative" }}>
-                        <div style={{
-                          width: 56, height: 56, borderRadius: 18,
-                          background: "linear-gradient(135deg, #d1fae5 0%, #a7f3d0 100%)",
-                          display: "flex", alignItems: "center", justifyContent: "center", marginBottom: 24,
-                          boxShadow: "0 6px 16px rgba(16,185,129,0.2)",
-                        }}>
-                          <Icono size={26} color="#059669" strokeWidth={1.75} />
-                        </div>
-                        <h3 style={{ fontSize: 19, fontWeight: 800, color: "#111827", margin: "0 0 12px", letterSpacing: "-0.025em" }}>{title}</h3>
-                        <p style={{ fontSize: 15, color: "#6b7280", margin: 0, lineHeight: 1.7 }}>{desc}</p>
-                      </div>
-                    </motion.div>
-                  ))}
-                </div>
-              </motion.section>
+            {resultados !== null && (
+              <ResultadosTarjetas
+                resultados={resultados}
+                gastos={gastos}
+                tarjetaActual={tarjetaActual}
+                haySegmentacion={haySegmentacion}
+                noElegiblesIds={
+                  haySegmentacion && ingresos && ELEGIBILIDAD[ingresos]?.length > 0
+                    ? TARJETAS_PUBLICAS.filter(t => !ELEGIBILIDAD[ingresos].includes(t.id)).map(t => t.id)
+                    : []
+                }
+              />
             )}
           </AnimatePresence>
 
-          {/* Resultados */}
-          <div ref={resultadosRef} style={{ scrollMarginTop: 80, paddingTop: resultados ? 80 : 0 }}>
-            <AnimatePresence>
-              {resultados !== null && (
-                <ResultadosTarjetas
-                  resultados={resultados}
-                  gastos={gastos}
-                  tarjetaActual={tarjetaActual}
-                  haySegmentacion={haySegmentacion}
-                  noElegiblesIds={
-                    haySegmentacion && ingresos && ELEGIBILIDAD[ingresos]?.length > 0
-                      ? TARJETAS_PUBLICAS.filter(t => !ELEGIBILIDAD[ingresos].includes(t.id)).map(t => t.id)
-                      : []
-                  }
-                />
-              )}
-            </AnimatePresence>
+          {/* Email capture — solo post-cálculo */}
+          {resultados !== null && (
+            <motion.div
+              initial={{ opacity: 0, y: 16 }} animate={{ opacity: 1, y: 0 }}
+              transition={{ delay: 0.3 }}
+              style={{
+                background: "#f0fdf7",
+                border: "1px solid #bbf7d0",
+                borderRadius: 16, padding: "28px 32px",
+                marginTop: 32, textAlign: "center",
+                maxWidth: 520, marginLeft: "auto", marginRight: "auto",
+              }}
+            >
+              <div style={{
+                background: "#16a34a", borderRadius: "50%",
+                width: 44, height: 44,
+                display: "flex", alignItems: "center", justifyContent: "center",
+                margin: "0 auto 14px",
+              }}>
+                <Bell size={20} color="white" />
+              </div>
+              <p style={{ fontSize: 18, fontWeight: 800, color: "#0f172a", margin: "0 0 8px" }}>
+                ¿Cambian los beneficios de tu tarjeta?
+              </p>
+              <p style={{ fontSize: 14, color: "#475569", lineHeight: 1.6, maxWidth: 380, margin: "0 auto 20px" }}>
+                Te avisamos cada lunes con las promos actualizadas y si aparece una tarjeta mejor para tu perfil.
+              </p>
 
-            {/* ── Email capture — solo post-cálculo ── */}
-            {resultados !== null && (
-              <motion.div
-                initial={{ opacity: 0, y: 20 }}
-                animate={{ opacity: 1, y: 0 }}
-                transition={{ delay: 0.3, duration: 0.5 }}
-                style={{
-                  background: "linear-gradient(135deg, #f0fdf7 0%, #ffffff 100%)",
-                  border: "1.5px solid #bbf7d0",
-                  borderRadius: 16,
-                  padding: 32,
-                  marginTop: 32,
-                  textAlign: "center",
-                  maxWidth: 560,
-                  marginLeft: "auto",
-                  marginRight: "auto",
-                }}
-              >
-                {/* Ícono campana */}
-                <div style={{
-                  background: "#0a7c4e", borderRadius: "50%",
-                  width: 48, height: 48,
-                  display: "flex", alignItems: "center", justifyContent: "center",
-                  margin: "0 auto 16px",
-                }}>
-                  <Bell size={22} color="white" />
+              {emailEnviado ? (
+                <div>
+                  <CheckCircle size={36} color="#16a34a" style={{ margin: "0 auto 10px", display: "block" }} />
+                  <p style={{ fontSize: 17, fontWeight: 700, color: "#0f172a", margin: "0 0 4px" }}>¡Listo! Te avisamos cada lunes.</p>
+                  <p style={{ fontSize: 13, color: "#64748b", margin: 0 }}>Revisá tu bandeja el próximo lunes.</p>
                 </div>
-
-                {/* Título */}
-                <p style={{ fontSize: 20, fontWeight: 800, color: "#0f172a", margin: "0 0 8px" }}>
-                  ¿Cambian los beneficios de tu tarjeta?
-                </p>
-
-                {/* Subtítulo */}
-                <p style={{
-                  fontSize: 15, color: "#475569", lineHeight: 1.6,
-                  maxWidth: 400, margin: "0 auto 24px",
-                }}>
-                  Te avisamos cada lunes con las promos actualizadas y si aparece una tarjeta mejor para tu perfil.
-                </p>
-
-                {emailEnviado ? (
-                  /* Estado de éxito */
-                  <div>
-                    <CheckCircle size={40} color="#0a7c4e" style={{ margin: "0 auto 12px", display: "block" }} />
-                    <p style={{ fontSize: 18, fontWeight: 700, color: "#0f172a", margin: "0 0 6px" }}>
-                      ¡Listo! Te avisamos cada lunes.
-                    </p>
-                    <p style={{ fontSize: 14, color: "#475569", margin: 0 }}>
-                      Revisá tu bandeja de entrada el próximo lunes.
-                    </p>
+              ) : (
+                <div>
+                  <div style={{ display: "flex", gap: 8 }}>
+                    <input
+                      type="email" placeholder="tu@email.com" value={emailInput}
+                      onChange={(e) => { setEmailInput(e.target.value); setEmailError(false) }}
+                      style={{
+                        flex: 1, minWidth: 0, padding: "11px 14px",
+                        border: emailError ? "1.5px solid #f87171" : "1.5px solid #d1fae5",
+                        borderRadius: 10, fontSize: 14, outline: "none",
+                        background: "white",
+                        transition: "border-color 0.15s",
+                      }}
+                      onFocus={e => { e.target.style.borderColor = "#16a34a" }}
+                      onBlur={e => { e.target.style.borderColor = emailError ? "#f87171" : "#d1fae5" }}
+                    />
+                    <button
+                      onClick={async () => {
+                        if (!emailInput.includes("@")) { setEmailError(true); return }
+                        try {
+                          await fetch("/api/suscribir", {
+                            method: "POST",
+                            headers: { "Content-Type": "application/json" },
+                            body: JSON.stringify({ email: emailInput, gastos }),
+                          })
+                        } catch {}
+                        setEmailEnviado(true)
+                      }}
+                      style={{
+                        background: "#16a34a", color: "white",
+                        padding: "11px 18px", borderRadius: 10,
+                        fontSize: 14, fontWeight: 600, border: "none", cursor: "pointer",
+                        whiteSpace: "nowrap", flexShrink: 0,
+                      }}
+                    >
+                      Avisame →
+                    </button>
                   </div>
-                ) : (
-                  /* Formulario */
-                  <div>
-                    <div style={{ display: "flex", gap: 8 }}>
-                      <input
-                        type="email"
-                        placeholder="tu@email.com"
-                        value={emailInput}
-                        onChange={(e) => { setEmailInput(e.target.value); setEmailError(false) }}
-                        style={{
-                          flex: 1, minWidth: 0,
-                          padding: "12px 16px",
-                          border: emailError ? "1.5px solid #f87171" : "1.5px solid #e2e8f0",
-                          borderRadius: 10, fontSize: 15,
-                          outline: "none", transition: "border-color 0.15s, box-shadow 0.15s",
-                        }}
-                        onFocus={(e) => { e.target.style.borderColor = "#0a7c4e"; e.target.style.boxShadow = "0 0 0 3px rgba(10,124,78,0.1)" }}
-                        onBlur={(e) => { e.target.style.borderColor = emailError ? "#f87171" : "#e2e8f0"; e.target.style.boxShadow = "none" }}
-                      />
-                      <button
-                        onClick={async () => {
-                          if (!emailInput.includes("@")) {
-                            setEmailError(true)
-                            return
-                          }
-                          try {
-                            await fetch("/api/suscribir", {
-                              method: "POST",
-                              headers: { "Content-Type": "application/json" },
-                              body: JSON.stringify({ email: emailInput, gastos }),
-                            })
-                          } catch {}
-                          setEmailEnviado(true)
-                        }}
-                        style={{
-                          background: "#0a7c4e", color: "white",
-                          padding: "12px 20px", borderRadius: 10,
-                          fontSize: 15, fontWeight: 600,
-                          border: "none", cursor: "pointer",
-                          whiteSpace: "nowrap", flexShrink: 0,
-                          transition: "opacity 0.15s",
-                        }}
-                        onMouseEnter={(e) => { e.currentTarget.style.opacity = "0.88" }}
-                        onMouseLeave={(e) => { e.currentTarget.style.opacity = "1" }}
-                      >
-                        Avisame →
-                      </button>
-                    </div>
-                    {emailError && (
-                      <p style={{ fontSize: 13, color: "#ef4444", margin: "6px 0 0", textAlign: "left" }}>
-                        Ingresá un email válido
-                      </p>
-                    )}
-                    <p style={{ fontSize: 12, color: "#94a3b8", marginTop: 12 }}>
-                      Sin spam. Cancelás cuando quieras.
-                    </p>
+                  {emailError && <p style={{ fontSize: 12, color: "#ef4444", margin: "6px 0 0", textAlign: "left" }}>Ingresá un email válido</p>}
+                  <p style={{ fontSize: 11, color: "#94a3b8", marginTop: 10 }}>Sin spam. Cancelás cuando quieras.</p>
+                </div>
+              )}
+            </motion.div>
+          )}
+        </div>
+      </div>
+
+      {/* ════ GUÍAS ════ */}
+      <section style={{ padding: "88px 24px", background: "#f8fafc", marginTop: 80 }}>
+        <div style={{ maxWidth: 1100, margin: "0 auto" }}>
+
+          <div style={{ marginBottom: 48 }}>
+            <div style={{ fontSize: 11, fontWeight: 700, color: "#16a34a", letterSpacing: "0.1em", textTransform: "uppercase", marginBottom: 10 }}>
+              Guías financieras
+            </div>
+            <h2 style={{ fontSize: "clamp(26px, 3.5vw, 40px)", fontWeight: 900, letterSpacing: "-0.04em", color: "#0f172a", margin: 0 }}>
+              Aprendé a elegir mejor
+            </h2>
+          </div>
+
+          <div className="guias-grid">
+            {GUIAS.map(({ Icono, titulo, desc, href }) => (
+              <a
+                key={titulo}
+                href={href}
+                style={{ textDecoration: "none" }}
+              >
+                <div style={{
+                  background: "#ffffff",
+                  border: "1px solid rgba(0,0,0,0.07)",
+                  borderRadius: 20,
+                  padding: "32px 28px",
+                  boxShadow: "0 1px 3px rgba(0,0,0,0.04)",
+                  display: "flex", flexDirection: "column",
+                  minHeight: 220,
+                  cursor: "pointer",
+                  transition: "box-shadow 0.2s, transform 0.2s",
+                }}
+                  onMouseEnter={e => {
+                    (e.currentTarget as HTMLDivElement).style.boxShadow = "0 12px 40px rgba(0,0,0,0.1)"
+                    ;(e.currentTarget as HTMLDivElement).style.transform = "translateY(-3px)"
+                  }}
+                  onMouseLeave={e => {
+                    (e.currentTarget as HTMLDivElement).style.boxShadow = "0 1px 3px rgba(0,0,0,0.04)"
+                    ;(e.currentTarget as HTMLDivElement).style.transform = "translateY(0)"
+                  }}
+                >
+                  <div style={{
+                    width: 44, height: 44, borderRadius: 12,
+                    background: "#f0fdf4", border: "1px solid #bbf7d0",
+                    display: "flex", alignItems: "center", justifyContent: "center",
+                    marginBottom: 20,
+                  }}>
+                    <Icono size={22} color="#16a34a" strokeWidth={1.75} />
                   </div>
-                )}
-              </motion.div>
-            )}
+
+                  <h3 style={{ fontSize: 17, fontWeight: 800, color: "#0f172a", margin: "0 0 10px", letterSpacing: "-0.02em" }}>
+                    {titulo}
+                  </h3>
+                  <p style={{ fontSize: 14, color: "#64748b", margin: "0 0 24px", lineHeight: 1.65, flex: 1 }}>
+                    {desc}
+                  </p>
+                  <span style={{ fontSize: 13, fontWeight: 700, color: "#16a34a", display: "inline-flex", alignItems: "center", gap: 5 }}>
+                    Leer guía <ArrowRight size={13} />
+                  </span>
+                </div>
+              </a>
+            ))}
           </div>
         </div>
-
-        {/* ── Separador resultados → guías ── */}
-        <div aria-hidden style={{ height:1, background:"linear-gradient(90deg, transparent, #e5e7eb 30%, #e5e7eb 70%, transparent)" }} />
-
-        {/* ════ GUÍAS ════ */}
-        <section style={{
-          padding: "104px 24px 104px",
-          background: "linear-gradient(180deg, #ffffff 0%, #f8fafc 60%, #f1f5f9 100%)",
-        }}>
-          <div style={{ maxWidth: 1120, margin: "0 auto" }}>
-
-            {/* Header */}
-            <div style={{ textAlign: "center", marginBottom: 64 }}>
-              <div style={{ display:"inline-flex", alignItems:"center", gap:7,
-                background:"linear-gradient(135deg, #ecfdf5 0%, #d1fae5 100%)",
-                border:"1px solid rgba(16,185,129,0.25)",
-                borderRadius:999, padding:"7px 16px", marginBottom:18,
-                fontSize:11, fontWeight:700, letterSpacing:"0.08em", textTransform:"uppercase", color:"#059669",
-                boxShadow:"0 2px 10px rgba(16,185,129,0.15), inset 0 1px 0 rgba(255,255,255,0.8)" }}>
-                <BookOpen size={11} color="#059669" />
-                Guías financieras
-              </div>
-              <h2 style={{ fontSize: "clamp(30px,3.5vw,48px)", fontWeight: 900,
-                letterSpacing: "-0.045em", color: "#0a0a0a", margin: "0 0 16px", lineHeight: 1.05 }}>
-                Aprendé a tomar mejores decisiones
-              </h2>
-              <p style={{ fontSize: 18, color: "#6b7280", maxWidth: 500, margin: "0 auto", lineHeight: 1.7 }}>
-                Contenido educativo sobre finanzas personales en Argentina.
-              </p>
-            </div>
-
-            <div className="guias-grid">
-              {GUIAS.map(({ Icono, titulo, desc }, i) => {
-                const paletas = [
-                  { bg: "linear-gradient(145deg, #f0fdf8 0%, #dcfce7 100%)", iconBg: "linear-gradient(135deg, #10b981 0%, #059669 100%)", accent: "#059669", border: "#a7f3d0" },
-                  { bg: "linear-gradient(145deg, #f0f7ff 0%, #dbeafe 100%)", iconBg: "linear-gradient(135deg, #3b82f6 0%, #1d4ed8 100%)", accent: "#2563eb", border: "#bfdbfe" },
-                  { bg: "linear-gradient(145deg, #fdf5ff 0%, #ede9fe 100%)", iconBg: "linear-gradient(135deg, #a855f7 0%, #7c3aed 100%)", accent: "#7c3aed", border: "#ddd6fe" },
-                ]
-                const { bg, iconBg, accent, border } = paletas[i % 3]
-
-                return (
-                  <motion.div
-                    key={titulo}
-                    initial={{ opacity: 0, y: 24 }} whileInView={{ opacity: 1, y: 0 }}
-                    viewport={{ once: true }} transition={{ duration: 0.5, delay: i * 0.1 }}
-                    whileHover={{ y: -8, boxShadow: `0 28px 64px rgba(0,0,0,0.12), 0 0 0 1.5px ${border}` }}
-                    style={{
-                      background: bg,
-                      border: `1.5px solid ${border}`,
-                      borderRadius: 28,
-                      padding: "40px 36px",
-                      boxShadow: "0 6px 24px rgba(0,0,0,0.05)",
-                      display: "flex", flexDirection: "column",
-                      minHeight: 300,
-                      position: "relative", overflow: "hidden",
-                      cursor: "default",
-                    }}
-                  >
-                    {/* Orb decorativo */}
-                    <div aria-hidden style={{
-                      position:"absolute", bottom:-50, right:-50, width:180, height:180,
-                      borderRadius:"50%", background:accent, opacity:0.06, pointerEvents:"none",
-                    }} />
-                    <div aria-hidden style={{
-                      position:"absolute", top:-30, left:-30, width:100, height:100,
-                      borderRadius:"50%", background:accent, opacity:0.04, pointerEvents:"none",
-                    }} />
-
-                    {/* Ícono */}
-                    <div style={{
-                      width: 68, height: 68, borderRadius: 20,
-                      background: iconBg,
-                      display: "flex", alignItems: "center", justifyContent: "center",
-                      marginBottom: 28,
-                      boxShadow: `0 10px 28px ${accent}40`,
-                      flexShrink: 0,
-                    }}>
-                      <Icono size={32} color="#fff" strokeWidth={1.5} />
-                    </div>
-
-                    {/* Contenido */}
-                    <div style={{ flex: 1 }}>
-                      <h3 style={{
-                        fontSize: 20, fontWeight: 900, color: "#0a0a0a",
-                        margin: "0 0 12px", lineHeight: 1.2, letterSpacing: "-0.03em",
-                      }}>
-                        {titulo}
-                      </h3>
-                      <p style={{ fontSize: 15, color: "#6b7280", margin: 0, lineHeight: 1.75 }}>
-                        {desc}
-                      </p>
-                    </div>
-
-                    {/* Footer */}
-                    <div style={{ marginTop: 32, display: "flex", alignItems: "center", justifyContent: "space-between" }}>
-                      <span style={{
-                        fontSize: 13, fontWeight: 700, color: accent,
-                        display: "inline-flex", alignItems: "center", gap: 6,
-                        background: "rgba(255,255,255,0.75)", padding: "8px 16px",
-                        borderRadius: 12, border: `1.5px solid ${border}`,
-                        backdropFilter: "blur(8px)",
-                      }}>
-                        Leer guía <ArrowRight size={14} />
-                      </span>
-                      <span style={{
-                        fontSize: 11, fontWeight: 600, color: "#9ca3af",
-                        background: "rgba(255,255,255,0.6)", padding: "5px 11px",
-                        borderRadius: 999, border: "1px solid rgba(0,0,0,0.06)",
-                      }}>
-                        Próximamente
-                      </span>
-                    </div>
-                  </motion.div>
-                )
-              })}
-            </div>
-          </div>
-        </section>
-
-        {/* ── Separador guías → footer ── */}
-        <div aria-hidden style={{ height:1, background:"linear-gradient(90deg, transparent, #1f2937 30%, #1f2937 70%, transparent)" }} />
-
-        {/* ════ FOOTER OSCURO ════ */}
-        <footer style={{
-          background: "#0a0a0a",
-          padding: "72px 24px 48px",
-          color: "#fff",
-        }}>
-          <div style={{ maxWidth: 1120, margin: "0 auto" }}>
-            <div style={{ display: "grid", gridTemplateColumns: "2fr 1fr 1fr", gap: 48,
-              marginBottom: 48, flexWrap: "wrap" }}
-              className="footer-grid">
-
-              {/* Brand */}
-              <div>
-                <a href="/" style={{ textDecoration: "none", display: "inline-flex", alignItems: "center", gap: 8, marginBottom: 16 }}>
-                  <span style={{ fontSize: 22, fontWeight: 800, letterSpacing: "-0.03em" }}>
-                    <span style={{ color: "#10b981" }}>r</span>
-                    <span style={{ color: "#fff" }}>ateargy</span>
-                  </span>
-                </a>
-                <p style={{ fontSize: 14, color: "#6b7280", lineHeight: 1.7, maxWidth: 320, margin: "0 0 20px" }}>
-                  El comparador financiero independiente de Argentina. Comparamos tarjetas de crédito y más para que tomés las mejores decisiones.
-                </p>
-                <div style={{ display: "inline-flex", alignItems: "center", gap: 6,
-                  background: "rgba(16,185,129,0.1)", border: "1px solid rgba(16,185,129,0.2)",
-                  borderRadius: 999, padding: "5px 12px",
-                  fontSize: 11, fontWeight: 700, color: "#10b981" }}>
-                  ✓ Actualizado mayo 2026
-                </div>
-              </div>
-
-              {/* Productos */}
-              <div>
-                <p style={{ fontSize: 12, fontWeight: 700, letterSpacing: "0.1em", textTransform: "uppercase",
-                  color: "#4b5563", marginBottom: 16 }}>
-                  Productos
-                </p>
-                {[
-                  { label: "Tarjetas de crédito", href: "/tarjetas" },
-                  { label: "Calculadora de nafta", href: "/nafta" },
-                  { label: "Billeteras digitales", href: "/billeteras" },
-                  { label: "Precios de streaming", href: "/streaming" },
-                ].map(({ label, href }) => (
-                  <a key={label} href={href} style={{ display: "block", fontSize: 14,
-                    color: "#9ca3af", textDecoration: "none", marginBottom: 10,
-                    transition: "color 0.15s" }}
-                    onMouseEnter={e => e.currentTarget.style.color="#fff"}
-                    onMouseLeave={e => e.currentTarget.style.color="#9ca3af"}>
-                    {label}
-                  </a>
-                ))}
-              </div>
-
-              {/* Información */}
-              <div>
-                <p style={{ fontSize: 12, fontWeight: 700, letterSpacing: "0.1em", textTransform: "uppercase",
-                  color: "#4b5563", marginBottom: 16 }}>
-                  Información
-                </p>
-                {[
-                  { label: "Guías financieras", href: "/articulos" },
-                  { label: "Metodología", href: "/metodologia" },
-                  { label: "Contacto", href: "/contacto" },
-                  { label: "Términos y privacidad", href: "/terminos" },
-                ].map(({ label, href }) => (
-                  <a key={label} href={href} style={{ display: "block", fontSize: 14,
-                    color: "#9ca3af", textDecoration: "none", marginBottom: 10,
-                    transition: "color 0.15s" }}
-                    onMouseEnter={e => e.currentTarget.style.color="#fff"}
-                    onMouseLeave={e => e.currentTarget.style.color="#9ca3af"}>
-                    {label}
-                  </a>
-                ))}
-              </div>
-            </div>
-
-            {/* Bottom bar */}
-            <div style={{ borderTop: "1px solid #1f2937", paddingTop: 24,
-              display: "flex", justifyContent: "space-between", flexWrap: "wrap", gap: 12 }}>
-              <p style={{ fontSize: 12, color: "#4b5563", margin: 0 }}>
-                © 2026 rateargy · Información orientativa, no constituye asesoramiento financiero.
-              </p>
-              <div style={{ display: "flex", gap: 16 }}>
-                {["Términos", "Privacidad"].map(label => (
-                  <span key={label} style={{ fontSize: 12, color: "#4b5563", cursor: "default" }}>
-                    {label}
-                  </span>
-                ))}
-              </div>
-            </div>
-          </div>
-        </footer>
-
-      </div>
+      </section>
 
       <Toast msg={toastMsg} />
     </>
