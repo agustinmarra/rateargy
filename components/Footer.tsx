@@ -1,32 +1,29 @@
 import Link from 'next/link'
 
-type FooterLink = { label: string; href: string } | { label: string; href: null }
+type FooterLink = { label: string; href: string }
 
-const COL_TARJETAS: FooterLink[] = [
-  { label: 'Comparar tarjetas', href: '/tarjetas' },
-  { label: 'Sin costo anual', href: '/tarjetas?perfil=sin-costo' },
-  { label: 'Mejores para viajes', href: '/tarjetas?perfil=viajes' },
-  { label: 'Día a día', href: '/tarjetas?perfil=dia-a-dia' },
-  { label: 'Con cuotas sin interés', href: '/tarjetas?perfil=cuotas' },
+const COL_HERRAMIENTAS: FooterLink[] = [
+  { label: 'Comparador de tarjetas', href: '/tarjetas' },
+  { label: 'Calculadora de nafta', href: '/nafta' },
+  { label: 'Guías financieras', href: '/articulos' },
 ]
 
-const COL_RECURSOS: FooterLink[] = [
-  { label: 'Guías financieras', href: '/articulos' },
-  { label: 'Cómo elegir una tarjeta', href: '/articulos/como-elegir-tarjeta-de-credito-argentina-2026' },
-  { label: 'Dólar MEP paso a paso', href: null },
-  { label: 'MP vs Ualá', href: null },
+const COL_GUIAS: FooterLink[] = [
+  { label: 'Cómo elegir tu tarjeta', href: '/articulos/como-elegir-tarjeta-de-credito-argentina-2026' },
+  { label: '7 errores al elegir tarjeta', href: '/articulos/errores-comunes-al-elegir-tarjeta-argentina' },
+  { label: 'Cómo funciona el ranking', href: '/articulos/como-funciona-el-ranking-de-rateargy' },
 ]
 
 const COL_EMPRESA: FooterLink[] = [
-  { label: 'Sobre rateargy', href: null },
-  { label: 'Metodología', href: null },
+  { label: 'Metodología', href: '/metodologia' },
   { label: 'Contacto', href: '/contacto' },
+  { label: 'Términos y privacidad', href: '/terminos' },
 ]
 
 const COLUMNS = [
-  { title: 'Tarjetas de crédito', links: COL_TARJETAS },
-  { title: 'Recursos', links: COL_RECURSOS },
-  { title: 'Sobre rateargy', links: COL_EMPRESA },
+  { title: 'Herramientas', links: COL_HERRAMIENTAS },
+  { title: 'Guías', links: COL_GUIAS },
+  { title: 'rateargy', links: COL_EMPRESA },
 ]
 
 export default function Footer() {
@@ -77,18 +74,12 @@ export default function Footer() {
               <ul className="space-y-2">
                 {links.map((link) => (
                   <li key={link.label}>
-                    {link.href ? (
-                      <Link
-                        href={link.href}
-                        className="text-[#6b7280] text-sm hover:text-[#1a1a1a] transition-colors"
-                      >
-                        {link.label}
-                      </Link>
-                    ) : (
-                      <span className="text-gray-400 text-sm cursor-default">
-                        {link.label}
-                      </span>
-                    )}
+                    <Link
+                      href={link.href}
+                      className="text-[#6b7280] text-sm hover:text-[#1a1a1a] transition-colors"
+                    >
+                      {link.label}
+                    </Link>
                   </li>
                 ))}
               </ul>
@@ -108,14 +99,9 @@ export default function Footer() {
             <p className="text-xs text-[#9ca3af]">
               © {new Date().getFullYear()} rateargy. Todos los derechos reservados. No somos una entidad financiera regulada.
             </p>
-            <div className="flex items-center gap-4">
-              <span className="text-xs text-gray-400 cursor-default">
-                Términos y condiciones
-              </span>
-              <span className="text-xs text-gray-400 cursor-default">
-                Política de privacidad
-              </span>
-            </div>
+            <Link href="/terminos" className="text-xs text-gray-400 hover:text-gray-600 transition-colors">
+              Términos y privacidad
+            </Link>
           </div>
         </div>
       </div>

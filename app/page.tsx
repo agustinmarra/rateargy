@@ -40,9 +40,9 @@ const COMO_FUNCIONA = [
 
 
 const GUIAS = [
-  { Icono: CreditCard, titulo: "Cómo elegir tu tarjeta", desc: "Los 5 factores clave para no equivocarte en Argentina.", href: "/articulos/como-elegir-tarjeta-de-credito-argentina-2026" },
-  { Icono: Banknote,   titulo: "Dólar MEP paso a paso",  desc: "La forma legal y sin límite de dolarizar tus ahorros.", href: "/articulos" },
-  { Icono: PiggyBank,  titulo: "MP vs Ualá: cuál rinde más", desc: "Comparamos tasas, beneficios y funcionalidades.", href: "/articulos" },
+  { Icono: CreditCard, titulo: "Cómo elegir tu tarjeta", desc: "Los factores clave para no equivocarte al elegir en Argentina.", href: "/articulos/como-elegir-tarjeta-de-credito-argentina-2026" },
+  { Icono: BookOpen,   titulo: "7 errores al elegir tarjeta",  desc: "Los errores más comunes que hacen que la gente pierda plata.", href: "/articulos/errores-comunes-al-elegir-tarjeta-argentina" },
+  { Icono: PiggyBank,  titulo: "Cómo funciona el ranking", desc: "La metodología detrás de los cálculos de ahorro de rateargy.", href: "/articulos/como-funciona-el-ranking-de-rateargy" },
 ]
 
 // ─── Elegibilidad por segmento de ingresos ────────────────────────────────────
@@ -287,18 +287,6 @@ function MiniTeaser({ onCTA }: { onCTA: () => void }) {
         flexWrap: "wrap", gap: 16, marginBottom: 48,
       }}>
         <div>
-          <div style={{
-            display: "inline-flex", alignItems: "center", gap: 7,
-            background: "linear-gradient(135deg, #ecfdf5 0%, #d1fae5 100%)",
-            border: "1px solid rgba(16,185,129,0.25)",
-            borderRadius: 999, padding: "6px 14px", marginBottom: 14,
-            fontSize: 11, fontWeight: 700, letterSpacing: "0.08em",
-            textTransform: "uppercase", color: "#059669",
-            boxShadow: "0 2px 8px rgba(16,185,129,0.12)",
-          }}>
-            <span style={{ width: 5, height: 5, borderRadius: "50%", background: "#10b981", display: "inline-block" }} />
-            Actualizado esta semana
-          </div>
           <h2 style={{
             fontSize: "clamp(26px, 3vw, 40px)", fontWeight: 900,
             letterSpacing: "-0.04em", color: "#0a0a0a", margin: 0, lineHeight: 1.05,
@@ -327,7 +315,7 @@ function MiniTeaser({ onCTA }: { onCTA: () => void }) {
       <div className="teaser-grid">
         {top3.map((t, i) => {
           const grad = TEASER_GRADIENTS[t.id] ?? t.gradiente
-          const medals = ["🥇", "🥈", "🥉"]
+          const medals = ["1", "2", "3"]
 
           return (
             <motion.div
@@ -358,7 +346,13 @@ function MiniTeaser({ onCTA }: { onCTA: () => void }) {
 
               {/* Posición + mini card */}
               <div style={{ display: "flex", alignItems: "center", gap: 12, marginBottom: 24 }}>
-                <span style={{ fontSize: 20, flexShrink: 0 }}>{medals[i]}</span>
+                <span style={{
+                  width: 28, height: 28, borderRadius: "50%", flexShrink: 0,
+                  background: i === 0 ? "#10b981" : "#f1f5f9",
+                  color: i === 0 ? "#fff" : "#64748b",
+                  display: "inline-flex", alignItems: "center", justifyContent: "center",
+                  fontSize: 13, fontWeight: 800,
+                }}>{medals[i]}</span>
                 <div style={{
                   width: 52, height: 32, borderRadius: 8,
                   background: grad, flexShrink: 0,
@@ -557,16 +551,6 @@ export default function Home() {
 
       <div style={{ position: "relative", minHeight: "100vh", background: "#ffffff", overflow: "clip" }}>
 
-        {/* Orbs decorativos */}
-        <div aria-hidden style={{ position:"absolute", width:900, height:900, borderRadius:"50%",
-          background:"radial-gradient(circle, rgba(16,185,129,0.09) 0%, transparent 65%)",
-          top:-320, left:-220, pointerEvents:"none", zIndex:0 }} />
-        <div aria-hidden style={{ position:"absolute", width:700, height:700, borderRadius:"50%",
-          background:"radial-gradient(circle, rgba(99,102,241,0.06) 0%, transparent 65%)",
-          bottom:-100, right:-250, pointerEvents:"none", zIndex:0 }} />
-        <div aria-hidden style={{ position:"absolute", width:400, height:400, borderRadius:"50%",
-          background:"radial-gradient(circle, rgba(16,185,129,0.05) 0%, transparent 70%)",
-          top:"40%", right:"5%", pointerEvents:"none", zIndex:0 }} />
 
         <div style={{
           position: "relative", zIndex: 1,
@@ -583,15 +567,13 @@ export default function Home() {
                 <motion.div
                   initial={{ opacity: 0, y: 8 }} animate={{ opacity: 1, y: 0 }} transition={{ duration: 0.4 }}
                   style={{ display: "inline-flex", alignItems: "center", gap: 7,
-                    background: "linear-gradient(135deg, #ecfdf5 0%, #d1fae5 100%)",
-                    border: "1px solid rgba(16,185,129,0.25)",
-                    borderRadius: 999, padding: "7px 16px",
-                    fontSize: 11, fontWeight: 700, letterSpacing: "0.08em",
-                    textTransform: "uppercase", color: "#059669", marginBottom: 24,
-                    boxShadow: "0 2px 10px rgba(16,185,129,0.15), inset 0 1px 0 rgba(255,255,255,0.8)" }}
+                    background: "#f0fdf4",
+                    border: "1px solid #bbf7d0",
+                    borderRadius: 999, padding: "6px 14px",
+                    fontSize: 12, fontWeight: 600, color: "#059669", marginBottom: 24 }}
                 >
-                  <span style={{ width: 6, height: 6, borderRadius: "50%", background: "#10b981", display: "inline-block", boxShadow: "0 0 6px rgba(16,185,129,0.6)" }} />
-                  Comparador financiero · Argentina · 2026
+                  <span style={{ width: 6, height: 6, borderRadius: "50%", background: "#10b981", display: "inline-block" }} />
+                  Datos actualizados · {TARJETAS_PUBLICAS.length} tarjetas
                 </motion.div>
 
                 {/* H1 */}
@@ -631,24 +613,18 @@ export default function Home() {
                 >
                   <motion.button
                     onClick={scrollToCalculadora}
-                    whileHover={{ y: -3, boxShadow: "0 20px 48px rgba(16,185,129,0.4)" }}
+                    whileHover={{ y: -2 }}
                     whileTap={{ scale: 0.97 }}
                     style={{
-                      position: "relative", overflow: "hidden",
                       display: "inline-flex", alignItems: "center", gap: 10,
-                      background: "linear-gradient(135deg, #10b981 0%, #059669 100%)",
-                      color: "#fff", border: "none", borderRadius: 16,
-                      padding: "16px 32px", fontSize: 16, fontWeight: 700,
+                      background: "#10b981",
+                      color: "#fff", border: "none", borderRadius: 14,
+                      padding: "15px 30px", fontSize: 16, fontWeight: 700,
                       cursor: "pointer",
-                      boxShadow: "0 12px 32px rgba(16,185,129,0.35)",
+                      boxShadow: "0 8px 24px rgba(16,185,129,0.3)",
                     }}
                   >
-                    <span aria-hidden style={{
-                      position:"absolute", top:0, bottom:0, width:"40%",
-                      background:"linear-gradient(90deg, transparent 0%, rgba(255,255,255,0.18) 50%, transparent 100%)",
-                      animation:"slideShimmer 2.5s infinite", pointerEvents:"none",
-                    }} />
-                    Calculá tu ahorro gratis
+                    Calculá tu ahorro
                     <ArrowRight size={18} />
                   </motion.button>
 
@@ -681,34 +657,6 @@ export default function Home() {
             </div>
           </section>
 
-          {/* ════ TRUST BAR ════ */}
-          <motion.div
-            initial={{ opacity: 0, y: 12 }} animate={{ opacity: 1, y: 0 }} transition={{ duration: 0.5, delay: 0.35 }}
-            style={{
-              display: "flex", alignItems: "stretch",
-              background: "linear-gradient(135deg, #f8fafc 0%, #f0fdf4 100%)",
-              border: "1px solid rgba(16,185,129,0.12)",
-              borderRadius: 20, overflow: "hidden",
-              marginBottom: 96,
-              boxShadow: "0 2px 16px rgba(0,0,0,0.04)",
-            }}
-          >
-            {[
-              { num: "+15.000", label: "argentinos esta semana" },
-              { num: "Cada lunes", label: "datos actualizados" },
-              { num: "100%", label: "gratis · sin registro" },
-            ].map(({ num, label }, i) => (
-              <div key={label} style={{
-                flex: 1, textAlign: "center", padding: "24px 16px",
-                borderRight: i < 2 ? "1px solid rgba(16,185,129,0.1)" : "none",
-              }}>
-                <p style={{ fontSize: "clamp(20px, 2.5vw, 28px)", fontWeight: 900, color: "#0a0a0a", margin: "0 0 4px", letterSpacing: "-0.03em" }}>
-                  {num}
-                </p>
-                <p style={{ fontSize: 13, color: "#6b7280", margin: 0, fontWeight: 500 }}>{label}</p>
-              </div>
-            ))}
-          </motion.div>
 
           {/* ════ MINI TEASER ════ */}
           <MiniTeaser onCTA={scrollToCalculadora} />
