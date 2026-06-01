@@ -1,10 +1,10 @@
 // ============================================================
 // GENERADO AUTOMÁTICAMENTE DESDE GOOGLE SHEETS
 // NO EDITAR MANUALMENTE — usar el Sheet
-// Última sincronización: 25/5/2026, 01:58:07
+// Última sincronización: 1/6/2026, 04:36:03
 // ============================================================
 
-export const MES_ACTUALIZACION = "mayo de 2026"
+export const MES_ACTUALIZACION = "junio de 2026"
 
 export const DESCUENTOS_NAFTA = [
   {
