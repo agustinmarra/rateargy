@@ -2,7 +2,7 @@
 // GENERADO AUTOMÁTICAMENTE DESDE GOOGLE SHEETS
 // NO EDITAR MANUALMENTE — usar el Sheet
 // Sheet: https://docs.google.com/spreadsheets/d/1bv7iUYwgrLcKLTA715Z8p1F3RqgMwaQtXKkYLgZXCoY
-// Última sincronización: 7/9/2026, 04:16:20
+// Última sincronización: 14/9/2026, 04:45:57
 // ============================================================
 
 export type CatKey = "super"|"nafta"|"farmacia"|"delivery"|"online"|"servicios"
